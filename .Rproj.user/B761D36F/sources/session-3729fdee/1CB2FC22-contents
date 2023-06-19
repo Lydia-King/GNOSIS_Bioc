@@ -1,0 +1,638 @@
+---
+title: "Breakpoint_Analysis"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,  message = FALSE, warning = FALSE)
+```
+
+```{r libraries, echo = FALSE, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(operator.tools)
+library(ds4psy)
+library(reshape)
+library(truncnorm)
+```
+
+```{r sim function, echo = F}
+Simulation_Function <- function(Num_Samples = c(20, 50, 80, 100), Percent_Neutral = c(90), Percent_Amp_Neutral = c(0), Percent_Neutral_Amp = c(0), 
+                                Percent_Del_Neutral = c(0), 
+                                Percent_Neutral_Del = c(0), 
+                                Percent_Amp_Del_FP = c(10), Percent_Del_Amp_FP = c(0), Prob_BP_Occurs = c(1), Max_Num_BP = c(5), 
+                                Sample_Same = T, Chr_Start = 1, Chr_End = 1000, Allele, Shuffle = F, SimData = 20, Lengths_Matrix, Prob_Matrix){
+  
+  Final_Sim <- list()
+  
+  for(size in 1:length(Num_Samples)){
+  
+   # Num_Samples = Num_Samples[size]
+    # Create vector of numbers of samples in each category 
+    # Make sure number of individuals are whole numbers and add up to sample size 
+    times <- (Num_Samples[size]*c(Percent_Neutral, Percent_Amp_Neutral, Percent_Neutral_Amp, Percent_Del_Neutral, 
+                            Percent_Neutral_Del, Percent_Amp_Del_FP, Percent_Del_Amp_FP))/100 # Get number of individuals
+    round_up <- c(sample(which(!is_wholenumber(times)), length(which(!is_wholenumber(times)))/2)) # elements to round up
+    round_down <- which(!is_wholenumber(times))[which(!is_wholenumber(times)) %!in% round_up] #  elements to round down
+    
+    times[round_up] <- ceiling(times[round_up])
+    times[round_down] <- floor(times[round_down])
+  
+  Store <- list()
+  
+  for(NumSim in 1:SimData){
+    
+    ## No Breakpoint
+    if(times[1] == 0){
+      DF <- data.frame("Sample" = character(), "Chr" = numeric(), "Type" = character(), "Combine" = character(),  "CumLength" = numeric(), "BP" = numeric(), "TS" = numeric(), "TE" = numeric(), "Allele" = character())
+    } else {
+      if(length(Allele) == 1){
+        DF <- data.frame("Sample" = paste("Sample", 1:times[1]), "Chr" = 1, "Type" = "NoBreakpoint", "Combine" = NA, "CumLength" = 0, "BP" = NA, "TS" = 0, "TE" = 0, "Allele" = Allele)
+      } else {
+        DF <- data.frame("Sample" = rep(paste("Sample", 1:times[1]), each = 2), "Chr" = rep(1, 2), "Type" = rep("NoBreakpoint", 2), "Combine" = rep(NA, 2), "CumLength" = rep(0, 2), "BP" = rep(NA, 2), "TS" = rep(0, 2), "TE" = rep(0, 2), "Allele" = c("Major", "Minor"))
+      }
+    }
+    
+    ## All Other Breakpoints 
+    Samp_Num <- times[1] ## Keep Track of Sample Number 
+    ## Create DF to store outputs 
+    DF_CNA_BP <- data.frame("Sample" = character(), "Chr" = numeric(), "Type" = character(), "Combine" = character(),  "CumLength" = numeric(), "BP" = numeric(), "TS" = numeric(), "TE" = numeric(), "Allele" = character())
+    
+    Total_Mu_Sd <- Lengths_Matrix
+    
+    times_1 <- times[-1]
+    
+    ## Create Sequence of BP for each patient (Same or Different)
+    for(Cate_Type in c(which(times_1[1:length(times_1)] != 0))){
+
+      ifelse(Sample_Same == T, patient1 <- 1, patient1 <- times_1[Cate_Type])
+      
+      for(patient in 1:patient1){
+        
+        Allele_DF <- data.frame("Sample" = character(), "Chr" = numeric(), "Allele" = character(), "Type" = character(), "Combine" =  character(),  "BP" = numeric(), "TS" = numeric(), "TE" = numeric(),  "CumLength" =numeric())
+        
+        # ifelse(Sample_Same == T, Allele_Try <- 1,  Allele_Try <- length(Allele))
+        
+        for(allele in 1:length(Allele)){
+          
+          ## Number of mutations 
+          Binom_CNA_BP <- rbinom(Max_Num_BP[1]-1, 1, Prob_BP_Occurs[1])
+          
+          ## Get Starting Category first 
+          DF_CNA_BP_Temp <- data.frame("Sample" = paste("Sample", Samp_Num + patient), "Chr" = 1, "Allele" = Allele[allele], "Type_1" = States_Vec[Cate_Type], "Combine_1" = Start_Vec[Cate_Type], "BP_1" = NA , "TS_1" = NA, "TE_1" = NA, "CumLength_1" = NA)
+          
+          ## Get rest of categories for each patient 
+          State <- States_Vec[Cate_Type]
+          num_CNA_BP <- 1
+          
+          while(Binom_CNA_BP[num_CNA_BP] == 1 && num_CNA_BP <= length(Binom_CNA_BP)) {
+            ## Append Columns
+            if(State == "Neutral_Amplification"){
+              State <- sample(c("Amplification_Neutral","Amplification_Deletion"), 1, prob = c(Prob_Matrix["NAAN", 1], Prob_Matrix["NAAD", 1]))
+              if(State == "Amplification_Neutral"){
+                Temp <- data.frame("Type" = State, "Combine" = "NAAN", "BP" = NA, "TS" = NA, "TE" = NA, "CumLength" = NA)
+              } else {
+                Temp <- data.frame("Type" = State, "Combine" = "NAAD", "BP" = NA, "TS" = NA, "TE" = NA, "CumLength" = NA)
+              }
+            } else if(State == "Neutral_Deletion"){
+              State <- sample(c("Deletion_Neutral","Deletion_Amplification"), 1, prob = c(Prob_Matrix["NDDN", 1], Prob_Matrix["NDDA", 1]))
+              if(State == "Deletion_Neutral"){
+                Temp <- data.frame("Type" = State, "Combine" = "NDDN", "BP" = NA, "TS" = NA, "TE" = NA, "CumLength" = NA)
+              } else {
+                Temp <- data.frame("Type" = State, "Combine" = "NDDA", "BP" = NA, "TS" = NA, "TE" = NA, "CumLength" = NA)
+              }
+            } else if(State == "Amplification_Neutral"){
+              State <- sample(c("Neutral_Amplification", "Neutral_Deletion"), 1, prob = c(Prob_Matrix["ANNA", 1], Prob_Matrix["ANND", 1]))
+              if(State == "Neutral_Amplification"){
+                Temp <- data.frame("Type" = State, "Combine" = "ANNA", "BP" = NA, "TS" = NA, "TE" = NA, "CumLength" = NA)
+              } else {
+                Temp <- data.frame("Type" = State, "Combine" = "ANND", "BP" = NA, "TS" = NA, "TE" = NA, "CumLength" = NA)
+              }
+            } else if(State == "Deletion_Neutral"){
+              State <- sample(c("Neutral_Amplification","Neutral_Deletion"), 1, prob = c(Prob_Matrix["DNNA", 1], Prob_Matrix["DNND", 1]))
+              if(State == "Neutral_Amplification"){
+                Temp <- data.frame("Type" = State, "Combine" = "DNNA", "BP" = NA, "TS" = NA, "TE" = NA, "CumLength" = NA)
+              } else {
+                Temp <- data.frame("Type" = State, "Combine" = "DNND", "BP" = NA, "TS" = NA, "TE" = NA, "CumLength" = NA)
+              }
+            } else if(State == "Amplification_Deletion"){
+              State <- sample(c("Deletion_Amplification","Deletion_Neutral"), 1, prob = c(Prob_Matrix["ADDA", 1], Prob_Matrix["ADDN", 1]))
+              if(State == "Deletion_Amplification"){
+                Temp <- data.frame("Type" = State, "Combine" = "ADDA", "BP" = NA, "TS" = NA, "TE" = NA, "CumLength" = NA)
+              } else {
+                Temp <- data.frame("Type" = State, "Combine" = "ADDN", "BP" = NA, "TS" = NA, "TE" = NA, "CumLength" = NA)
+              }
+            }  else if(State == "Deletion_Amplification"){
+              State <- sample(c("Amplification_Deletion","Amplification_Neutral"), 1, prob = c(Prob_Matrix["DAAD", 1], Prob_Matrix["DAAN", 1]))
+              if(State == "Amplification_Deletion"){
+                Temp <- data.frame("Type" = State, "Combine" = "DAAD", "BP" = NA, "TS" = NA, "TE" = NA, "CumLength" = NA)
+              } else {
+                Temp <- data.frame("Type" = State, "Combine" = "DAAN", "BP" = NA, "TS" = NA, "TE" = NA, "CumLength" = NA)
+              }
+            }
+            
+            #  Temp <- as.data.frame(Temp)
+            colnames(Temp) <- c(paste("Type_",  num_CNA_BP + 1, sep=""), paste("Combine_",  num_CNA_BP + 1, sep=""), paste("BP_",  num_CNA_BP + 1, sep=""), paste("TS_",  num_CNA_BP + 1, sep=""), paste("TE_",  num_CNA_BP + 1, sep=""), paste("CumLength_",  num_CNA_BP + 1, sep=""))
+            DF_CNA_BP_Temp <- cbind.data.frame(DF_CNA_BP_Temp, Temp)
+            num_CNA_BP <- num_CNA_BP + 1
+          }
+          
+          if( Sample_Same == T){
+            DF_CNA_BP_Temp <- DF_CNA_BP_Temp[rep(1,  times_1[Cate_Type]), ]
+            DF_CNA_BP_Temp[, 1] <- c(paste("Sample", c(Samp_Num + 1:times_1[Cate_Type])))
+            DF_CNA_BP_Temp[, 3] <- Allele[allele]}
+
+          
+          
+          for(row in 1:nrow(DF_CNA_BP_Temp)){
+            
+            for(Combination_State in c(seq(5, ncol(DF_CNA_BP_Temp), 6))){
+              
+              Cate_State <- DF_CNA_BP_Temp[row, Combination_State]
+              
+              if(Combination_State == 5){
+                len <- round(rtruncnorm(1, a = 1, b = Chr_End, mean = Total_Mu_Sd[Cate_State, 1], sd = Total_Mu_Sd[Cate_State, 2]))
+                DF_CNA_BP_Temp[row, Combination_State + 2] <- len 
+                DF_CNA_BP_Temp[row, Combination_State + 1]  <- 1 + len
+                
+              } else if(Combination_State == tail(c(seq(5, ncol(DF_CNA_BP_Temp), 6)), n = 1)){
+                len <- round(rtruncnorm(1, a = 1, b = Chr_End, mean = Total_Mu_Sd[Cate_State, 1], sd = Total_Mu_Sd[Cate_State, 2]))
+                DF_CNA_BP_Temp[row , Combination_State - 3] <- len 
+                DF_CNA_BP_Temp[row , Combination_State + 2] <- len 
+                
+                DF_CNA_BP_Temp[row , Combination_State + 1]  <-  DF_CNA_BP_Temp[row, Combination_State - 3] + DF_CNA_BP_Temp[row, Combination_State - 5]
+                
+                mock1 <- paste0(substr(Cate_State, 3, 4), substr(Cate_State, 4, 4), "E")
+                len <- round(rtruncnorm(1, a = 1, b = Chr_End, mean = Total_Mu_Sd[mock1, 1], sd = Total_Mu_Sd[mock1, 2]))
+                DF_CNA_BP_Temp[row , Combination_State + 3] <- len
+              }  else {
+                len <- round(rtruncnorm(1, a = 1, b = Chr_End, mean = Total_Mu_Sd[Cate_State, 1], sd = Total_Mu_Sd[Cate_State, 2]))
+                DF_CNA_BP_Temp[row, Combination_State - 3] <- len 
+                DF_CNA_BP_Temp[row, Combination_State + 2] <- len 
+                
+                DF_CNA_BP_Temp[row, Combination_State + 1]  <-  DF_CNA_BP_Temp[row, Combination_State - 3] + DF_CNA_BP_Temp[row, Combination_State - 5]
+              }
+            }
+            
+            for(Combination_State in c(seq(5, ncol(DF_CNA_BP_Temp), 6))){
+              
+              Cate_State <- DF_CNA_BP_Temp[1, Combination_State]
+              
+              if(Combination_State == 5){
+                # Cumulative Length
+                DF_CNA_BP_Temp[row, Combination_State + 4] <- DF_CNA_BP_Temp[row, Combination_State + 3] +  DF_CNA_BP_Temp[row, Combination_State + 2]
+              }  else {
+                DF_CNA_BP_Temp[row, Combination_State + 4] <- DF_CNA_BP_Temp[row, Combination_State + 3] +  DF_CNA_BP_Temp[row, Combination_State - 2]
+              }
+            }
+          }
+          
+          DF_CNA_BP_Temp <- DF_CNA_BP_Temp %>% pivot_longer(
+            cols = !c(Sample, Chr, Allele),
+            names_to = c(".value", "Samp"),
+            names_sep = "_",
+            values_drop_na = TRUE
+          ) %>% select(Sample, Chr, Type, Combine, CumLength, BP, TS, TE, Allele)
+          
+          
+          # Create an empty list to store the data frames
+          data_list <- list()
+          
+          # Loop through unique samples in DF_CNA_BP_Temp
+          for (pat in unique(DF_CNA_BP_Temp$Sample)) {
+            
+            # Filter data for current sample
+            Data <- DF_CNA_BP_Temp %>% filter(Sample == pat)
+            
+            # Modify the data
+            if (length(which(Data$CumLength >= Chr_End)) > 0) {
+              Data <- Data[1:which(Data$CumLength >= Chr_End)[1],]
+              Data[nrow(Data), "CumLength"] <- Chr_End
+              Data[nrow(Data), "TE"] <- Chr_End - Data[nrow(Data), "BP"]
+            } else {
+              Data[nrow(Data), "CumLength"] <- Chr_End
+              Data[nrow(Data), "TE"] <- Chr_End - Data[nrow(Data), "BP"]
+            }
+            
+            # Add modified data to the list
+            data_list[[pat]] <- Data
+          }
+          
+          # Combine data frames into a single data frame
+          Data1 <- do.call(rbind.data.frame, data_list)
+          
+          DF_CNA_BP_Temp <- Data1
+          # Allele_DF <- rbind.data.frame(Allele_DF, DF_CNA_BP_Temp)
+          
+          Allele_DF <- rbind.data.frame(Allele_DF, DF_CNA_BP_Temp)
+        }
+        DF_CNA_BP <- rbind.data.frame(DF_CNA_BP,  Allele_DF)
+      }
+      
+      Output3 <- rbind.data.frame(DF, DF_CNA_BP)
+      
+      Output3 <- Output3 %>% mutate(TS = ifelse(Type %in% c("Neutral_Amplification", "Neutral_Deletion"), 0, TS), 
+                                    TE = ifelse(Type %in% c("Amplification_Neutral", "Deletion_Neutral"), 0, TE)) 
+      
+      if(Shuffle == T){
+        Output3 <- Output3 %>%
+          group_by(Allele) %>%
+          mutate(Sample = sample(Sample)) %>% arrange(Sample, Allele)
+        
+        # Output3 <- Output3[mixedorder(Output3$Sample),]
+      } 
+      
+      Output4 <- Output3
+      
+      Samp_Num <- Samp_Num + times_1[Cate_Type] # Update Sample Number 
+    }
+    
+    Store[[NumSim]] <- Output4
+  }
+  
+  Final_Sim[[size]] <- Store
+  }
+  return(Final_Sim)
+  
+}
+
+```
+
+```{r setup and prob function, echo = F}
+### Simulate Data - Setup
+States_Vec <- c("Amplification_Neutral", "Neutral_Amplification", "Deletion_Neutral", "Neutral_Deletion", "Amplification_Deletion", "Deletion_Amplification")
+Start_Vec <- c("SAAN", "SNNA", "SDDN", "SNND", "SAAD", "SDDA")
+
+## Create Matrix/df with Probabilities of transition between each state pair
+Prob_Matrix_Function <- function(Prob_Amp_Neut_to_Neut_Amp = 1, Prob_Neut_Amp_to_Amp_Neut = 1, Prob_Del_Neut_to_Neut_Amp = 0, Prob_Neut_Del_to_Del_Neut = 1, Prob_Del_Amp_to_Amp_Del = 0, Prob_Amp_Del_to_Del_Neut = 1){
+  Prob_Matrix <- matrix(c(Prob_Amp_Neut_to_Neut_Amp, 1 - Prob_Amp_Neut_to_Neut_Amp, Prob_Neut_Amp_to_Amp_Neut, 1 - Prob_Neut_Amp_to_Amp_Neut,
+                          Prob_Del_Neut_to_Neut_Amp, 1 - Prob_Del_Neut_to_Neut_Amp,  Prob_Neut_Del_to_Del_Neut, 1 - Prob_Neut_Del_to_Del_Neut,
+                          Prob_Del_Amp_to_Amp_Del, 1 - Prob_Del_Amp_to_Amp_Del, Prob_Amp_Del_to_Del_Neut, 1 - Prob_Amp_Del_to_Del_Neut)
+                        , nrow = 12, ncol = 1, byrow = T)
+  
+  rownames(Prob_Matrix) <- c("ANNA", "ANND", "NAAN", "NAAD", "DNNA", "DNND", "NDDN", "NDDA", "DAAD", "DAAN", "ADDN", "ADDA")
+  colnames(Prob_Matrix) <- c("Probability")
+  
+  return(Prob_Matrix)
+}
+```
+
+```{r regression function, echo = F, warning = F, message=FALSE}
+Regression_Function <- function(DataSet){
+  df <-  data.frame("Dataset" = character(), "Sample" = character(), "Type" = character(), "Dir" = character(), "P" = numeric(), "SampleSize" = numeric(), "Beta" = numeric(), "LB" = numeric(), "UB" = numeric())
+  size1 <- c(20, 50, 80, 100, 200, 500, 1000, 2000)
+  
+  Store_Regression_Results <- list()
+  
+  for(size in 1:length(DataSet)){
+    dataRes <- data.frame("Dataset" = character(), "Sample" = character(), "Type" = character(), "Dir" = character(), "P" = numeric(), "SampleSize" = numeric(),  "Beta" = numeric(), "LB" = numeric(), "UB" = numeric())
+    
+    pp <- sapply(DataSet[[size]], function(i){
+      DF <- within(i, Type <- relevel(factor(Type), ref = "NoBreakpoint"))
+      summary(lm(cbind(TS, TE) ~ Type, data =  DF))})
+    
+    pp1 <- lapply(DataSet[[size]], function(i){
+      DF <- within(i, Type <- relevel(factor(Type), ref = "NoBreakpoint"))
+      lm(cbind(TS, TE) ~ Type, data =  DF)})
+    
+    for(TD in 1:ncol(pp)){
+      
+      TS <- pp[1, TD]
+      TE <- pp[2, TD]
+      
+      dataRes <- rbind.data.frame(dataRes, data.frame("Dataset" = rep(paste("Dataset", TD, sep = " "), length(TS$`Response TS`$coefficients[,4])), "Sample" = rep(paste("Sample", TD, sep = " "), length(TS$`Response TS`$coefficients[,4])), "Type" = rownames(TS$`Response TS`$coefficients), "Dir" = rep("TS", length(TS$`Response TS`$coefficients[,4])), "P" = TS$`Response TS`$coefficients[,4], "SampleSize" = rep(size1[size],  length(TS$`Response TS`$coefficients[,4])),  "Beta" = TS$`Response TS`$coefficients[,1], "LB" = confint(pp1[[TD]])[1:3, 1], "UB" = confint(pp1[[TD]])[1:3, 2]))
+      
+      dataRes <- rbind.data.frame(dataRes, data.frame("Dataset" = rep(paste("Dataset", TD, sep = " "), length(TE$`Response TE`$coefficients[,4])), "Sample" = rep(paste("Sample", TD, sep = " "), length(TE$`Response TE`$coefficients[,4])), "Type" = rownames(TE$`Response TE`$coefficients), "Dir" = rep("TE", length(TE$`Response TE`$coefficients[,4])), "P" = TE$`Response TE`$coefficients[,4], "SampleSize" =  rep(size1[size],  length(TS$`Response TS`$coefficients[,4])),  "Beta" =  TE$`Response TE`$coefficients[,1], "LB" = confint(pp1[[TD]])[4:6, 1], "UB" = confint(pp1[[TD]])[4:6, 2]))
+    }
+    
+    df <- rbind.data.frame(df, dataRes)
+  }
+  return(df)
+}
+```
+
+## Issue 1: Model is always breakpoint, even if only 1 patient displays breakpoint? 
+### Scenario 1: 5% of patients have Neutral/Amp -> Amp_Neutral (No noise)
+```{r scenario 1 setup, echo = F}
+### Dataset 1 (Lenght 1000)
+# Matrix of Distributions 
+MU_SD_Neut <- matrix(c(200, 1, 20, 1, 20, 1, 20, 1, 20, 1, 20, 1, 20, 1, 20, 1), nrow = 8, ncol = 2, byrow = T)
+#MU_SD_Neut <- matrix(c(rep(1, 16)), nrow = 8, ncol = 2)
+
+rownames(MU_SD_Neut) <- c("SNNA", "SNND", "ANNA", "ANND", "DNND", "DNNA", "ANNE", "DNNE")
+colnames(MU_SD_Neut) <- c("Mu", "Sd")
+
+# MU_SD_Amp <- matrix(c(500, 100, 500, 100, 500, 100, 50, 15, 50, 15, 50 ,15, 50, 15, 50 ,15), nrow = 8, ncol = 2)
+MU_SD_Amp <- matrix(c(100, 1, 100, 1, 100, 1, 300, 1, 100, 1, 100, 1, 100, 1, 100, 1), nrow = 8, ncol = 2, byrow = T)
+
+rownames(MU_SD_Amp) <- c("SAAN", "NAAN", "NAAE", "SAAD", "NAAD", "DAAD", "DAAE", "DAAN")
+colnames(MU_SD_Amp) <- c("Mu", "Sd")
+
+MU_SD_Del <- matrix(c(50, 1, 50, 1, 20, 1, 25, 1, 25, 1, 25, 1, 25, 1, 300, 1), nrow = 8, ncol = 2, byrow = T)
+
+rownames(MU_SD_Del) <- c("SDDN", "NDDN", "NDDE", "SDDA", "NDDA", "ADDA", "ADDE", "ADDN")
+colnames(MU_SD_Del) <- c("Mu", "Sd")
+
+Total_Mu_Sd1 <- rbind.data.frame(MU_SD_Neut, MU_SD_Amp, MU_SD_Del)
+
+### Make, Manipulate and Plot Data 
+DataSet_1 <- Simulation_Function(Num_Samples = c(20, 50, 80, 100, 200, 500, 1000, 2000), Allele = "Major", Lengths_Matrix = Total_Mu_Sd1, Prob_Matrix = Prob_Matrix_Function(), Max_Num_BP = 2, Percent_Neutral = c(95), Percent_Amp_Neutral = c(0), Percent_Neutral_Amp = c(5), 
+                                Percent_Del_Neutral = c(0), 
+                                Percent_Neutral_Del = c(0), 
+                                Percent_Amp_Del_FP = c(0), Percent_Del_Amp_FP = c(0))
+
+DataSet_2 <- Simulation_Function(Num_Samples = c(20, 50, 80, 100, 200, 500, 1000, 2000), Allele = "Major", Lengths_Matrix = Total_Mu_Sd1, Prob_Matrix = Prob_Matrix_Function(), Max_Num_BP = 2, Percent_Neutral = c(50), Percent_Amp_Neutral = c(0), Percent_Neutral_Amp = c(50), 
+                                Percent_Del_Neutral = c(0), 
+                                Percent_Neutral_Del = c(0), 
+                                Percent_Amp_Del_FP = c(0), Percent_Del_Amp_FP = c(0))
+```
+
+```{r scenario 1 regression, echo = FALSE}
+DataSet_1_RR <- Regression_Function(DataSet_1)
+DataSet_2_RR <- Regression_Function(DataSet_2)
+```
+
+#### Dataset n=20, 5%, dataset=1
+```{r analyse results 1, echo = FALSE}
+DataSet_1[[1]][[1]] %>% select(-Chr, -Combine) # n=20, 5%, DS=1
+
+DF <- within(DataSet_1[[1]][[1]], Type <- relevel(factor(Type), ref = "NoBreakpoint"))
+summary(lm(cbind(TS, TE) ~ Type, data =  DF))
+```
+
+#### Dataset n=100, 5%, dataset=1
+```{r analyse results 2, echo = FALSE}
+DataSet_1[[4]][[1]] %>% select(-Chr, -Combine) # n=100, 5%, DS=1
+
+DF <- within(DataSet_1[[4]][[1]], Type <- relevel(factor(Type), ref = "NoBreakpoint"))
+summary(lm(cbind(TS, TE) ~ Type, data =  DF))
+```
+
+### Scenario 2: 50% of patients have Neutral/Amp -> Amp_Neutral (No noise)
+```{r scenario 2 setup, echo = F}
+DataSet_2 <- Simulation_Function(Num_Samples = c(20, 50, 80, 100, 200, 500, 1000, 2000), Allele = "Major", Lengths_Matrix = Total_Mu_Sd1, Prob_Matrix = Prob_Matrix_Function(), Max_Num_BP = 2, Percent_Neutral = c(50), Percent_Amp_Neutral = c(0), Percent_Neutral_Amp = c(50), 
+                                Percent_Del_Neutral = c(0), 
+                                Percent_Neutral_Del = c(0), 
+                                Percent_Amp_Del_FP = c(0), Percent_Del_Amp_FP = c(0))
+```
+
+#### Dataset n=20, 50%, dataset=1
+```{r analyse results 3, echo = FALSE}
+DataSet_2[[1]][[1]] %>% select(-Chr, -Combine) # n=20, 50%, DS=1
+
+DF <- within(DataSet_2[[1]][[1]], Type <- relevel(factor(Type), ref = "NoBreakpoint"))
+summary(lm(cbind(TS, TE) ~ Type, data =  DF))
+```
+
+#### Dataset n=100, 50%, dataset=1
+```{r analyse results 4, echo = FALSE}
+DataSet_2[[4]][[1]] %>% select(-Chr, -Combine) # n=100, 50%, DS=1
+
+DF <- within(DataSet_2[[4]][[1]], Type <- relevel(factor(Type), ref = "NoBreakpoint"))
+summary(lm(cbind(TS, TE) ~ Type, data =  DF))
+```
+
+### Scenario 3: 5% of patients have Neutral/Amp -> Amp/Neutral (With variation in segment length)
+```{r scenario 3, echo = F, eval = F}
+### Dataset 1 (Lenght 1000)
+# Matrix of Distributions 
+MU_SD_Neut <- matrix(c(200, 1, 20, 1, 20, 1, 20, 1, 20, 1, 20, 1, 20, 1, 20, 1), nrow = 8, ncol = 2, byrow = T)
+#MU_SD_Neut <- matrix(c(rep(1, 16)), nrow = 8, ncol = 2)
+
+rownames(MU_SD_Neut) <- c("SNNA", "SNND", "ANNA", "ANND", "DNND", "DNNA", "ANNE", "DNNE")
+colnames(MU_SD_Neut) <- c("Mu", "Sd")
+
+# MU_SD_Amp <- matrix(c(500, 100, 500, 100, 500, 100, 50, 15, 50, 15, 50 ,15, 50, 15, 50 ,15), nrow = 8, ncol = 2)
+MU_SD_Amp <- matrix(c(100, 1, 100, 100, 100, 1, 300, 1, 100, 1, 100, 1, 100, 1, 100, 1), nrow = 8, ncol = 2, byrow = T)
+
+rownames(MU_SD_Amp) <- c("SAAN", "NAAN", "NAAE", "SAAD", "NAAD", "DAAD", "DAAE", "DAAN")
+colnames(MU_SD_Amp) <- c("Mu", "Sd")
+
+MU_SD_Del <- matrix(c(50, 1, 50, 1, 20, 1, 25, 1, 25, 1, 25, 1, 25, 1, 300, 1), nrow = 8, ncol = 2, byrow = T)
+
+rownames(MU_SD_Del) <- c("SDDN", "NDDN", "NDDE", "SDDA", "NDDA", "ADDA", "ADDE", "ADDN")
+colnames(MU_SD_Del) <- c("Mu", "Sd")
+
+Total_Mu_Sd1 <- rbind.data.frame(MU_SD_Neut, MU_SD_Amp, MU_SD_Del)
+
+### Make, Manipulate and Plot Data 
+DataSet_1 <- Simulation_Function(Num_Samples = c(20, 50, 80, 100, 200, 500, 1000, 2000), Allele = "Major", Lengths_Matrix = Total_Mu_Sd1, Prob_Matrix = Prob_Matrix_Function(), Max_Num_BP = 2, Percent_Neutral = c(95), Percent_Amp_Neutral = c(0), Percent_Neutral_Amp = c(5), 
+                                Percent_Del_Neutral = c(0), 
+                                Percent_Neutral_Del = c(0), 
+                                Percent_Amp_Del_FP = c(0), Percent_Del_Amp_FP = c(0))
+```
+
+#### Dataset n=20, 5%, dataset=1
+```{r analyse results 5, echo = FALSE}
+DataSet_1[[1]][[1]] %>% select(-Chr, -Combine) # n=20, 5%, DS=1
+
+DF <- within(DataSet_1[[1]][[1]], Type <- relevel(factor(Type), ref = "NoBreakpoint"))
+summary(lm(cbind(TS, TE) ~ Type, data =  DF))
+```
+
+#### Dataset n=100, 5%, dataset=1
+```{r analyse results 6, echo = FALSE}
+DataSet_1[[4]][[1]] %>% select(-Chr, -Combine) # n=100, 5%, DS=1
+
+DF <- within(DataSet_1[[4]][[1]], Type <- relevel(factor(Type), ref = "NoBreakpoint"))
+summary(lm(cbind(TS, TE) ~ Type, data =  DF))
+```
+
+### Scenario 4: 50% of patients have Neutral/Amp -> Amp/Neutral (With variation in segment length)
+```{r scenario 4 setup, echo = F}
+DataSet_2 <- Simulation_Function(Num_Samples = c(20, 50, 80, 100, 200, 500, 1000, 2000), Allele = "Major", Lengths_Matrix = Total_Mu_Sd1, Prob_Matrix = Prob_Matrix_Function(), Max_Num_BP = 2, Percent_Neutral = c(50), Percent_Amp_Neutral = c(0), Percent_Neutral_Amp = c(50), 
+                                Percent_Del_Neutral = c(0), 
+                                Percent_Neutral_Del = c(0), 
+                                Percent_Amp_Del_FP = c(0), Percent_Del_Amp_FP = c(0))
+```
+
+#### Dataset n=20, 50%, dataset=1
+```{r analyse results 7, echo = FALSE}
+DataSet_2[[1]][[1]] %>% select(-Chr, -Combine) # n=20, 50%, DS=1
+
+DF <- within(DataSet_2[[1]][[1]], Type <- relevel(factor(Type), ref = "NoBreakpoint"))
+summary(lm(cbind(TS, TE) ~ Type, data =  DF))
+```
+
+#### Dataset n=100, 50%, dataset=1
+```{r analyse results 8, echo = FALSE}
+DataSet_2[[4]][[1]] %>% select(-Chr, -Combine) # n=100, 50%, DS=1
+
+DF <- within(DataSet_2[[4]][[1]], Type <- relevel(factor(Type), ref = "NoBreakpoint"))
+summary(lm(cbind(TS, TE) ~ Type, data =  DF))
+```
+
+### Scenario 4: Mix of CNA patterns
+```{r setup scenario 4, echo = FALSE}
+MU_SD_Neut <- matrix(c(200, 1, 20, 1, 20, 1, 20, 1, 20, 1, 20, 1, 20, 1, 20, 1), nrow = 8, ncol = 2, byrow = T)
+#MU_SD_Neut <- matrix(c(rep(1, 16)), nrow = 8, ncol = 2)
+
+rownames(MU_SD_Neut) <- c("SNNA", "SNND", "ANNA", "ANND", "DNND", "DNNA", "ANNE", "DNNE")
+colnames(MU_SD_Neut) <- c("Mu", "Sd")
+
+# MU_SD_Amp <- matrix(c(500, 100, 500, 100, 500, 100, 50, 15, 50, 15, 50 ,15, 50, 15, 50 ,15), nrow = 8, ncol = 2)
+MU_SD_Amp <- matrix(c(100, 1, 100, 1, 100, 1, 300, 1, 100, 1, 100, 1, 100, 1, 100, 1), nrow = 8, ncol = 2, byrow = T)
+
+rownames(MU_SD_Amp) <- c("SAAN", "NAAN", "NAAE", "SAAD", "NAAD", "DAAD", "DAAE", "DAAN")
+colnames(MU_SD_Amp) <- c("Mu", "Sd")
+
+MU_SD_Del <- matrix(c(50, 1, 50, 1, 20, 1, 25, 1, 25, 1, 25, 1, 25, 1, 300, 1), nrow = 8, ncol = 2, byrow = T)
+
+rownames(MU_SD_Del) <- c("SDDN", "NDDN", "NDDE", "SDDA", "NDDA", "ADDA", "ADDE", "ADDN")
+colnames(MU_SD_Del) <- c("Mu", "Sd")
+
+Total_Mu_Sd1 <- rbind.data.frame(MU_SD_Neut, MU_SD_Amp, MU_SD_Del)
+
+# Netural/Amp -> Amp/Neutral (2)
+DataSet_1_Part1 <- Simulation_Function(Num_Samples = c(2), Allele = "Major", Lengths_Matrix = Total_Mu_Sd1, Prob_Matrix = Prob_Matrix_Function(), Max_Num_BP = 2, Percent_Neutral = c(0), Percent_Amp_Neutral = c(0), Percent_Neutral_Amp = c(100), Percent_Del_Neutral = c(0), Percent_Neutral_Del = c(0), Percent_Amp_Del_FP = c(0), Percent_Del_Amp_FP = c(0))
+
+DataSet_1_Part1[[1]][1]
+
+# Neutral/Del -> Del/Neutral (6)
+DataSet_1_Part2 <- Simulation_Function(Num_Samples = c(6), Allele = "Major", Lengths_Matrix = Total_Mu_Sd1, Prob_Matrix = Prob_Matrix_Function(), Max_Num_BP = 2, Percent_Neutral = c(0), Percent_Amp_Neutral = c(0), Percent_Neutral_Amp = c(0), Percent_Del_Neutral = c(0), Percent_Neutral_Del = c(100), Percent_Amp_Del_FP = c(0), Percent_Del_Amp_FP = c(0))
+
+DataSet_1_Part2[[1]][1]
+
+DataSet_1_Part3 <- Simulation_Function(Num_Samples = c(6), Allele = "Major", Lengths_Matrix = Total_Mu_Sd1, Prob_Matrix = Prob_Matrix_Function(), Max_Num_BP = 2, Percent_Neutral = c(0), Percent_Amp_Neutral = c(0), Percent_Neutral_Amp = c(0), Percent_Del_Neutral = c(0), Percent_Neutral_Del = c(0), Percent_Amp_Del_FP = c(100), Percent_Del_Amp_FP = c(0))
+
+DataSet_1_Part3[[1]][1]
+
+New_Data_Combine <- rbind.data.frame(as.data.frame(DataSet_1_Part1[[1]][1]), as.data.frame(DataSet_1_Part2[[1]][1]), as.data.frame(DataSet_1_Part3[[1]][1]))
+New_Data_Combine <- rbind.data.frame(New_Data_Combine, data.frame("Sample" = paste("Sample", 1:6), "Chr" = 1, "Type" = "NoBreakpoint", "Combine" = NA, "CumLength" = 0, "BP" = NA, "TS" = 0, "TE" = 0, "Allele" = "Major"))
+```
+
+```{r, echo = F}
+New_Data_Combine %>% select(-Chr, -Combine)
+
+DF <- within(New_Data_Combine, Type <- relevel(factor(Type), ref = "NoBreakpoint"))
+summary(lm(cbind(TS, TE) ~ Type, data =  DF))
+```
+
+### Scenario 5: Mix of CNAs (reduce number of Amp/Del)
+```{r}
+# Netural/Amp -> Amp/Neutral (2)
+DataSet_1_Part1 <- Simulation_Function(Num_Samples = c(2), Allele = "Major", Lengths_Matrix = Total_Mu_Sd1, Prob_Matrix = Prob_Matrix_Function(), Max_Num_BP = 2, Percent_Neutral = c(0), Percent_Amp_Neutral = c(0), Percent_Neutral_Amp = c(100), Percent_Del_Neutral = c(0), Percent_Neutral_Del = c(0), Percent_Amp_Del_FP = c(0), Percent_Del_Amp_FP = c(0))
+
+DataSet_1_Part1[[1]][1]
+
+# Neutral/Del -> Del/Neutral (6)
+DataSet_1_Part2 <- Simulation_Function(Num_Samples = c(6), Allele = "Major", Lengths_Matrix = Total_Mu_Sd1, Prob_Matrix = Prob_Matrix_Function(), Max_Num_BP = 2, Percent_Neutral = c(0), Percent_Amp_Neutral = c(0), Percent_Neutral_Amp = c(0), Percent_Del_Neutral = c(0), Percent_Neutral_Del = c(100), Percent_Amp_Del_FP = c(0), Percent_Del_Amp_FP = c(0))
+
+DataSet_1_Part2[[1]][1]
+
+# Firestorm (2)
+DataSet_1_Part3 <- Simulation_Function(Num_Samples = c(2), Allele = "Major", Lengths_Matrix = Total_Mu_Sd1, Prob_Matrix = Prob_Matrix_Function(), Max_Num_BP = 2, Percent_Neutral = c(0), Percent_Amp_Neutral = c(0), Percent_Neutral_Amp = c(0), Percent_Del_Neutral = c(0), Percent_Neutral_Del = c(0), Percent_Amp_Del_FP = c(100), Percent_Del_Amp_FP = c(0))
+
+DataSet_1_Part3[[1]][1]
+
+New_Data_Combine <- rbind.data.frame(as.data.frame(DataSet_1_Part1[[1]][1]), as.data.frame(DataSet_1_Part2[[1]][1]), as.data.frame(DataSet_1_Part3[[1]][1]))
+New_Data_Combine <- rbind.data.frame(New_Data_Combine, data.frame("Sample" = paste("Sample", 1:10), "Chr" = 1, "Type" = "NoBreakpoint", "Combine" = NA, "CumLength" = 0, "BP" = NA, "TS" = 0, "TE" = 0, "Allele" = "Major"))
+```
+
+```{r, echo = F}
+New_Data_Combine %>% select(-Chr, -Combine)
+
+DF <- within(New_Data_Combine, Type <- relevel(factor(Type), ref = "NoBreakpoint"))
+summary(lm(cbind(TS, TE) ~ Type, data =  DF))
+```
+
+### Scenario 6: Mix of CNAs -> 1 Amp/Neutral (n=50)
+```{r, echo = F}
+# Netural/Amp -> Amp/Neutral (1)
+DataSet_1_Part1 <- Simulation_Function(Num_Samples = c(1), Allele = "Major", Lengths_Matrix = Total_Mu_Sd1, Prob_Matrix = Prob_Matrix_Function(), Max_Num_BP = 2, Percent_Neutral = c(0), Percent_Amp_Neutral = c(0), Percent_Neutral_Amp = c(100), Percent_Del_Neutral = c(0), Percent_Neutral_Del = c(0), Percent_Amp_Del_FP = c(0), Percent_Del_Amp_FP = c(0))
+
+DataSet_1_Part1[[1]][1]
+
+# Neutral/Del -> Del/Neutral (15)
+DataSet_1_Part2 <- Simulation_Function(Num_Samples = c(15), Allele = "Major", Lengths_Matrix = Total_Mu_Sd1, Prob_Matrix = Prob_Matrix_Function(), Max_Num_BP = 2, Percent_Neutral = c(0), Percent_Amp_Neutral = c(0), Percent_Neutral_Amp = c(0), Percent_Del_Neutral = c(0), Percent_Neutral_Del = c(100), Percent_Amp_Del_FP = c(0), Percent_Del_Amp_FP = c(0))
+
+DataSet_1_Part2[[1]][1]
+
+# Firestorm (15)
+DataSet_1_Part3 <- Simulation_Function(Num_Samples = c(15), Allele = "Major", Lengths_Matrix = Total_Mu_Sd1, Prob_Matrix = Prob_Matrix_Function(), Max_Num_BP = 2, Percent_Neutral = c(0), Percent_Amp_Neutral = c(0), Percent_Neutral_Amp = c(0), Percent_Del_Neutral = c(0), Percent_Neutral_Del = c(0), Percent_Amp_Del_FP = c(100), Percent_Del_Amp_FP = c(0))
+
+DataSet_1_Part3[[1]][1]
+
+# 20
+New_Data_Combine <- rbind.data.frame(as.data.frame(DataSet_1_Part1[[1]][1]), as.data.frame(DataSet_1_Part2[[1]][1]), as.data.frame(DataSet_1_Part3[[1]][1]))
+New_Data_Combine <- rbind.data.frame(New_Data_Combine, data.frame("Sample" = paste("Sample", 1:20), "Chr" = 1, "Type" = "NoBreakpoint", "Combine" = NA, "CumLength" = 0, "BP" = NA, "TS" = 0, "TE" = 0, "Allele" = "Major"))
+
+```
+
+```{r, echo = F}
+New_Data_Combine %>% select(-Chr, -Combine)
+
+DF <- within(New_Data_Combine, Type <- relevel(factor(Type), ref = "NoBreakpoint"))
+summary(lm(cbind(TS, TE) ~ Type, data =  DF))
+```
+
+### Scenario 7: Mix of CNAs -> 5 Amp/Neutral (n=50)
+```{r, echo = F}
+# Netural/Amp -> Amp/Neutral (1)
+DataSet_1_Part1 <- Simulation_Function(Num_Samples = c(5), Allele = "Major", Lengths_Matrix = Total_Mu_Sd1, Prob_Matrix = Prob_Matrix_Function(), Max_Num_BP = 2, Percent_Neutral = c(0), Percent_Amp_Neutral = c(0), Percent_Neutral_Amp = c(100), Percent_Del_Neutral = c(0), Percent_Neutral_Del = c(0), Percent_Amp_Del_FP = c(0), Percent_Del_Amp_FP = c(0))
+
+DataSet_1_Part1[[1]][1]
+
+New_Data_Combine <- rbind.data.frame(as.data.frame(DataSet_1_Part1[[1]][1]), as.data.frame(DataSet_1_Part2[[1]][1]), as.data.frame(DataSet_1_Part3[[1]][1]))
+New_Data_Combine <- rbind.data.frame(New_Data_Combine, data.frame("Sample" = paste("Sample", 1:20), "Chr" = 1, "Type" = "NoBreakpoint", "Combine" = NA, "CumLength" = 0, "BP" = NA, "TS" = 0, "TE" = 0, "Allele" = "Major"))
+
+New_Data_Combine %>% select(-Chr, -Combine)
+
+DF <- within(New_Data_Combine, Type <- relevel(factor(Type), ref = "NoBreakpoint"))
+summary(lm(cbind(TS, TE) ~ Type, data =  DF))
+```
+
+### Scenario 8: Mix of CNAs -> 10 Amp/Neutral (n=50)
+```{r, echo = F}
+# Netural/Amp -> Amp/Neutral (10)
+DataSet_1_Part1 <- Simulation_Function(Num_Samples = c(10), Allele = "Major", Lengths_Matrix = Total_Mu_Sd1, Prob_Matrix = Prob_Matrix_Function(), Max_Num_BP = 2, Percent_Neutral = c(0), Percent_Amp_Neutral = c(0), Percent_Neutral_Amp = c(100), Percent_Del_Neutral = c(0), Percent_Neutral_Del = c(0), Percent_Amp_Del_FP = c(0), Percent_Del_Amp_FP = c(0))
+
+DataSet_1_Part1[[1]][1]
+
+New_Data_Combine <- rbind.data.frame(as.data.frame(DataSet_1_Part1[[1]][1]), as.data.frame(DataSet_1_Part2[[1]][1]), as.data.frame(DataSet_1_Part3[[1]][1]))
+New_Data_Combine <- rbind.data.frame(New_Data_Combine, data.frame("Sample" = paste("Sample", 1:20), "Chr" = 1, "Type" = "NoBreakpoint", "Combine" = NA, "CumLength" = 0, "BP" = NA, "TS" = 0, "TE" = 0, "Allele" = "Major"))
+
+New_Data_Combine %>% select(-Chr, -Combine)
+
+DF <- within(New_Data_Combine, Type <- relevel(factor(Type), ref = "NoBreakpoint"))
+summary(lm(cbind(TS, TE) ~ Type, data =  DF))
+```
+
+### Scenario 9: Mix of CNAs -> 25 Amp/Neutral (n=50)
+```{r, echo = F}
+# Netural/Amp -> Amp/Neutral (25)
+DataSet_1_Part1 <- Simulation_Function(Num_Samples = c(25), Allele = "Major", Lengths_Matrix = Total_Mu_Sd1, Prob_Matrix = Prob_Matrix_Function(), Max_Num_BP = 2, Percent_Neutral = c(0), Percent_Amp_Neutral = c(0), Percent_Neutral_Amp = c(100), Percent_Del_Neutral = c(0), Percent_Neutral_Del = c(0), Percent_Amp_Del_FP = c(0), Percent_Del_Amp_FP = c(0))
+
+DataSet_1_Part1[[1]][1]
+
+New_Data_Combine <- rbind.data.frame(as.data.frame(DataSet_1_Part1[[1]][1]), as.data.frame(DataSet_1_Part2[[1]][1]), as.data.frame(DataSet_1_Part3[[1]][1]))
+New_Data_Combine <- rbind.data.frame(New_Data_Combine, data.frame("Sample" = paste("Sample", 1:20), "Chr" = 1, "Type" = "NoBreakpoint", "Combine" = NA, "CumLength" = 0, "BP" = NA, "TS" = 0, "TE" = 0, "Allele" = "Major"))
+
+New_Data_Combine %>% select(-Chr, -Combine)
+
+DF <- within(New_Data_Combine, Type <- relevel(factor(Type), ref = "NoBreakpoint"))
+summary(lm(cbind(TS, TE) ~ Type, data =  DF))
+```
+
+### Scenario 10: Mix of CNAs -> 1 large Amp/Neutral (n=50)
+```{r, echo = F}
+# MU_SD_Amp <- matrix(c(500, 100, 500, 100, 500, 100, 50, 15, 50, 15, 50 ,15, 50, 15, 50 ,15), nrow = 8, ncol = 2)
+MU_SD_Amp <- matrix(c(100, 1, 500, 1, 100, 1, 300, 1, 100, 1, 100, 1, 100, 1, 100, 1), nrow = 8, ncol = 2, byrow = T)
+
+rownames(MU_SD_Amp) <- c("SAAN", "NAAN", "NAAE", "SAAD", "NAAD", "DAAD", "DAAE", "DAAN")
+colnames(MU_SD_Amp) <- c("Mu", "Sd")
+
+Total_Mu_Sd1 <- rbind.data.frame(MU_SD_Neut, MU_SD_Amp, MU_SD_Del)
+
+# Netural/Amp -> Amp/Neutral (25)
+DataSet_1_Part1 <- Simulation_Function(Num_Samples = c(1), Allele = "Major", Lengths_Matrix = Total_Mu_Sd1, Prob_Matrix = Prob_Matrix_Function(), Max_Num_BP = 2, Percent_Neutral = c(0), Percent_Amp_Neutral = c(0), Percent_Neutral_Amp = c(100), Percent_Del_Neutral = c(0), Percent_Neutral_Del = c(0), Percent_Amp_Del_FP = c(0), Percent_Del_Amp_FP = c(0))
+
+DataSet_1_Part1[[1]][1]
+
+New_Data_Combine <- rbind.data.frame(as.data.frame(DataSet_1_Part1[[1]][1]), as.data.frame(DataSet_1_Part2[[1]][1]), as.data.frame(DataSet_1_Part3[[1]][1]))
+New_Data_Combine <- rbind.data.frame(New_Data_Combine, data.frame("Sample" = paste("Sample", 1:20), "Chr" = 1, "Type" = "NoBreakpoint", "Combine" = NA, "CumLength" = 0, "BP" = NA, "TS" = 0, "TE" = 0, "Allele" = "Major"))
+
+New_Data_Combine %>% select(-Chr, -Combine)
+
+DF <- within(New_Data_Combine, Type <- relevel(factor(Type), ref = "NoBreakpoint"))
+summary(lm(cbind(TS, TE) ~ Type, data =  DF))
+```

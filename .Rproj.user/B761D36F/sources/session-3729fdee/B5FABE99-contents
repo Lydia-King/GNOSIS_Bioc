@@ -1,0 +1,45 @@
+histogramUI <- function(id) {
+    tagList(
+        selectInput(NS(id, "var"), "Variable", choices = names(mtcars)),
+        numericInput(NS(id, "bins"), "bins", value = 10, min = 1),
+        plotOutput(NS(id, "hist"))
+    )
+}
+
+histogramServer <- function(id1) {
+    moduleServer(id1, function(input, output, session) {
+        data <- reactive(mtcars[[input$var]])
+        output$hist <- renderPlot({
+            hist(data(), breaks = input$bins, main = input$var)
+        }, res = 96)
+    })
+}
+
+histogramApp <- function() {
+    ui <- fluidPage(
+        histogramUI("hist1")
+    )
+    server <- function(input, output, session) {
+        histogramServer("hist1")
+    }
+    shinyApp(ui, server)  
+}
+
+histogramApp()
+
+library(cBioPortalData)
+
+
+(acc_file <- downloadStudy("acc_tcga"))
+#> Study file in cache: acc_tcga
+#>                                                              BFC16 
+#> "/github/home/.cache/R/cBioPortalData/40e1758ad07_acc_tcga.tar.gz" 
+
+(file_dir <- untarStudy(acc_file, tempdir()))
+#> [1] "/tmp/RtmpooLXq5/40e1758ad07_acc_tcga"
+
+p <- read.delim(paste0(file_dir, "/acc_tcga/data_clinical_patient.txt"))
+p <- loadStudy(paste0(file_dir, "/acc_tcga/data_clinical_patient.txt"))
+file_dir
+/tmp/Rtmp5os0dN/b7dc29db201c_acc_tcga/acc_tcga
+

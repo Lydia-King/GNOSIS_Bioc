@@ -1,0 +1,104 @@
+##
+## This is a Shiny web application. You can run the application by clicking
+## the 'Run App' button above.
+##
+## Find out more about building applications with Shiny here:
+##
+##    http://shiny.rstudio.com/
+##
+##
+## This is the user-interface definition of a Shiny web application. You can
+## run the application by clicking 'Run App' above.
+##
+## Find out more about building applications with Shiny here:
+##
+##    http://shiny.rstudio.com/
+##
+#
+#library(shiny)
+#
+#histogramUI <- function(id) {
+#shinydashboardPlus::box(solidHeader = T, status = "primary",
+#        selectInput(NS(id, "var"), "Variable", choices = names(mtcars)),
+#        numericInput(NS(id, "bins"), "bins", value = 10, min = 1))
+#}
+#
+#histogramServer <- function(id) {
+#    moduleServer(id, function(input, output, session) {
+#        data <- reactive(mtcars[[input$var]])
+#        output$hist <- renderPlot({
+#            hist(data(), breaks = input$bins, main = input$var)
+#        }, res = 96)
+#    })
+#}
+#
+#
+#
+#ui <- fluidPage(
+#    histogramUI("hist1")
+#)
+#server <- function(input, output, session) {
+#    histogramServer("hist1")
+#}
+#shinyApp(ui, server)
+
+
+module_ui <- function(id) {
+    ns <- NS(id) # create namespace
+    
+    tagList(
+        fluidRow(column(6, DT::dataTableOutput(ns("dt_table")))),
+        fluidRow(column(4, verbatimTextOutput(ns("render_selected_line"))))
+    )
+}
+
+
+table_server <- function(input, output, session, data) {
+    
+    output$dt_table <- DT::renderDataTable(
+        DT::datatable(
+            data = data,
+            selection = "single"
+        )
+    )
+}
+
+selected_line_server <- function(input, output, session, data) { 
+    output$render_selected_line <- renderText({
+        paste0("My selection was: ", data()) # refer to the reactive object with parenthesis
+    })
+    
+}
+
+
+library(shiny)
+library(dplyr)
+library(DT)
+
+source("./modules/ui_module.R")
+source("./modules/server_module.R")
+
+ui <- fluidPage(
+    module_ui("my_ID")
+)
+
+server = function(input, output, session) {
+    data <- mtcars
+    callModule(table_server, id = "my_ID", data = data) # data is not reactive
+    callModule(selected_line_server, id = "my_ID", data = selectedLine) # refer to the reactive object selectedLine without parenthesis
+    
+    selectedLine <- reactive({
+        req(input$`my_ID-dt_table_rows_selected`)
+        if (is.null(input$`my_ID-dt_table_rows_selected`)) {
+            return(NULL)
+        } else {
+            rows_selected <- as.numeric(input$`my_ID-dt_table_rows_selected`) # we need to prefix dt_table_rows_selected with the ID of the UI function "my_ID" and a hyphen
+        }
+    })
+    
+}
+
+shinyApp(ui = ui, server = server)
+
+
+
