@@ -38,7 +38,14 @@ GNOSIS <- function(...) {
                     tabBox(width = "1000px",
                            Tab2_Exploaratory_Tables_Clin_UI("tab2_clin_table"),
                            Tab2_Exploaratory_Tables_CNA_UI("tab2_cna_table"),
-                           Tab2_Exploaratory_Tables_MAF_UI("tab2_maf_table"))))
+                           Tab2_Exploaratory_Tables_MAF_UI("tab2_maf_table"))),
+
+            ## Tab 3 - Subset/Recode/Format Data
+            tabItem(tabName = "FactorLevels", Tab3_Factor_Levels_UI("tab3")),
+            tabItem(tabName = "Subset", Tab3_Subset_UI("tab3")),
+            tabItem(tabName = "Recode", Tab3_Recode_UI("tab3")),
+            tabItem(tabName = "CNACalc", Tab3_CNACalc_UI("tab3")),
+            tabItem(tabName = "Data_Down", Tab3_Data_Down_UI("tab3")))
 
     ))
 

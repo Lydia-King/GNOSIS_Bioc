@@ -70,15 +70,25 @@ Tab1_Input_Files_Manual_Server <- function(tab1_input_manual, rowselect) {
         })
 
         # API cBioPortal Data
-        API_data_output <- reactive({
+        API_Out <- reactive({
             if(is.null(rowselect())){
                 return(NULL)
             } else {
                 cbio <- cBioPortal(hostname = "www.cbioportal.org", protocol = "https", api. = "/api/api-docs")
                 API <-  as.data.frame(getStudies(cbio))
                 samp <- API[rowselect(), "studyId"]
-                API_files <- downloadStudy(samp)
-                file_dir <- untarStudy(API_files, tempdir())
+                download <- downloadStudy(samp)
+                return(list(download = download, samp = samp))
+            }
+        })
+
+        API_data_output <- reactive({
+            if(is.null(rowselect())){
+                return(NULL)
+            } else {
+                study <- API_Out()[["download"]]
+                samp <-  API_Out()[["samp"]]
+                file_dir <- untarStudy(study, tempdir())
                 patient_clin_file <- if(file.exists(paste0(file_dir, "/", samp, "/data_clinical_patient.txt"))){
                     read.delim(paste0(file_dir, "/", samp, "/data_clinical_patient.txt"),
                                                 header = input$Tab1_Clin_Header_Yes_or_No,
@@ -202,7 +212,7 @@ Tab1_Input_Files_Manual_Server <- function(tab1_input_manual, rowselect) {
             }
         })
 
-        rlist <- list(patient_manual_data = patient_data, sample_manual_data = sample_data, CNA_manual_data = CNA_data, MAF_manual_data = MAF_data, Combined_clin = dataClinical, CNA_Val = CNA_Validated, MAF_Val = MAF_Validated)
+        rlist <- list(patient_manual_data = patient_data, sample_manual_data = sample_data, CNA_manual_data = CNA_data, MAF_manual_data = MAF_data, Combined_clin = dataClinical, CNA_Val = CNA_Validated, MAF_Val = MAF_Validated, API_Out = API_Out)
         return(rlist)
     })
 }
@@ -221,6 +231,35 @@ Count_Row <- function(dataset) {
 
 Tab1_Input_Files_Preview_Server <- function(id, datalist, data, length_px, select_dt) {
     moduleServer(id, function(input, output, session) {
+
+        loading_API <- function() {
+            req(!is.null(datalist[["API_Out"]]()) & is.null(input$Input_Sample_File) & is.null(input$Input_Patient_File))
+            try(message(datalist[["API_Out"]](), silent = T))
+
+            message("Loading: Please wait for data to display")
+            Sys.sleep(2)
+            message("Displaying Data")
+        }
+
+        observe({
+            withCallingHandlers({
+                shinyjs::html("text", "")
+                loading_API()
+            },
+            message = function(m) {
+                print(m$message)
+                if(m$message != "Displaying Data\n"){
+                    hide("Preview")
+                    show("text")
+                    shinyjs::html(id = "text", html = paste(m$message, "<br>", sep = " "), add = TRUE)
+                } else {
+                    hide("text")
+                    show("Preview")
+                }
+            }
+            )
+        })
+
         output$Preview <- metaRender(renderDataTable, {metaExpr({ datatable(..(datalist[[data]]()), selection = select_dt, options = list(lengthMenu = c(10, 30, 50, 100), pageLength = 30, scrollX = TRUE, scrollY = length_px)) })})
     })
 }
