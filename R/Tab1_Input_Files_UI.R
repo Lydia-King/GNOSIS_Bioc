@@ -60,9 +60,7 @@ Tab1_Input_Files_Preview_CNA_UI <- function(tab1_input_preview_CNA_ui) {
     ns <- NS(tab1_input_preview_CNA_ui)
     # Preview CNA Data
     tabPanel("CNA Data",
-             fluidRow( shinydashboardPlus::box(sidebar = boxSidebar(id="Tab1_CNA_Sidebar",  width = 25, h4(strong("Select CNA Data")), background = "#599740",  icon = shiny::icon("rectangle-list"),
-                                               selectizeInput(ns("Tab2_CNA_Data"), "Select Dataset:", choices = "None Selected", width = "95%", selected = "None Selected")),
-                          collapsible = T, title = "Preview", width = 12, status = "primary", solidHeader = TRUE,  shinyjs::useShinyjs(), textOutput(ns("text")),
+             fluidRow(box(collapsible = T, title = "Preview", width = 12, status = "primary", solidHeader = TRUE,  shinyjs::useShinyjs(), textOutput(ns("text")),
                           withSpinner(DT::dataTableOutput(ns("Preview"))), style = "height:800px")))
 }
 
@@ -70,9 +68,7 @@ Tab1_Input_Files_Preview_MAF_UI <- function(tab1_input_preview_MAF_ui) {
     ns <- NS(tab1_input_preview_MAF_ui)
     # Preview Mutation Data
     tabPanel("Mutation Data",
-             fluidRow(shinydashboardPlus::box(sidebar = boxSidebar(id="Tab1_Mutation_Sidebar", width = 25, h4(strong("Select Mutation Data")), background = "#599740",  icon = shiny::icon("rectangle-list"),
-                                               selectizeInput(ns("Tab2_MAF_Data"), "Select Mutation Dataset:", choices = "None Selected", width = "95%", selected = "None Selected")),
-                          collapsible = T, title = "Preview", width = 12, status = "primary", solidHeader = TRUE, shinyjs::useShinyjs(),
+             fluidRow(box(collapsible = T, title = "Preview", width = 12, status = "primary", solidHeader = TRUE, shinyjs::useShinyjs(),
                           textOutput(ns("text")), withSpinner(DT::dataTableOutput(ns("Preview"))), style = "height:800px")))
 
 }

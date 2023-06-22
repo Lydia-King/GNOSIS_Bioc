@@ -1,8 +1,8 @@
 ## Tab 2 - Exploratory Tables
 # Tables to further explore and compare Input Files
-Tab2_Exploratory_Tables_Server <- function(id, dataset, length_px, select_dt) {
+Tab2_Exploratory_Tables_Server <- function(id, datalist, data, length_px, select_dt) {
     moduleServer(id, function(input, output, session) {
-        observe({vchoices <- c(names(dataset), "None Selected")
+        observe({vchoices <- c(names(datalist[[data]]()), "None Selected")
         updateSelectizeInput(session, "Tab2_Column1_Variable", choices = vchoices, selected = "None Selected", server = TRUE)
         updateSelectizeInput(session, "Tab2_Column2_Variable", choices = vchoices, selected = "None Selected", server = TRUE)
         updateSelectizeInput(session, "Tab2_Column3_Variable", choices = vchoices, selected = "None Selected", server = TRUE)
@@ -13,15 +13,15 @@ Tab2_Exploratory_Tables_Server <- function(id, dataset, length_px, select_dt) {
             if(input$Tab2_Column1_Variable == "None Selected" & input$Tab2_Column2_Variable == "None Selected" & input$Tab2_Column3_Variable == "None Selected" & input$Tab2_Column4_Variable == "None Selected" & input$Tab2_Column5_Variable == "None Selected"){
                 return(validate("Please select data columns to analyse in sequential order i.e. select column 1 to column 5."))
             } else if(input$Tab2_Column1_Variable!= "None Selected" & input$Tab2_Column2_Variable == "None Selected" & input$Tab2_Column3_Variable== "None Selected" & input$Tab2_Column4_Variable == "None Selected" & input$Tab2_Column5_Variable == "None Selected"){
-                metaExpr({as_tibble(..(dataset)[,c(..(input$Tab2_Column1_Variable))]) %>% mutate(!!..(input$Tab2_Column1_Variable) := value) %>% select(!!..(input$Tab2_Column1_Variable))})
+                metaExpr({as_tibble(..(datalist[[data]]())[,c(..(input$Tab2_Column1_Variable))]) %>% mutate(!!..(input$Tab2_Column1_Variable) := value) %>% select(!!..(input$Tab2_Column1_Variable))})
             } else if(input$Tab2_Column1_Variable != "None Selected" & input$Tab2_Column2_Variable != "None Selected" & input$Tab2_Column3_Variable== "None Selected" & input$Tab2_Column4_Variable == "None Selected" & input$Tab2_Column5_Variable == "None Selected"){
-                metaExpr({ ..(dataset)[,c(..(input$Tab2_Column1_Variable), ..(input$Tab2_Column2_Variable))]})
+                metaExpr({ ..(datalist[[data]]())[,c(..(input$Tab2_Column1_Variable), ..(input$Tab2_Column2_Variable))]})
             } else if(input$Tab2_Column1_Variable != "None Selected" & input$Tab2_Column2_Variable != "None Selected" & input$Tab2_Column3_Variable != "None Selected" & input$Tab2_Column4_Variable == "None Selected" & input$Tab2_Column5_Variable == "None Selected"){
-                metaExpr({ ..(dataset)[,c(..(input$Tab2_Column1_Variable), ..(input$Tab2_Column2_Variable), ..(input$Tab2_Column3_Variable))]})
+                metaExpr({ ..(datalist[[data]]())[,c(..(input$Tab2_Column1_Variable), ..(input$Tab2_Column2_Variable), ..(input$Tab2_Column3_Variable))]})
             } else if(input$Tab2_Column1_Variable != "None Selected" & input$Tab2_Column2_Variable != "None Selected" & input$Tab2_Column3_Variable != "None Selected" & input$Tab2_Column4_Variable != "None Selected" & input$Tab2_Column5_Variable == "None Selected"){
-                metaExpr({ ..(dataset)[,c(..(input$Tab2_Column1_Variable), ..(input$Tab2_Column2_Variable), ..(input$Tab2_Column3_Variable), ..(input$Tab2_Column4_Variable))]})
+                metaExpr({ ..(datalist[[data]]())[,c(..(input$Tab2_Column1_Variable), ..(input$Tab2_Column2_Variable), ..(input$Tab2_Column3_Variable), ..(input$Tab2_Column4_Variable))]})
             } else if(input$Tab2_Column1_Variable != "None Selected" & input$Tab2_Column2_Variable != "None Selected" & input$Tab2_Column3_Variable != "None Selected" & input$Tab2_Column4_Variable != "None Selected" & input$Tab2_Column5_Variable != "None Selected"){
-                metaExpr({ ..(dataset)[,c(..(input$Tab2_Column1_Variable), ..(input$Tab2_Column2_Variable), ..(input$Tab2_Column3_Variable), ..(input$Tab2_Column4_Variable), ..(input$Tab2_Column5_Variable))]})
+                metaExpr({ ..(datalist[[data]]())[,c(..(input$Tab2_Column1_Variable), ..(input$Tab2_Column2_Variable), ..(input$Tab2_Column3_Variable), ..(input$Tab2_Column4_Variable), ..(input$Tab2_Column5_Variable))]})
             } else{validate("Please select data columns in sequential order i.e. column 1 to column 5.")}
         })
 

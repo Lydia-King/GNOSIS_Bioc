@@ -48,62 +48,48 @@ GNOSIS <- function(...) {
         #  track_usage(store_null(console = FALSE))
 
         ## Tab 1 - Input Files (Upload ourselves or use API)
-        # 1) Input Clinical Patient File from cBioPortal: can specify header, sep, quote and Tab3_Segment_CNA_Yes_or_No of lines to skip (default = tab, double quote, skip 4)
-        # 2) Input Clinical Sample File from cBioPortal: can specify header, sep, quote and Tab3_Segment_CNA_Yes_or_No of lines to skip (default = tab, double quote, skip 4)
-        # 3) Merge two files (patient and sample -> clinical data) -> Make sure PATIENT ID column exists
-        # 4) Input CNA File from cBioPortal: can specify header, sep, quote and Tab3_Segment_CNA_Yes_or_No of lines to skip (default = tab, double quote, skip 0)
-        # 5) Input MAF File from cBioPortal: can specify header, sep, quote and Tab3_Segment_CNA_Yes_or_No of lines to skip (default = tab, double quote, skip 1)
-        # 6) API data
-
         # Function to select row from cBioPortal Data
         selectedLine <- reactive({
             if (is.null(input$`tab1_inputAPI-cBioData_rows_selected`)) {
                 return(NULL)
             } else {
-                rows_selected <- as.numeric(input$`tab1_inputAPI-cBioData_rows_selected`) # we need to prefix dt_table_rows_selected with the ID of the UI function "my_ID" and a hyphen
+                rows_selected <- as.numeric(input$`tab1_inputAPI-cBioData_rows_selected`)
             }
         })
 
-        patient_manual_data <- Tab1_Input_Files_Manual_Server("tab1_input", rowselect = selectedLine)[[1]]
-        sample_manual_data <- Tab1_Input_Files_Manual_Server("tab1_input", rowselect = selectedLine)[[2]]
-        cna_manual_data <- Tab1_Input_Files_Manual_Server("tab1_input", rowselect = selectedLine)[[3]]
-        maf_manual_data <- Tab1_Input_Files_Manual_Server("tab1_input", rowselect = selectedLine)[[4]]
-        clinical_data <- Tab1_Input_Files_Manual_Server("tab1_input", rowselect = selectedLine)[[5]]
-        CNA_data <- Tab1_Input_Files_Manual_Server("tab1_input", rowselect = selectedLine)[[6]]
-        MAF_data <- Tab1_Input_Files_Manual_Server("tab1_input", rowselect = selectedLine)[[7]]
-        API_select <- Tab1_Input_Files_Manual_Server("tab1_input", rowselect = selectedLine)[[8]]
+        datalist <- Tab1_Input_Files_Manual_Server("tab1_input", rowselect = selectedLine)
 
-         # Tab 1 - Input Data Files
-         ## Row/Column
-         output$TotalC <- metaRender(renderPrint, {Count_Col(..(patient_manual_data()))})
-         output$TotalR <- metaRender(renderPrint, {Count_Row(..(patient_manual_data()))})
+        # Tab 1 - Input Data Files
+        ## Row/Column
+        output$TotalC <- metaRender(renderPrint, {Count_Col(..(datalist[["patient_manual_data"]]()))})
+        output$TotalR <- metaRender(renderPrint, {Count_Row(..(datalist[["patient_manual_data"]]()))})
 
-         output$TotalC1 <- metaRender(renderPrint, {Count_Col(..(sample_manual_data()))})
-         output$TotalR2 <- metaRender(renderPrint, {Count_Row(..(sample_manual_data()))})
+        output$TotalC1 <- metaRender(renderPrint, {Count_Col(..(datalist[["sample_manual_data"]]()))})
+        output$TotalR2 <- metaRender(renderPrint, {Count_Row(..(datalist[["sample_manual_data"]]()))})
 
-         output$TotalCCNA <- metaRender(renderPrint, {Count_Col(..(cna_manual_data()))})
-         output$TotalRCNA <-  metaRender(renderPrint, {Count_Row(..(cna_manual_data()))})
+        output$TotalCCNA <- metaRender(renderPrint, {Count_Col(..(datalist[["CNA_manual_data"]]()))})
+        output$TotalRCNA <-  metaRender(renderPrint, {Count_Row(..(datalist[["CNA_manual_data"]]()))})
 
-         output$TotalCMAF <- metaRender(renderPrint, {Count_Col(..(maf_manual_data()))})
-         output$TotalRMAF <- metaRender(renderPrint, {Count_Row(..(maf_manual_data()))})
+        output$TotalCMAF <- metaRender(renderPrint, {Count_Col(..(datalist[["MAF_manual_data"]]()))})
+        output$TotalRMAF <- metaRender(renderPrint, {Count_Row(..(datalist[["MAF_manual_data"]]()))})
 
          ## API study dataframe
          Tab1_API_Files_Server("tab1_inputAPI")
 
         ## Data Preview
-         Tab1_Input_Files_Preview_Server("tab1_input_preview_1", clinical_data(), length_px = "650px", select_dt = "multiple")
-         Tab1_Input_Files_Preview_Server("tab1_input_preview_2", CNA_data(), length_px = "650px", select_dt = "multiple")
-         Tab1_Input_Files_Preview_Server("tab1_input_preview_3", MAF_data(), length_px = "650px", select_dt = "multiple")
+         Tab1_Input_Files_Preview_Server("tab1_input_preview_1", datalist, "Combined_clin", length_px = "650px", select_dt = "multiple")
+         Tab1_Input_Files_Preview_Server("tab1_input_preview_2", datalist, "CNA_Val", length_px = "650px", select_dt = "multiple")
+         Tab1_Input_Files_Preview_Server("tab1_input_preview_3", datalist, "MAF_Val", length_px = "650px", select_dt = "multiple")
 
         # Tab 2 - Exploratory Tables Tab
         ## Tables
-         Tab2_Exploratory_Tables_Server("tab2_clin_table", clinical_data(), length_px = "450px", select_dt = "multiple")
-         Tab2_Exploratory_Tables_Server("tab2_cna_table", CNA_data(), length_px = "450px", select_dt = "multiple")
-         Tab2_Exploratory_Tables_Server("tab2_maf_table", MAF_data(), length_px = "450px", select_dt = "multiple")
+         Tab2_Exploratory_Tables_Server("tab2_clin_table", datalist, "Combined_clin", length_px = "450px", select_dt = "multiple")
+         Tab2_Exploratory_Tables_Server("tab2_cna_table", datalist, "CNA_Val", length_px = "450px", select_dt = "multiple")
+         Tab2_Exploratory_Tables_Server("tab2_maf_table", datalist, "MAF_Val", length_px = "450px", select_dt = "multiple")
 
     }
 
     shinyApp(ui, server, ...)
 }
 
-
+GNOSIS()
