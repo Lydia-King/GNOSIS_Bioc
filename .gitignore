@@ -3,3 +3,4 @@
 
 
 # Don't track these file types 
+.Rhistory 
