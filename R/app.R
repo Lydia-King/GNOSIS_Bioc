@@ -5,6 +5,8 @@
 #' @import shiny shinydashboard shinydashboardPlus dashboardthemes fontawesome shinyWidgets shinycssloaders shinymeta tidyverse DT
 #' @export
 
+# options(shiny.sanitize.errors = TRUE)
+
 GNOSIS <- function(...) {
 
   #  source("/home/lydia/PhD_Insync/PhD_Project/Shiny_App_Code/GNOSIS/R/Setup.R")
@@ -21,6 +23,10 @@ GNOSIS <- function(...) {
 
         # Set up theme - use custom theme and import css file
         body = dashboardBody(
+      #      tags$style(type="text/css",
+       #                ".shiny-output-error { visibility: hidden; }",
+       #                ".shiny-output-error:before { visibility: hidden; }"
+       #     ),
             shinyDashboardThemes(theme = "blue_gradient"),
             tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "Style_File.css")),
             tags$head(tags$style(HTML('.wrapper {height: auto !important; position:relative; overflow-x:hidden; overflow-y:hidden}'))),
@@ -42,10 +48,10 @@ GNOSIS <- function(...) {
 
             ## Tab 3 - Subset/Recode/Format Data
             tabItem(tabName = "FactorLevels", Tab3_Factor_Levels_UI("tab3")),
-            tabItem(tabName = "Subset", Tab3_Subset_UI("tab3")),
-            tabItem(tabName = "Recode", Tab3_Recode_UI("tab3")),
-            tabItem(tabName = "CNACalc", Tab3_CNACalc_UI("tab3")),
-            tabItem(tabName = "Data_Down", Tab3_Data_Down_UI("tab3")))
+            tabItem(tabName = "Subset", Tab3_Subset_UI("tab31")),
+            tabItem(tabName = "Recode", Tab3_Recode_UI("tab31")),
+            tabItem(tabName = "CNACalc", Tab3_CNACalc_UI("tab31")),
+            tabItem(tabName = "Data_Down", Tab3_Data_Down_UI("tab31")))
 
     ))
 
@@ -94,9 +100,17 @@ GNOSIS <- function(...) {
          Tab2_Exploratory_Tables_Server("tab2_cna_table", datalist, "CNA_Val", length_px = "450px", select_dt = "multiple")
          Tab2_Exploratory_Tables_Server("tab2_maf_table", datalist, "MAF_Val", length_px = "450px", select_dt = "multiple")
 
+         # Tab 3 - Recode andSubset Data
+         ## Check Levels
+         Formatted_Data <- Tab3_Factor_Levels_Server("tab3", datalist, "Combined_clin")
+         Tab3_Render_Print_Server("tab3", Formatted_Data, "formatted_data", expression_text = "str(datalist[[data]](), list.len=ncol(datalist[[data]]()))")
+         Tab3_Subset_Server("tab31", Formatted_Data, "formatted_data")
+
     }
 
     shinyApp(ui, server, ...)
 }
+
+#GNOSIS::GNOSIS()
 
 GNOSIS()

@@ -1,22 +1,22 @@
 Tab3_Factor_Levels_UI <- function(id) {
     ns <- NS(id)
     # 1) Convert Variables (Numeric - Factor etc.)
-        fluidRow(box(collapsible = T, height = "500px", width = 12, solidHeader = TRUE, status = "primary", title = ("Clinical Variable Types"), verbatimTextOutput("DataTypes"),
+        fluidRow(box(collapsible = T, height = "500px", width = 12, solidHeader = TRUE, status = "primary", title = ("Clinical Variable Types"), verbatimTextOutput(ns("DataTypes")),
                      sidebar = boxSidebar(id= "Tab3_Convert_Type_Sidebar", width = 25, background = "#599740",  icon = shiny::icon("rectangle-list"),
-                                          h4(strong("Convert to Numeric")), selectInput(inputId = "Tab3_Variables_to_Numeric", label = "Select Variables:",  choices = "", multiple = TRUE,  width = "97%"),
-                                          h4(strong("Convert to Factor")), selectInput(inputId = "Tab3_Variables_to_Factor", label = "Select Variables:",  choices = "", multiple = TRUE,  width = "97%"))),
-                 box(collapsible = T, style = "height:300px; overflow-y: scroll;overflow-x: hidden", solidHeader = TRUE, width = 12, status = "primary", title = ("Clinical Variable Levels"), withSpinner(verbatimTextOutput("DataLevels"), proxy.height = "280px")))
+                                          h4(strong("Convert to Numeric")), selectInput(inputId = ns("Tab3_Variables_to_Numeric"), label = "Select Variables:",  choices = "", multiple = TRUE,  width = "97%"),
+                                          h4(strong("Convert to Factor")), selectInput(inputId = ns("Tab3_Variables_to_Factor"), label = "Select Variables:",  choices = "", multiple = TRUE,  width = "97%"))),
+                 box(collapsible = T, style = "height:300px; overflow-y: scroll;overflow-x: hidden", solidHeader = TRUE, width = 12, status = "primary", title = ("Clinical Variable Levels"), withSpinner(verbatimTextOutput(ns("DataLevels")), proxy.height = "280px")))
 }
 
 Tab3_Subset_UI <- function(id) {
     ns <- NS(id)
     # 2) Subset Data (Can do based on 3 factor variables)
-    fluidRow(box(collapsible = T, title =  "Filter and Preview Clinical Data", height = "500px", solidHeader = T, status = "primary", width = 12, withSpinner(DT::dataTableOutput("TableRecode1"), proxy.height = "460px"), # Make sure survival recoding has been implemented
+    fluidRow(box(collapsible = T, title =  "Filter and Preview Clinical Data", height = "500px", solidHeader = T, status = "primary", width = 12, withSpinner(DT::dataTableOutput(ns("TableRecode1")), proxy.height = "460px"), # Make sure survival recoding has been implemented
         sidebar = boxSidebar(id="Tab3_Subset_Sidebar", width = 25,  background = "#599740",  icon = shiny::icon("rectangle-list"), h4(strong("Options")),
-                             selectInput("Tab3_Subset_Variable_1", "1) Filter Based on Variable:", choices = "PATIENT_ID"), selectInput("Tab3_Subset_Variable_Levels_1", label = "Choose Variable Level:", choices = "None Selected", selected = "None Selected", multiple = TRUE),
-                             selectInput("Tab3_Subset_Variable_2", "2) Filter Based on Variable:", choices = "PATIENT_ID"), selectInput("Tab3_Subset_Variable_Levels_2", label = "Choose Variable Level:", choices = "None Selected", selected = "None Selected", multiple = TRUE),
-                             selectInput("Tab3_Subset_Variable_3", "3) Filter Based on Variable:", choices = "PATIENT_ID"), selectInput("Tab3_Subset_Variable_Levels_3", label = "Choose Variable Level:", choices = "None Selected", selected = "None Selected", multiple = TRUE))),
-    box(collapsible = T, solidHeader = TRUE, height = "300px", title = "Check Selected Variable Levels", width = 12, status = "primary", style ="height:300px; overflow-y: scroll;", withSpinner(verbatimTextOutput("TableLevels"), proxy.height = "180px")))
+                             selectInput(ns("Tab3_Subset_Variable_1"), "1) Filter Based on Variable:", choices = "PATIENT_ID"), selectInput(ns("Tab3_Subset_Variable_Levels_1"), label = "Choose Variable Level:", choices = "None Selected", selected = "None Selected", multiple = TRUE),
+                             selectInput(ns("Tab3_Subset_Variable_2"), "2) Filter Based on Variable:", choices = "PATIENT_ID"), selectInput(ns("Tab3_Subset_Variable_Levels_2"), label = "Choose Variable Level:", choices = "None Selected", selected = "None Selected", multiple = TRUE),
+                             selectInput(ns("Tab3_Subset_Variable_3"), "3) Filter Based on Variable:", choices = "PATIENT_ID"), selectInput(ns("Tab3_Subset_Variable_Levels_3"), label = "Choose Variable Level:", choices = "None Selected", selected = "None Selected", multiple = TRUE))),
+    box(collapsible = T, solidHeader = TRUE, height = "300px", title = "Check Selected Variable Levels", width = 12, status = "primary", style ="height:300px; overflow-y: scroll;", withSpinner(verbatimTextOutput(ns("TableLevels")), proxy.height = "180px")))
 
 }
 
