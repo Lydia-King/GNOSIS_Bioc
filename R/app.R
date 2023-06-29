@@ -145,10 +145,7 @@ GNOSIS <- function(...) {
     shinyApp(ui, server, ...)
 }
 
-
-#GNOSIS::GNOSIS()
-
-#GNOSIS::GNOSIS()
+GNOSIS::GNOSIS()
 
 #library(tidyverse)
 #library(cBioPortalData)

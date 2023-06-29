@@ -120,7 +120,222 @@ Tab4_Hist_Server <- function(id, datalist, data) {
                 scale_fill_discrete(..(input$Tab4_Faceted_Histogram_Legend_Title)) + guides(color = FALSE) }) }})
 
 
-    return(list(histogram = CNAHistogram, facet_histogram = long_fileHist))
+    output$CNAHist = metaRender(renderPlot, { ..(CNAHistogram()) })
+
+
+    output$Tab4_Download_Histogram_PNG <- downloadHandler(filename = function(){paste("Histogram",'.png',sep='')}, content = function(file){
+        png(file, width = input$Tab4_Histogram_Width, height = input$Tab4_Histogram_Height, units = "in", res = 1200)
+        print(CNAHistogram())
+        dev.off()})
+
+    output$Tab4_Download_Histogram_SVG <- downloadHandler(filename = function(){paste("Histogram",'.svg',sep='')}, content = function(file){
+        svg(file, width = input$Tab4_Histogram_Width, height = input$Tab4_Histogram_Height)
+        print(CNAHistogram())
+        dev.off()})
+
+
+    output$CNAHist1 = metaRender(renderPlot, { ..(CNAHisttab()) })
+
+    output$Tab4_Download_Faceted_Histogram_PNG <- downloadHandler(filename = function(){paste("Histogram_Facet",'.png',sep='')}, content = function(file){
+        png(file, width = input$Tab4_Faceted_Histogram_Width, height = input$Tab4_Faceted_Histogram_Height, units="in", res=1200)
+        print(CNAHisttab())
+        dev.off()})
+
+    output$Tab4_Download_Faceted_Histogram_SVG <- downloadHandler(filename = function(){paste("Histogram_Facet",'.svg',sep='')}, content = function(file){
+        svg(file, width = input$Tab4_Faceted_Histogram_Width, height = input$Tab4_Faceted_Histogram_Height)
+        print(CNAHisttab())
+        dev.off()})
+
+    # Plain Density Plot
+    CNADense <- metaReactive2({
+        if(is.null(datalist[[data]]()) | input$Tab4_Select_Plot_Variable  == "None Selected"){
+            ggplot() + theme_void()
+        } else if(input$Tab4_Select_Plot_Variable  != "None Selected" & input$Tab4_Density_Plot_Select_Fill_Variable == "None Selected"){
+            metaExpr({
+                ggplot(..(datalist[[data]]())) + geom_density(aes(x=..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], color = 'Color', fill= "Color"),  na.rm = ..(input$Tab4_Density_Plot_Display_NAs), alpha = ..(input$Tab4_Density_Plot_Alpha)) + xlab(..(input$Tab4_Density_Plot_X_Axis_Title)) + ylab(..(input$Tab4_Density_Plot_Y_Axis_Title)) + ggtitle(..(input$Tab4_Density_Plot_Title)) +
+                    theme_bw() + theme(plot.title = element_text(hjust = 0.5, size =18)) + theme(axis.title.x = element_text(hjust = 0.5, size=18)) + theme(axis.title.y = element_text(hjust = 0.5, size=18)) +
+                    theme(axis.text.x=element_text(size=15)) +  theme(axis.text.y=element_text(size=15)) + theme(legend.title = element_text(colour="black", size=15, face="bold")) + theme(strip.text = element_text(size=15)) + theme(legend.text=element_text(size=15)) +
+                    scale_color_manual(values = c("Color" = "#2ac0db")) +  scale_fill_manual(values = c("Color" = "#2ac0db")) + theme(legend.position = "none") + xlim(range(density(..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], na.rm = T)$x)) })
+        } else { metaExpr({
+            if(input$Tab4_Density_Plot_Display_NAs == FALSE){
+                Data <- completeFun(..(datalist[[data]]()), c(..(input$Tab4_Density_Plot_Select_Fill_Variable)))
+                ggplot(Data) + geom_density(aes(x=Data[,..(input$Tab4_Select_Plot_Variable)], fill = Data[,..(input$Tab4_Density_Plot_Select_Fill_Variable)], color = Data[,..(input$Tab4_Density_Plot_Select_Fill_Variable)]), alpha = ..(input$Tab4_Density_Plot_Alpha)) + xlab(..(input$Tab4_Density_Plot_X_Axis_Title)) + ylab(..(input$Tab4_Density_Plot_Y_Axis_Title)) + ggtitle(..(input$Tab4_Density_Plot_Title)) +
+                    theme_bw() + theme(plot.title = element_text(hjust = 0.5, size =18)) + theme(axis.title.x = element_text(hjust = 0.5, size=18)) + theme(axis.title.y = element_text(hjust = 0.5, size=18)) +
+                    theme(axis.text.x=element_text(size=15)) +  theme(axis.text.y=element_text(size=15)) + theme(legend.title = element_text(colour="black", size=15, face="bold")) + theme(strip.text = element_text(size=15)) + theme(legend.text=element_text(size=15)) +
+                    theme(legend.position = ..(input$Tab4_Density_Plot_Legend_Position)) + scale_fill_discrete(..(input$Tab4_Density_Plot_Legend_Title)) + scale_color_discrete(..(input$Tab4_Density_Plot_Legend_Title)) + xlim(range(density(..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], na.rm = T)$x))
+            } else {
+                ggplot(..(datalist[[data]]())) + geom_density(aes(x=..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], fill = ..(datalist[[data]]())[,..(input$Tab4_Density_Plot_Select_Fill_Variable)], color = ..(datalist[[data]]())[,..(input$Tab4_Density_Plot_Select_Fill_Variable)]), alpha = ..(input$Tab4_Density_Plot_Alpha)) + xlab(..(input$Tab4_Density_Plot_X_Axis_Title)) + ylab(..(input$Tab4_Density_Plot_Y_Axis_Title)) + ggtitle(..(input$Tab4_Density_Plot_Title)) +
+                    theme_bw() + theme(plot.title = element_text(hjust = 0.5, size =18)) + theme(axis.title.x = element_text(hjust = 0.5, size=18)) + theme(axis.title.y = element_text(hjust = 0.5, size=18)) +
+                    theme(axis.text.x=element_text(size=15)) +  theme(axis.text.y=element_text(size=15)) + theme(legend.title = element_text(colour="black", size=15, face="bold")) + theme(strip.text = element_text(size=15)) + theme(legend.text=element_text(size=15)) +
+                    theme(legend.position = ..(input$Tab4_Density_Plot_Legend_Position)) + scale_fill_discrete(..(input$Tab4_Density_Plot_Legend_Title)) + scale_color_discrete(..(input$Tab4_Density_Plot_Legend_Title)) + xlim(range(density(..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], na.rm = T)$x))
+            }}) }})
+
+    output$CNADist = metaRender(renderPlot, { ..(CNADense()) })
+
+    output$Tab4_Download_Density_Plot_PNG <- downloadHandler(filename = function(){paste("Density_Plot",'.png',sep='')}, content = function(file){
+        png(file, width = input$Tab4_Density_Plot_Width, height = input$Tab4_Density_Plot_Height, units="in", res=1200)
+        print(CNADense())
+        dev.off()})
+
+    output$Tab4_Download_Density_Plot_SVG <- downloadHandler(filename = function(){paste("Density_Plot",'.svg',sep='')}, content = function(file){
+        svg(file, width = input$Tab4_Density_Plot_Width, height = input$Tab4_Density_Plot_Height)
+        print(CNADense())
+        dev.off()})
+
+    # Segmented Density Plot (Works for half, tertiled, quartiles and quintiled data)
+    CNADist1Plot <- metaReactive2({
+        if(is.null(datalist[[data]]()) | input$Tab4_Select_Plot_Variable  == "None Selected"){
+            ggplot() + theme_void()
+        } else if(input$Tab4_Segmented_Density_Plot_Display_Legend == TRUE){
+            metaExpr({
+                colourCount = ..(input$Tab4_Segmented_Density_Plot_Number_of_Segments)
+                getPalette = colorRampPalette(brewer.pal(9, "Blues"))
+                lab <- as.character(1:..(input$Tab4_Segmented_Density_Plot_Number_of_Segments))
+
+                dt <- data.frame(x=c(1:length(..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)])), y=..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)])
+                dt <- na.omit(dt)
+                dens <- density(dt$y)
+                df <- data.frame(x=dens$x, y=dens$y)
+                probs1 = c(0:..(input$Tab4_Segmented_Density_Plot_Number_of_Segments)/..(input$Tab4_Segmented_Density_Plot_Number_of_Segments))
+                probs <- probs1[-c(1,length(probs1))]
+                quantiles <- quantile(dt$y, prob=probs)
+                df$quant <- factor(findInterval(df$x,quantiles))
+                ggplot(df, aes(x,y)) + geom_line() + geom_ribbon(aes(ymin=0, ymax=y, fill=quant)) + scale_x_continuous(breaks=quantiles) + xlab(..(input$Tab4_Segmented_Density_Plot_X_Axis_Title)) + ylab(..(input$Tab4_Segmented_Density_Plot_Y_Axis_Title)) + ggtitle(..(input$Tab4_Segmented_Density_Plot_Title)) + theme_bw() +
+                    theme(legend.position = c(0.9, 0.5)) + theme(legend.key.size = unit(0.9, "cm")) +
+                    theme(plot.title = element_text(hjust = 0.5, size =18)) + theme(axis.title.x = element_text(hjust = 0.5, size=18)) + theme(axis.title.y = element_text(hjust = 0.5, size=18)) +
+                    theme(axis.text.x=element_text(size=15)) +  theme(axis.text.y=element_text(size=15)) + theme(legend.title = element_text(colour="black", size=15, face="bold")) + theme(strip.text = element_text(size=15)) + theme(legend.text=element_text(size=15)) +
+                    scale_fill_manual(values = getPalette(colourCount), labels = lab, name=..(input$Tab4_Segmented_Density_Plot_Legend_Title))})
+        } else {
+            metaExpr({
+                colourCount = ..(input$Tab4_Segmented_Density_Plot_Number_of_Segments)
+                getPalette = colorRampPalette(brewer.pal(9, "Blues"))
+
+                dt <- data.frame(x=c(1:length(..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)])), y=..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)])
+                dt <- na.omit(dt)
+                dens <- density(dt$y)
+                df <- data.frame(x=dens$x, y=dens$y)
+                probs1 = c(0:..(input$Tab4_Segmented_Density_Plot_Number_of_Segments)/..(input$Tab4_Segmented_Density_Plot_Number_of_Segments))
+                probs <- probs1[-c(1,length(probs1))]
+                quantiles <- quantile(dt$y, prob=probs)
+                df$quant <- factor(findInterval(df$x,quantiles))
+                ggplot(df, aes(x,y)) + geom_line() + geom_ribbon(aes(ymin=0, ymax=y, fill=quant)) + scale_x_continuous(breaks=quantiles) + theme_bw() + xlab(..(input$Tab4_Segmented_Density_Plot_X_Axis_Title)) + ylab(..(input$Tab4_Segmented_Density_Plot_Y_Axis_Title)) + ggtitle(..(input$Tab4_Segmented_Density_Plot_Title)) +
+                    theme(plot.title = element_text(hjust = 0.5, size =18)) + theme(axis.title.x = element_text(hjust = 0.5, size=18)) + theme(axis.title.y = element_text(hjust = 0.5, size=18)) +
+                    theme(axis.text.x=element_text(size=15)) +  theme(axis.text.y=element_text(size=15)) + theme(legend.title = element_text(colour="black", size=15, face="bold")) + theme(strip.text = element_text(size=15)) + theme(legend.text=element_text(size=15)) +
+                    theme(legend.position = c(0.9, 0.5)) + theme(legend.key.size = unit(0.9, "cm")) + scale_fill_manual(values = getPalette(colourCount), name=..(input$Tab4_Segmented_Density_Plot_Legend_Title)) + guides(fill=FALSE)}) }})
+
+    output$CNADist1 <- metaRender(renderPlot, { ..(CNADist1Plot()) })
+
+    output$Tab4_Download_Segmented_Density_Plot_PNG <- downloadHandler(filename = function(){paste("Segmented_Density_Plot",'.png',sep='')}, content = function(file){
+        png(file, width = input$Tab4_Segmented_Density_Plot_Width, height = input$Tab4_Segmented_Density_Plot_Height, units="in", res=1200)
+        print(CNADist1Plot())
+        dev.off()})
+
+    output$Tab4_Download_Segmented_Density_Plot_SVG <- downloadHandler(filename = function(){paste("Segmented_Density_Plot",'.svg',sep='')}, content = function(file){
+        svg(file, width = input$Tab4_Segmented_Density_Plot_Width, height = input$Tab4_Segmented_Density_Plot_Height)
+        print(CNADist1Plot())
+        dev.off()})
+
+    # Facet Wrap -> Make new dataset (melt)
+    observe({vchoicesDistfacet <- c(names(datalist[[data]]()), "None Selected")
+    updateSelectizeInput(session, "Tab4_Density_Plot_Select_Facet_Variable", choices = vchoicesDistfacet, selected = "None Selected", server = TRUE)})
+
+    long_file <- metaReactive2({ if(input$Tab4_Faceted_Density_Plot_Display_NAs == FALSE){
+        metaExpr({melt(..(datalist[[data]]())[,c(..(input$Tab4_Select_Plot_Variable), ..(input$Tab4_Density_Plot_Select_Facet_Variable))]) %>% filter(!is.na(eval(parse(text = ..(input$Tab4_Density_Plot_Select_Facet_Variable)))))
+        }) } else { metaExpr({melt(..(datalist[[data]]())[,c(..(input$Tab4_Select_Plot_Variable), ..(input$Tab4_Density_Plot_Select_Facet_Variable))])})}})
+
+    CNADist2Plot <- metaReactive2({
+        if(is.null(datalist[[data]]()) | input$Tab4_Density_Plot_Select_Facet_Variable  == "None Selected"){
+            ggplot() + theme_void()
+        } else {metaExpr({
+            ggplot(..(long_file())) + geom_density(aes(x=value, color = factor(..(long_file())[,..(input$Tab4_Density_Plot_Select_Facet_Variable)]), fill = factor(..(long_file())[,..(input$Tab4_Density_Plot_Select_Facet_Variable)])), alpha = ..(input$Tab4_Faceted_Density_Plot_Alpha)) + facet_wrap(factor(..(long_file())[,..(input$Tab4_Density_Plot_Select_Facet_Variable)])~., ncol=..(input$Tab4_Faceted_Density_Plot_Number_of_Columns)) + ggtitle(..(input$Tab4_Faceted_Density_Plot_Title)) +
+                ylab(..(input$Tab4_Faceted_Density_Plot_Y_Axis_Title)) + xlab(..(input$Tab4_Faceted_Density_Plot_X_Axis_Title)) + theme_bw() +
+                theme(plot.title = element_text(hjust = 0.5, size =18)) + theme(axis.title.x = element_text(hjust = 0.5, size=18)) + theme(axis.title.y = element_text(hjust = 0.5, size=18)) +
+                theme(axis.text.x=element_text(size=15)) +  theme(axis.text.y=element_text(size=15)) + theme(legend.title = element_text(colour="black", size=15, face="bold")) + theme(strip.text = element_text(size=15)) + theme(legend.text=element_text(size=15)) +
+                scale_fill_discrete(name = ..(input$Tab4_Faceted_Density_Plot_Legend_Title)) + xlim(range(density(..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], na.rm = T)$x)) +
+                guides(color = FALSE) + theme(legend.position = ..(input$Tab4_Faceted_Density_Plot_Legend_Position))}) }})
+
+    output$CNADist2 <- metaRender(renderPlot, { ..(CNADist2Plot()) })
+
+    output$Tab4_Download_Faceted_Density_Plot_PNG <- downloadHandler(filename = function(){paste("Faceted_Density_Plot1",'.png',sep='')}, content = function(file){
+        png(file,  width = input$Tab4_Faceted_Density_Plot_Width, height = input$Tab4_Faceted_Density_Plot_Height, units="in", res=1200)
+        print(CNADist2Plot())
+        dev.off()})
+
+    output$Tab4_Download_Faceted_Density_Plot_SVG <- downloadHandler(filename = function(){paste("Faceted_Density_Plot1",'.svg',sep='')}, content = function(file){
+        svg(file,  width = input$Tab4_Faceted_Density_Plot_Width, height = input$Tab4_Faceted_Density_Plot_Height)
+        print(CNADist2Plot())
+        dev.off()})
+
+    # 3) Both
+    # Plain
+    CNABoth <- metaReactive2({
+        if(is.null(datalist[[data]]()) | input$Tab4_Select_Plot_Variable  == "None Selected"){
+            ggplot() + theme_void()
+        } else if(input$Tab4_Select_Plot_Variable  != "None Selected" & input$Tab4_Both_Plot_Select_Fill_Variable == "None Selected"){
+            metaExpr({
+                ggplot(..(datalist[[data]]())) + geom_density(aes(x=..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], color = 'Color', fill= "Color"),  na.rm = ..(input$Tab4_Both_Plot_Display_NAs), alpha = ..(input$Tab4_Both_Density_Plot_Alpha)) +
+                    geom_histogram(aes(x=..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], y = ..density.., color = "Color", fill="Color"), alpha = ..(input$Tab4_Both_Histogram_Alpha), fill="#2ac0db", position = "identity")  + xlab(..(input$Tab4_Both_Plot_X_Axis_Title)) + ylab(..(input$Tab4_Both_Plot_Y_Axis_Title)) + ggtitle(..(input$Tab4_Both_Plot_Title)) +
+                    theme_bw() + theme(plot.title = element_text(hjust = 0.5, size =18)) + theme(axis.title.x = element_text(hjust = 0.5, size=18)) + theme(axis.title.y = element_text(hjust = 0.5, size=18)) +
+                    theme(axis.text.x=element_text(size=15)) +  theme(axis.text.y=element_text(size=15)) + theme(legend.title = element_text(colour="black", size=15, face="bold")) + theme(strip.text = element_text(size=15)) + theme(legend.text=element_text(size=15))  +
+                    xlim(range(density(..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], na.rm = T)$x)) +
+                    scale_color_manual(values = c("Color" = "#2ac0db")) +  scale_fill_manual(values = c("Color" = "#2ac0db")) + theme(legend.position = "none")})
+        } else {metaExpr({
+            if(input$Tab4_Both_Plot_Display_NAs == FALSE){
+                Data <- completeFun(..(datalist[[data]]()), c(..(input$Tab4_Both_Plot_Select_Fill_Variable)))
+                ggplot(Data) + geom_density(aes(x=Data[,..(input$Tab4_Select_Plot_Variable)], fill = Data[,..(input$Tab4_Both_Plot_Select_Fill_Variable)], color =  Data[,..(input$Tab4_Both_Plot_Select_Fill_Variable)]), alpha = ..(input$Tab4_Both_Density_Plot_Alpha)) +
+                    geom_histogram(aes(x=Data[,..(input$Tab4_Select_Plot_Variable)], y = ..density.., fill = Data[,..(input$Tab4_Both_Plot_Select_Fill_Variable)], color =  Data[,..(input$Tab4_Both_Plot_Select_Fill_Variable)]), alpha = ..(input$Tab4_Both_Histogram_Alpha), position = "identity") + xlab(..(input$Tab4_Both_Plot_X_Axis_Title)) + ylab(..(input$Tab4_Both_Plot_Y_Axis_Title)) + ggtitle(..(input$Tab4_Both_Plot_Title)) +
+                    xlim(range(density(..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], na.rm = T)$x)) + theme_bw() + theme(plot.title = element_text(hjust = 0.5, size =18)) + theme(axis.title.x = element_text(hjust = 0.5, size=18)) + theme(axis.title.y = element_text(hjust = 0.5, size=18)) +
+                    theme(axis.text.x=element_text(size=15)) +  theme(axis.text.y=element_text(size=15)) + theme(legend.title = element_text(colour="black", size=15, face="bold")) + theme(strip.text = element_text(size=15)) + theme(legend.text=element_text(size=15))  +
+                    theme(legend.position = ..(input$Tab4_Both_Plot_Legend_Position)) + scale_fill_discrete(..(input$Tab4_Both_Plot_Legend_Title)) + scale_color_discrete(..(input$Tab4_Both_Plot_Legend_Title))
+            } else {ggplot(..(datalist[[data]]())) + geom_density(aes(x=..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], fill = ..(datalist[[data]]())[,..(input$Tab4_Both_Plot_Select_Fill_Variable)], color = ..(datalist[[data]]())[,..(input$Tab4_Both_Plot_Select_Fill_Variable)]), alpha = ..(input$Tab4_Both_Density_Plot_Alpha)) +
+                    geom_histogram(aes(x=..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], y = ..density.., fill = ..(datalist[[data]]())[,..(input$Tab4_Both_Plot_Select_Fill_Variable)],  color = ..(datalist[[data]]())[,..(input$Tab4_Both_Plot_Select_Fill_Variable)]), alpha = ..(input$Tab4_Both_Histogram_Alpha), position = "identity") + xlab(..(input$Tab4_Both_Plot_X_Axis_Title)) + ylab(..(input$Tab4_Both_Plot_Y_Axis_Title)) + ggtitle(..(input$Tab4_Both_Plot_Title)) +
+                    theme_bw() + theme(plot.title = element_text(hjust = 0.5, size =18)) + theme(axis.title.x = element_text(hjust = 0.5, size=18)) + theme(axis.title.y = element_text(hjust = 0.5, size=18)) +
+                    theme(axis.text.x=element_text(size=15)) +  theme(axis.text.y=element_text(size=15)) + theme(legend.title = element_text(colour="black", size=15, face="bold")) + theme(strip.text = element_text(size=15)) + theme(legend.text=element_text(size=15))  + xlim(range(density(..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], na.rm = T)$x)) +
+                    theme(legend.position = ..(input$Tab4_Both_Plot_Legend_Position)) + scale_fill_discrete(..(input$Tab4_Both_Plot_Legend_Title)) + scale_color_discrete(..(input$Tab4_Both_Plot_Legend_Title))
+            }}) } })
+
+    output$CNABoth <- metaRender(renderPlot, { ..(CNABoth()) })
+
+    output$Tab4_Download_Both_Plot_PNG <- downloadHandler(filename = function(){paste("Density_Hist_Plot",'.png',sep='')}, content = function(file){
+        png(file, width = input$Tab4_Both_Plot_Width, height = input$Tab4_Both_Plot_Height, units="in", res=1200)
+        print(CNABoth())
+        dev.off()})
+
+    output$Tab4_Download_Both_Plot_SVG <- downloadHandler(filename = function(){paste("Density_Hist_Plot",'.svg',sep='')}, content = function(file){
+        svg(file, width = input$Tab4_Both_Plot_Width, height = input$Tab4_Both_Plot_Height)
+        print(CNABoth())
+        dev.off()})
+
+    # Facet Wrap
+    long_file1 <-  metaReactive2({ if(input$Tab4_Faceted_Both_Plot_Display_NAs == FALSE){
+        metaExpr({melt(..(datalist[[data]]())[,c(..(input$Tab4_Select_Plot_Variable), ..(input$Tab4_Both_Plot_Select_Facet_Variable))]) %>% filter(!is.na(eval(parse(text = ..(input$Tab4_Both_Plot_Select_Facet_Variable)))))
+        })} else { metaExpr({melt(..(datalist[[data]]())[,c(..(input$Tab4_Select_Plot_Variable), ..(input$Tab4_Both_Plot_Select_Facet_Variable))])
+        }) }})
+
+    CNADist2Plot1 <- metaReactive2({
+        if(is.null(datalist[[data]]()) | input$Tab4_Both_Plot_Select_Facet_Variable  == "None Selected"){
+            ggplot() + theme_void()
+        } else {metaExpr ({
+            ggplot(..(long_file1()), aes(x=value)) + geom_histogram(aes(x=value, y=..density.., color = factor(..(long_file1())[,..(input$Tab4_Both_Plot_Select_Facet_Variable)]),  fill=factor(..(long_file1())[,..(input$Tab4_Both_Plot_Select_Facet_Variable)])), position = "identity", alpha = ..(input$Tab4_Faceted_Both_Histogram_Plot_Alpha)) +
+                geom_density(aes(x=value, color = factor(..(long_file1())[,..(input$Tab4_Both_Plot_Select_Facet_Variable)]), fill=factor(..(long_file1())[,..(input$Tab4_Both_Plot_Select_Facet_Variable)])), show.legend = ..(input$Tab4_Faceted_Both_Plot_Legend_Position), alpha= ..(input$Tab4_Faceted_Both_Density_Plot_Alpha)) + facet_wrap(factor(..(long_file1())[,..(input$Tab4_Both_Plot_Select_Facet_Variable)])~., ncol=..(input$Tab4_Faceted_Both_Plot_Number_of_Columns)) + ggtitle(..(input$Tab4_Faceted_Both_Plot_Title)) +
+                ylab(..(input$Tab4_Faceted_Both_Plot_Y_Axis_Title)) + xlab(..(input$Tab4_Faceted_Both_Plot_X_Axis_Title)) + theme_bw() +
+                theme(plot.title = element_text(hjust = 0.5, size =18)) + theme(axis.title.x = element_text(hjust = 0.5, size=18)) + theme(axis.title.y = element_text(hjust = 0.5, size=18)) +
+                theme(axis.text.x=element_text(size=15)) + theme(axis.text.y=element_text(size=15)) + theme(legend.title = element_text(colour="black", size=15, face="bold")) + theme(strip.text = element_text(size=15)) + theme(legend.text=element_text(size=15)) +
+                scale_fill_discrete(name = ..(input$Tab4_Faceted_Both_Plot_Legend_Title)) + xlim(range(density(..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], na.rm = T)$x))  +
+                guides(color = FALSE) + theme(legend.position = ..(input$Tab4_Faceted_Both_Plot_Legend_Position))}) }})
+
+    output$CNABoth1 <- metaRender(renderPlot, { ..(CNADist2Plot1()) })
+
+    # Download
+    output$Tab4_Download_Faceted_Both_Plot_PNG <- downloadHandler(filename = function(){paste("Faceted_Density_Plot2",'.png',sep='')}, content = function(file){
+        png(file, width = input$Tab4_Faceted_Both_Plot_Width, height = input$Tab4_Faceted_Both_Plot_Height, units="in", res = 1200)
+        print(CNADist2Plot1())
+        dev.off()})
+
+    output$Tab4_Download_Faceted_Both_Plot_SVG <- downloadHandler(filename = function(){paste("Faceted_Density_Plot2",'.svg',sep='')}, content = function(file){
+        svg(file, width = input$Tab4_Faceted_Both_Plot_Width, height = input$Tab4_Faceted_Both_Plot_Height)
+        print(CNADist2Plot1())
+        dev.off()})
     })
 }
 
@@ -148,222 +363,7 @@ Tab4_Download_Server <- function(id, datalist, plot) {
 }
 
 
-#
 
-#
-#output$CNAHist = metaRender(renderPlot, { ..(CNAHistogram()) })
-#
-#output$Tab4_Download_Histogram_PNG <- downloadHandler(filename = function(){paste("Histogram",'.png',sep='')}, content = function(file){
-#    png(file, width = input$Tab4_Histogram_Width, height = input$Tab4_Histogram_Height, units = "in", res = 1200)
-#    print(CNAHistogram())
-#    dev.off()})
-#
-#output$Tab4_Download_Histogram_SVG <- downloadHandler(filename = function(){paste("Histogram",'.svg',sep='')}, content = function(file){
-#    svg(file, width = input$Tab4_Histogram_Width, height = input$Tab4_Histogram_Height)
-#    print(CNAHistogram())
-#    dev.off()})
 
-#
-#output$CNAHist1 = metaRender(renderPlot, { ..(CNAHisttab()) })
-#
-#output$Tab4_Download_Faceted_Histogram_PNG <- downloadHandler(filename = function(){paste("Histogram_Facet",'.png',sep='')}, content = function(file){
-#    png(file, width = input$Tab4_Faceted_Histogram_Width, height = input$Tab4_Faceted_Histogram_Height, units="in", res=1200)
-#    print(CNAHisttab())
-#    dev.off()})
-#
-#output$Tab4_Download_Faceted_Histogram_SVG <- downloadHandler(filename = function(){paste("Histogram_Facet",'.svg',sep='')}, content = function(file){
-#    svg(file, width = input$Tab4_Faceted_Histogram_Width, height = input$Tab4_Faceted_Histogram_Height)
-#    print(CNAHisttab())
-#    dev.off()})
-#
-## Plain Density Plot
-#CNADense <- metaReactive2({
-#    if(is.null(datalist[[data]]()) | input$Tab4_Select_Plot_Variable  == "None Selected"){
-#        ggplot() + theme_void()
-#    } else if(input$Tab4_Select_Plot_Variable  != "None Selected" & input$Tab4_Density_Plot_Select_Fill_Variable == "None Selected"){
-#        metaExpr({
-#            ggplot(..(datalist[[data]]())) + geom_density(aes(x=..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], color = 'Color', fill= "Color"),  na.rm = ..(input$Tab4_Density_Plot_Display_NAs), alpha = ..(input$Tab4_Density_Plot_Alpha)) + xlab(..(input$Tab4_Density_Plot_X_Axis_Title)) + ylab(..(input$Tab4_Density_Plot_Y_Axis_Title)) + ggtitle(..(input$Tab4_Density_Plot_Title)) +
-#                theme_bw() + theme(plot.title = element_text(hjust = 0.5, size =18)) + theme(axis.title.x = element_text(hjust = 0.5, size=18)) + theme(axis.title.y = element_text(hjust = 0.5, size=18)) +
-#                theme(axis.text.x=element_text(size=15)) +  theme(axis.text.y=element_text(size=15)) + theme(legend.title = element_text(colour="black", size=15, face="bold")) + theme(strip.text = element_text(size=15)) + theme(legend.text=element_text(size=15)) +
-#                scale_color_manual(values = c("Color" = "#2ac0db")) +  scale_fill_manual(values = c("Color" = "#2ac0db")) + theme(legend.position = "none") + xlim(range(density(..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], na.rm = T)$x)) })
-#    } else { metaExpr({
-#        if(input$Tab4_Density_Plot_Display_NAs == FALSE){
-#            Data <- completeFun(..(datalist[[data]]()), c(..(input$Tab4_Density_Plot_Select_Fill_Variable)))
-#            ggplot(Data) + geom_density(aes(x=Data[,..(input$Tab4_Select_Plot_Variable)], fill = Data[,..(input$Tab4_Density_Plot_Select_Fill_Variable)], color = Data[,..(input$Tab4_Density_Plot_Select_Fill_Variable)]), alpha = ..(input$Tab4_Density_Plot_Alpha)) + xlab(..(input$Tab4_Density_Plot_X_Axis_Title)) + ylab(..(input$Tab4_Density_Plot_Y_Axis_Title)) + ggtitle(..(input$Tab4_Density_Plot_Title)) +
-#                theme_bw() + theme(plot.title = element_text(hjust = 0.5, size =18)) + theme(axis.title.x = element_text(hjust = 0.5, size=18)) + theme(axis.title.y = element_text(hjust = 0.5, size=18)) +
-#                theme(axis.text.x=element_text(size=15)) +  theme(axis.text.y=element_text(size=15)) + theme(legend.title = element_text(colour="black", size=15, face="bold")) + theme(strip.text = element_text(size=15)) + theme(legend.text=element_text(size=15)) +
-#                theme(legend.position = ..(input$Tab4_Density_Plot_Legend_Position)) + scale_fill_discrete(..(input$Tab4_Density_Plot_Legend_Title)) + scale_color_discrete(..(input$Tab4_Density_Plot_Legend_Title)) + xlim(range(density(..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], na.rm = T)$x))
-#        } else {
-#            ggplot(..(datalist[[data]]())) + geom_density(aes(x=..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], fill = ..(datalist[[data]]())[,..(input$Tab4_Density_Plot_Select_Fill_Variable)], color = ..(datalist[[data]]())[,..(input$Tab4_Density_Plot_Select_Fill_Variable)]), alpha = ..(input$Tab4_Density_Plot_Alpha)) + xlab(..(input$Tab4_Density_Plot_X_Axis_Title)) + ylab(..(input$Tab4_Density_Plot_Y_Axis_Title)) + ggtitle(..(input$Tab4_Density_Plot_Title)) +
-#                theme_bw() + theme(plot.title = element_text(hjust = 0.5, size =18)) + theme(axis.title.x = element_text(hjust = 0.5, size=18)) + theme(axis.title.y = element_text(hjust = 0.5, size=18)) +
-#                theme(axis.text.x=element_text(size=15)) +  theme(axis.text.y=element_text(size=15)) + theme(legend.title = element_text(colour="black", size=15, face="bold")) + theme(strip.text = element_text(size=15)) + theme(legend.text=element_text(size=15)) +
-#                theme(legend.position = ..(input$Tab4_Density_Plot_Legend_Position)) + scale_fill_discrete(..(input$Tab4_Density_Plot_Legend_Title)) + scale_color_discrete(..(input$Tab4_Density_Plot_Legend_Title)) + xlim(range(density(..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], na.rm = T)$x))
-#        }}) }})
-#
-#output$CNADist = metaRender(renderPlot, { ..(CNADense()) })
-#
-#output$Tab4_Download_Density_Plot_PNG <- downloadHandler(filename = function(){paste("Density_Plot",'.png',sep='')}, content = function(file){
-#    png(file, width = input$Tab4_Density_Plot_Width, height = input$Tab4_Density_Plot_Height, units="in", res=1200)
-#    print(CNADense())
-#    dev.off()})
-#
-#output$Tab4_Download_Density_Plot_SVG <- downloadHandler(filename = function(){paste("Density_Plot",'.svg',sep='')}, content = function(file){
-#    svg(file, width = input$Tab4_Density_Plot_Width, height = input$Tab4_Density_Plot_Height)
-#    print(CNADense())
-#    dev.off()})
-#
-## Segmented Density Plot (Works for half, tertiled, quartiles and quintiled data)
-#CNADist1Plot <- metaReactive2({
-#    if(is.null(datalist[[data]]()) | input$Tab4_Select_Plot_Variable  == "None Selected"){
-#        ggplot() + theme_void()
-#    } else if(input$Tab4_Segmented_Density_Plot_Display_Legend == TRUE){
-#        metaExpr({
-#            colourCount = ..(input$Tab4_Segmented_Density_Plot_Number_of_Segments)
-#            getPalette = colorRampPalette(brewer.pal(9, "Blues"))
-#            lab <- as.character(1:..(input$Tab4_Segmented_Density_Plot_Number_of_Segments))
-#
-#            dt <- data.frame(x=c(1:length(..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)])), y=..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)])
-#            dt <- na.omit(dt)
-#            dens <- density(dt$y)
-#            df <- data.frame(x=dens$x, y=dens$y)
-#            probs1 = c(0:..(input$Tab4_Segmented_Density_Plot_Number_of_Segments)/..(input$Tab4_Segmented_Density_Plot_Number_of_Segments))
-#            probs <- probs1[-c(1,length(probs1))]
-#            quantiles <- quantile(dt$y, prob=probs)
-#            df$quant <- factor(findInterval(df$x,quantiles))
-#            ggplot(df, aes(x,y)) + geom_line() + geom_ribbon(aes(ymin=0, ymax=y, fill=quant)) + scale_x_continuous(breaks=quantiles) + xlab(..(input$Tab4_Segmented_Density_Plot_X_Axis_Title)) + ylab(..(input$Tab4_Segmented_Density_Plot_Y_Axis_Title)) + ggtitle(..(input$Tab4_Segmented_Density_Plot_Title)) + theme_bw() +
-#                theme(legend.position = c(0.9, 0.5)) + theme(legend.key.size = unit(0.9, "cm")) +
-#                theme(plot.title = element_text(hjust = 0.5, size =18)) + theme(axis.title.x = element_text(hjust = 0.5, size=18)) + theme(axis.title.y = element_text(hjust = 0.5, size=18)) +
-#                theme(axis.text.x=element_text(size=15)) +  theme(axis.text.y=element_text(size=15)) + theme(legend.title = element_text(colour="black", size=15, face="bold")) + theme(strip.text = element_text(size=15)) + theme(legend.text=element_text(size=15)) +
-#                scale_fill_manual(values = getPalette(colourCount), labels = lab, name=..(input$Tab4_Segmented_Density_Plot_Legend_Title))})
-#    } else {
-#        metaExpr({
-#            colourCount = ..(input$Tab4_Segmented_Density_Plot_Number_of_Segments)
-#            getPalette = colorRampPalette(brewer.pal(9, "Blues"))
-#
-#            dt <- data.frame(x=c(1:length(..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)])), y=..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)])
-#            dt <- na.omit(dt)
-#            dens <- density(dt$y)
-#            df <- data.frame(x=dens$x, y=dens$y)
-#            probs1 = c(0:..(input$Tab4_Segmented_Density_Plot_Number_of_Segments)/..(input$Tab4_Segmented_Density_Plot_Number_of_Segments))
-#            probs <- probs1[-c(1,length(probs1))]
-#            quantiles <- quantile(dt$y, prob=probs)
-#            df$quant <- factor(findInterval(df$x,quantiles))
-#            ggplot(df, aes(x,y)) + geom_line() + geom_ribbon(aes(ymin=0, ymax=y, fill=quant)) + scale_x_continuous(breaks=quantiles) + theme_bw() + xlab(..(input$Tab4_Segmented_Density_Plot_X_Axis_Title)) + ylab(..(input$Tab4_Segmented_Density_Plot_Y_Axis_Title)) + ggtitle(..(input$Tab4_Segmented_Density_Plot_Title)) +
-#                theme(plot.title = element_text(hjust = 0.5, size =18)) + theme(axis.title.x = element_text(hjust = 0.5, size=18)) + theme(axis.title.y = element_text(hjust = 0.5, size=18)) +
-#                theme(axis.text.x=element_text(size=15)) +  theme(axis.text.y=element_text(size=15)) + theme(legend.title = element_text(colour="black", size=15, face="bold")) + theme(strip.text = element_text(size=15)) + theme(legend.text=element_text(size=15)) +
-#                theme(legend.position = c(0.9, 0.5)) + theme(legend.key.size = unit(0.9, "cm")) + scale_fill_manual(values = getPalette(colourCount), name=..(input$Tab4_Segmented_Density_Plot_Legend_Title)) + guides(fill=FALSE)}) }})
-#
-#output$CNADist1 <- metaRender(renderPlot, { ..(CNADist1Plot()) })
-#
-#output$Tab4_Download_Segmented_Density_Plot_PNG <- downloadHandler(filename = function(){paste("Segmented_Density_Plot",'.png',sep='')}, content = function(file){
-#    png(file, width = input$Tab4_Segmented_Density_Plot_Width, height = input$Tab4_Segmented_Density_Plot_Height, units="in", res=1200)
-#    print(CNADist1Plot())
-#    dev.off()})
-#
-#output$Tab4_Download_Segmented_Density_Plot_SVG <- downloadHandler(filename = function(){paste("Segmented_Density_Plot",'.svg',sep='')}, content = function(file){
-#    svg(file, width = input$Tab4_Segmented_Density_Plot_Width, height = input$Tab4_Segmented_Density_Plot_Height)
-#    print(CNADist1Plot())
-#    dev.off()})
-#
-## Facet Wrap -> Make new dataset (melt)
-#observe({vchoicesDistfacet <- c(names(datalist[[data]]()), "None Selected")
-#updateSelectizeInput(session, "Tab4_Density_Plot_Select_Facet_Variable", choices = vchoicesDistfacet, selected = "None Selected", server = TRUE)})
-#
-#long_file <- metaReactive2({ if(input$Tab4_Faceted_Density_Plot_Display_NAs == FALSE){
-#    metaExpr({melt(..(datalist[[data]]())[,c(..(input$Tab4_Select_Plot_Variable), ..(input$Tab4_Density_Plot_Select_Facet_Variable))]) %>% filter(!is.na(eval(parse(text = ..(input$Tab4_Density_Plot_Select_Facet_Variable)))))
-#    }) } else { metaExpr({melt(..(datalist[[data]]())[,c(..(input$Tab4_Select_Plot_Variable), ..(input$Tab4_Density_Plot_Select_Facet_Variable))])})}})
-#
-#CNADist2Plot <- metaReactive2({
-#    if(is.null(datalist[[data]]()) | input$Tab4_Density_Plot_Select_Facet_Variable  == "None Selected"){
-#        ggplot() + theme_void()
-#    } else {metaExpr({
-#        ggplot(..(long_file())) + geom_density(aes(x=value, color = factor(..(long_file())[,..(input$Tab4_Density_Plot_Select_Facet_Variable)]), fill = factor(..(long_file())[,..(input$Tab4_Density_Plot_Select_Facet_Variable)])), alpha = ..(input$Tab4_Faceted_Density_Plot_Alpha)) + facet_wrap(factor(..(long_file())[,..(input$Tab4_Density_Plot_Select_Facet_Variable)])~., ncol=..(input$Tab4_Faceted_Density_Plot_Number_of_Columns)) + ggtitle(..(input$Tab4_Faceted_Density_Plot_Title)) +
-#            ylab(..(input$Tab4_Faceted_Density_Plot_Y_Axis_Title)) + xlab(..(input$Tab4_Faceted_Density_Plot_X_Axis_Title)) + theme_bw() +
-#            theme(plot.title = element_text(hjust = 0.5, size =18)) + theme(axis.title.x = element_text(hjust = 0.5, size=18)) + theme(axis.title.y = element_text(hjust = 0.5, size=18)) +
-#            theme(axis.text.x=element_text(size=15)) +  theme(axis.text.y=element_text(size=15)) + theme(legend.title = element_text(colour="black", size=15, face="bold")) + theme(strip.text = element_text(size=15)) + theme(legend.text=element_text(size=15)) +
-#            scale_fill_discrete(name = ..(input$Tab4_Faceted_Density_Plot_Legend_Title)) + xlim(range(density(..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], na.rm = T)$x)) +
-#            guides(color = FALSE) + theme(legend.position = ..(input$Tab4_Faceted_Density_Plot_Legend_Position))}) }})
-#
-#output$CNADist2 <- metaRender(renderPlot, { ..(CNADist2Plot()) })
-#
-#output$Tab4_Download_Faceted_Density_Plot_PNG <- downloadHandler(filename = function(){paste("Faceted_Density_Plot1",'.png',sep='')}, content = function(file){
-#    png(file,  width = input$Tab4_Faceted_Density_Plot_Width, height = input$Tab4_Faceted_Density_Plot_Height, units="in", res=1200)
-#    print(CNADist2Plot())
-#    dev.off()})
-#
-#output$Tab4_Download_Faceted_Density_Plot_SVG <- downloadHandler(filename = function(){paste("Faceted_Density_Plot1",'.svg',sep='')}, content = function(file){
-#    svg(file,  width = input$Tab4_Faceted_Density_Plot_Width, height = input$Tab4_Faceted_Density_Plot_Height)
-#    print(CNADist2Plot())
-#    dev.off()})
-#
-## 3) Both
-## Plain
-#CNABoth <- metaReactive2({
-#    if(is.null(datalist[[data]]()) | input$Tab4_Select_Plot_Variable  == "None Selected"){
-#        ggplot() + theme_void()
-#    } else if(input$Tab4_Select_Plot_Variable  != "None Selected" & input$Tab4_Both_Plot_Select_Fill_Variable == "None Selected"){
-#        metaExpr({
-#            ggplot(..(datalist[[data]]())) + geom_density(aes(x=..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], color = 'Color', fill= "Color"),  na.rm = ..(input$Tab4_Both_Plot_Display_NAs), alpha = ..(input$Tab4_Both_Density_Plot_Alpha)) +
-#                geom_histogram(aes(x=..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], y = ..density.., color = "Color", fill="Color"), alpha = ..(input$Tab4_Both_Histogram_Alpha), fill="#2ac0db", position = "identity")  + xlab(..(input$Tab4_Both_Plot_X_Axis_Title)) + ylab(..(input$Tab4_Both_Plot_Y_Axis_Title)) + ggtitle(..(input$Tab4_Both_Plot_Title)) +
-#                theme_bw() + theme(plot.title = element_text(hjust = 0.5, size =18)) + theme(axis.title.x = element_text(hjust = 0.5, size=18)) + theme(axis.title.y = element_text(hjust = 0.5, size=18)) +
-#                theme(axis.text.x=element_text(size=15)) +  theme(axis.text.y=element_text(size=15)) + theme(legend.title = element_text(colour="black", size=15, face="bold")) + theme(strip.text = element_text(size=15)) + theme(legend.text=element_text(size=15))  +
-#                xlim(range(density(..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], na.rm = T)$x)) +
-#                scale_color_manual(values = c("Color" = "#2ac0db")) +  scale_fill_manual(values = c("Color" = "#2ac0db")) + theme(legend.position = "none")})
-#    } else {metaExpr({
-#        if(input$Tab4_Both_Plot_Display_NAs == FALSE){
-#            Data <- completeFun(..(datalist[[data]]()), c(..(input$Tab4_Both_Plot_Select_Fill_Variable)))
-#            ggplot(Data) + geom_density(aes(x=Data[,..(input$Tab4_Select_Plot_Variable)], fill = Data[,..(input$Tab4_Both_Plot_Select_Fill_Variable)], color =  Data[,..(input$Tab4_Both_Plot_Select_Fill_Variable)]), alpha = ..(input$Tab4_Both_Density_Plot_Alpha)) +
-#                geom_histogram(aes(x=Data[,..(input$Tab4_Select_Plot_Variable)], y = ..density.., fill = Data[,..(input$Tab4_Both_Plot_Select_Fill_Variable)], color =  Data[,..(input$Tab4_Both_Plot_Select_Fill_Variable)]), alpha = ..(input$Tab4_Both_Histogram_Alpha), position = "identity") + xlab(..(input$Tab4_Both_Plot_X_Axis_Title)) + ylab(..(input$Tab4_Both_Plot_Y_Axis_Title)) + ggtitle(..(input$Tab4_Both_Plot_Title)) +
-#                xlim(range(density(..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], na.rm = T)$x)) + theme_bw() + theme(plot.title = element_text(hjust = 0.5, size =18)) + theme(axis.title.x = element_text(hjust = 0.5, size=18)) + theme(axis.title.y = element_text(hjust = 0.5, size=18)) +
-#                theme(axis.text.x=element_text(size=15)) +  theme(axis.text.y=element_text(size=15)) + theme(legend.title = element_text(colour="black", size=15, face="bold")) + theme(strip.text = element_text(size=15)) + theme(legend.text=element_text(size=15))  +
-#                theme(legend.position = ..(input$Tab4_Both_Plot_Legend_Position)) + scale_fill_discrete(..(input$Tab4_Both_Plot_Legend_Title)) + scale_color_discrete(..(input$Tab4_Both_Plot_Legend_Title))
-#        } else {ggplot(..(datalist[[data]]())) + geom_density(aes(x=..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], fill = ..(datalist[[data]]())[,..(input$Tab4_Both_Plot_Select_Fill_Variable)], color = ..(datalist[[data]]())[,..(input$Tab4_Both_Plot_Select_Fill_Variable)]), alpha = ..(input$Tab4_Both_Density_Plot_Alpha)) +
-#                geom_histogram(aes(x=..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], y = ..density.., fill = ..(datalist[[data]]())[,..(input$Tab4_Both_Plot_Select_Fill_Variable)],  color = ..(datalist[[data]]())[,..(input$Tab4_Both_Plot_Select_Fill_Variable)]), alpha = ..(input$Tab4_Both_Histogram_Alpha), position = "identity") + xlab(..(input$Tab4_Both_Plot_X_Axis_Title)) + ylab(..(input$Tab4_Both_Plot_Y_Axis_Title)) + ggtitle(..(input$Tab4_Both_Plot_Title)) +
-#                theme_bw() + theme(plot.title = element_text(hjust = 0.5, size =18)) + theme(axis.title.x = element_text(hjust = 0.5, size=18)) + theme(axis.title.y = element_text(hjust = 0.5, size=18)) +
-#                theme(axis.text.x=element_text(size=15)) +  theme(axis.text.y=element_text(size=15)) + theme(legend.title = element_text(colour="black", size=15, face="bold")) + theme(strip.text = element_text(size=15)) + theme(legend.text=element_text(size=15))  + xlim(range(density(..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], na.rm = T)$x)) +
-#                theme(legend.position = ..(input$Tab4_Both_Plot_Legend_Position)) + scale_fill_discrete(..(input$Tab4_Both_Plot_Legend_Title)) + scale_color_discrete(..(input$Tab4_Both_Plot_Legend_Title))
-#        }}) } })
-#
-#output$CNABoth <- metaRender(renderPlot, { ..(CNABoth()) })
-#
-#output$Tab4_Download_Both_Plot_PNG <- downloadHandler(filename = function(){paste("Density_Hist_Plot",'.png',sep='')}, content = function(file){
-#    png(file, width = input$Tab4_Both_Plot_Width, height = input$Tab4_Both_Plot_Height, units="in", res=1200)
-#    print(CNABoth())
-#    dev.off()})
-#
-#output$Tab4_Download_Both_Plot_SVG <- downloadHandler(filename = function(){paste("Density_Hist_Plot",'.svg',sep='')}, content = function(file){
-#    svg(file, width = input$Tab4_Both_Plot_Width, height = input$Tab4_Both_Plot_Height)
-#    print(CNABoth())
-#    dev.off()})
-#
-## Facet Wrap
-#long_file1 <-  metaReactive2({ if(input$Tab4_Faceted_Both_Plot_Display_NAs == FALSE){
-#    metaExpr({melt(..(datalist[[data]]())[,c(..(input$Tab4_Select_Plot_Variable), ..(input$Tab4_Both_Plot_Select_Facet_Variable))]) %>% filter(!is.na(eval(parse(text = ..(input$Tab4_Both_Plot_Select_Facet_Variable)))))
-#    })} else { metaExpr({melt(..(datalist[[data]]())[,c(..(input$Tab4_Select_Plot_Variable), ..(input$Tab4_Both_Plot_Select_Facet_Variable))])
-#    }) }})
-#
-#CNADist2Plot1 <- metaReactive2({
-#    if(is.null(datalist[[data]]()) | input$Tab4_Both_Plot_Select_Facet_Variable  == "None Selected"){
-#        ggplot() + theme_void()
-#    } else {metaExpr ({
-#        ggplot(..(long_file1()), aes(x=value)) + geom_histogram(aes(x=value, y=..density.., color = factor(..(long_file1())[,..(input$Tab4_Both_Plot_Select_Facet_Variable)]),  fill=factor(..(long_file1())[,..(input$Tab4_Both_Plot_Select_Facet_Variable)])), position = "identity", alpha = ..(input$Tab4_Faceted_Both_Histogram_Plot_Alpha)) +
-#            geom_density(aes(x=value, color = factor(..(long_file1())[,..(input$Tab4_Both_Plot_Select_Facet_Variable)]), fill=factor(..(long_file1())[,..(input$Tab4_Both_Plot_Select_Facet_Variable)])), show.legend = ..(input$Tab4_Faceted_Both_Plot_Legend_Position), alpha= ..(input$Tab4_Faceted_Both_Density_Plot_Alpha)) + facet_wrap(factor(..(long_file1())[,..(input$Tab4_Both_Plot_Select_Facet_Variable)])~., ncol=..(input$Tab4_Faceted_Both_Plot_Number_of_Columns)) + ggtitle(..(input$Tab4_Faceted_Both_Plot_Title)) +
-#            ylab(..(input$Tab4_Faceted_Both_Plot_Y_Axis_Title)) + xlab(..(input$Tab4_Faceted_Both_Plot_X_Axis_Title)) + theme_bw() +
-#            theme(plot.title = element_text(hjust = 0.5, size =18)) + theme(axis.title.x = element_text(hjust = 0.5, size=18)) + theme(axis.title.y = element_text(hjust = 0.5, size=18)) +
-#            theme(axis.text.x=element_text(size=15)) + theme(axis.text.y=element_text(size=15)) + theme(legend.title = element_text(colour="black", size=15, face="bold")) + theme(strip.text = element_text(size=15)) + theme(legend.text=element_text(size=15)) +
-#            scale_fill_discrete(name = ..(input$Tab4_Faceted_Both_Plot_Legend_Title)) + xlim(range(density(..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], na.rm = T)$x))  +
-#            guides(color = FALSE) + theme(legend.position = ..(input$Tab4_Faceted_Both_Plot_Legend_Position))}) }})
-#
-#output$CNABoth1 <- metaRender(renderPlot, { ..(CNADist2Plot1()) })
-#
-## Download
-#output$Tab4_Download_Faceted_Both_Plot_PNG <- downloadHandler(filename = function(){paste("Faceted_Density_Plot2",'.png',sep='')}, content = function(file){
-#    png(file, width = input$Tab4_Faceted_Both_Plot_Width, height = input$Tab4_Faceted_Both_Plot_Height, units="in", res = 1200)
-#    print(CNADist2Plot1())
-#    dev.off()})
-#
-#output$Tab4_Download_Faceted_Both_Plot_SVG <- downloadHandler(filename = function(){paste("Faceted_Density_Plot2",'.svg',sep='')}, content = function(file){
-#    svg(file, width = input$Tab4_Faceted_Both_Plot_Width, height = input$Tab4_Faceted_Both_Plot_Height)
-#    print(CNADist2Plot1())
-#    dev.off()})
-#
+
+

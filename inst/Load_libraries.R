@@ -10,3 +10,8 @@ library(DT)
 library(tidyverse)
 library(cBioPortalData)
 
+if (!requireNamespace("reshape2", quietly = TRUE))
+    BiocManager::install("reshape2")
+library(reshape2)
+
+library(RColorBrewer)
