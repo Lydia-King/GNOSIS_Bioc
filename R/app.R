@@ -62,10 +62,17 @@ GNOSIS <- function(...) {
             ## Tab 5 Kaplan-Meier Plots
             tabItem(tabName = "KMplot", Tab5_KM_Clin_UI("i")),
             tabItem(tabName = "KMOver", Tab5_KM_Quart_UI("y")),
-            tabItem(tabName = "KMplotRadio", Tab5_KM_Treatment_1_UI("g"), Tab5_KM_Treatment_2_UI("f")))
+            tabItem(tabName = "KMplotRadio", Tab5_KM_Treatment_1_UI("g"), Tab5_KM_Treatment_2_UI("f")),
 
+            ## Tab 6 Association Tests
+            tabItem(tabName = "ASTest", Tab6_Association_Tests("h")),
 
-        ))
+            ## Tab 7 Cox PH Models
+            tabItem(tabName = "UniVar", Tab7_Univariate_CoxPH("l")),
+            tabItem(tabName = "MultiVar", Tab7_Multivariate_CoxPH ("m")),
+            tabItem(tabName = "AssumptionsOS", Tab7_Assumption_CoxPH("p")))
+        )
+    )
 
     server <- function(input, output, session) {
 
@@ -145,7 +152,7 @@ GNOSIS <- function(...) {
     shinyApp(ui, server, ...)
 }
 
-GNOSIS::GNOSIS()
+# GNOSIS::GNOSIS()
 
 #library(tidyverse)
 #library(cBioPortalData)
