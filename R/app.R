@@ -70,7 +70,14 @@ GNOSIS <- function(...) {
             ## Tab 7 Cox PH Models
             tabItem(tabName = "UniVar", Tab7_Univariate_CoxPH("l")),
             tabItem(tabName = "MultiVar", Tab7_Multivariate_CoxPH ("m")),
-            tabItem(tabName = "AssumptionsOS", Tab7_Assumption_CoxPH("p")))
+            tabItem(tabName = "AssumptionsOS", Tab7_Assumption_CoxPH("p")),
+
+            ## Tab 8 Adjusted Survival Curves
+            tabItem(tabName = "AdjSurvival", Tab8_Adjusted_Survival_Curves_UI("pp")),
+
+            ## Tab 9 Survival Trees
+            tabItem(tabName = "RpartTree", Tab9_Rpart_UI("hh")),
+            tabItem(tabName = "STreeCtree", Tab9_Ctree_UI("hhh")))
         )
     )
 
