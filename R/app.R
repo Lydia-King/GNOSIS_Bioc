@@ -77,7 +77,14 @@ GNOSIS <- function(...) {
 
             ## Tab 9 Survival Trees
             tabItem(tabName = "RpartTree", Tab9_Rpart_UI("hh")),
-            tabItem(tabName = "STreeCtree", Tab9_Ctree_UI("hhh")))
+            tabItem(tabName = "STreeCtree", Tab9_Ctree_UI("hhh")),
+
+            ## Tab 10 Maftools Summary
+            tabItem(tabName = "MAFText", Tab10_MAF_Text_Summary_UI("rr")),
+            tabItem(tabName = "MAFVis", Tab10_MAF_Visual_Summary_UI("rrr")),
+
+            ## Tab 11 Download Code/Log
+            tabItem(tabName = "downlog", Tab11_Download_Code_UI("pppp")))
         )
     )
 
