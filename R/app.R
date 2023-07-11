@@ -26,7 +26,7 @@ GNOSIS <- function(...) {
       #      tags$style(type="text/css",
        #                ".shiny-output-error { visibility: hidden; }",
        #                ".shiny-output-error:before { visibility: hidden; }"
-       #     ),
+            #     ),
             shinyDashboardThemes(theme = "blue_gradient"),
             tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "Style_File.css")),
             tags$head(tags$style(HTML('.wrapper {height: auto !important; position:relative; overflow-x:hidden; overflow-y:hidden}'))),
@@ -38,53 +38,54 @@ GNOSIS <- function(...) {
                                                                Tab1_Input_Files_Preview_Clin_UI("tab1_input_preview_1"),
                                                                Tab1_Input_Files_Preview_CNA_UI("tab1_input_preview_2"),
                                                                Tab1_Input_Files_Preview_MAF_UI("tab1_input_preview_3"))),
-            ## Tab 2 -  Tables
-            # Exploratory Table Tab: Space to explore uploaded data -> choose 5 columns to study
-            tabItem(tabName = "tables",
-                    tabBox(width = "1000px",
-                           Tab2_Exploaratory_Tables_Clin_UI("tab2_clin_table"),
-                           Tab2_Exploaratory_Tables_CNA_UI("tab2_cna_table"),
-                           Tab2_Exploaratory_Tables_MAF_UI("tab2_maf_table"))),
+                     ## Tab 2 -  Tables
+                     # Exploratory Table Tab: Space to explore uploaded data -> choose 5 columns to study
+                     tabItem(tabName = "tables",
+                             tabBox(width = "1000px",
+                                    Tab2_Exploaratory_Tables_Clin_UI("tab2_clin_table"),
+                                    Tab2_Exploaratory_Tables_CNA_UI("tab2_cna_table"),
+                                    Tab2_Exploaratory_Tables_MAF_UI("tab2_maf_table"))),
 
-            ## Tab 3 - Subset/Recode/Format Data
-            tabItem(tabName = "FactorLevels", Tab3_Factor_Levels_UI("tab3")),
-            tabItem(tabName = "Subset", Tab3_Subset_UI("tab31")),
-            tabItem(tabName = "Recode", Tab3_Recode_UI("tab31")),
-            tabItem(tabName = "CNACalc", Tab3_CNACalc_UI("tab31")),
-            tabItem(tabName = "Data_Down", Tab3_Data_Down_UI("tab31")),
+                     ## Tab 3 - Subset/Recode/Format Data
+                     tabItem(tabName = "FactorLevels", Tab3_Factor_Levels_UI("tab3_factor_levels")),
+                     tabItem(tabName = "Subset", Tab3_Subset_UI("tab3_subset")),
+                     tabItem(tabName = "Recode", Tab3_Recode_UI("tab3_recode")),
+                     tabItem(tabName = "CNACalc", Tab3_CNACalc_UI("tab3_CNAcalc")),
+                     tabItem(tabName = "Data_Down", Tab3_Data_Down_UI("tab3_data_download")),
 
-            ## Tab 4 - Exploratory Plots
-            tabItem(tabName = "boxplot", Tab4_Boxplot_UI("tab4_boxplot")),
-            tabItem(tabName = "scatterplot", Tab4_Scatterplot_UI("tab4_scatterplot")),
-            tabItem(tabName = "barplot", Tab4_Barplot_UI("tab4_barplot")),
-            tabItem(tabName = "density_hist", Tab4_Density_UI("tab4_density")),
+                     ## Tab 4 - Exploratory Plots
+                     tabItem(tabName = "boxplot", Tab4_Boxplot_UI("tab4_boxplot")),
+                     tabItem(tabName = "scatterplot", Tab4_Scatterplot_UI("tab4_scatterplot")),
+                     tabItem(tabName = "barplot", Tab4_Barplot_UI("tab4_barplot")),
+                     tabItem(tabName = "density_hist", Tab4_Density_UI("tab4_density")),
 
-            ## Tab 5 Kaplan-Meier Plots
-            tabItem(tabName = "KMplot", Tab5_KM_Clin_UI("i")),
-            tabItem(tabName = "KMOver", Tab5_KM_Quart_UI("y")),
-            tabItem(tabName = "KMplotRadio", Tab5_KM_Treatment_1_UI("g"), Tab5_KM_Treatment_2_UI("f")),
+                     ## Tab 5 Kaplan-Meier Plots
+                     tabItem(tabName = "KMplot", Tab5_KM_Clin_UI("tab5_km_plot")),
+                     tabItem(tabName = "KMOver", Tab5_KM_Quart_UI("tab5_km_qurt_plot")),
+                     tabItem(tabName = "KMplotRadio", Tab5_KM_Treatment_1_UI("tab5_km_treat_plot"), Tab5_KM_Treatment_2_UI("tab5_km_treat_plot"))
 
-            ## Tab 6 Association Tests
-            tabItem(tabName = "ASTest", Tab6_Association_Tests("h")),
+       #   ## Tab 6 Association Tests
+       #   tabItem(tabName = "ASTest", Tab6_Association_Tests("h")),
 
-            ## Tab 7 Cox PH Models
-            tabItem(tabName = "UniVar", Tab7_Univariate_CoxPH("l")),
-            tabItem(tabName = "MultiVar", Tab7_Multivariate_CoxPH ("m")),
-            tabItem(tabName = "AssumptionsOS", Tab7_Assumption_CoxPH("p")),
+       #   ## Tab 7 Cox PH Models
+       #   tabItem(tabName = "UniVar", Tab7_Univariate_CoxPH("l")),
+       #   tabItem(tabName = "MultiVar", Tab7_Multivariate_CoxPH ("m")),
+       #   tabItem(tabName = "AssumptionsOS", Tab7_Assumption_CoxPH("p")),
 
-            ## Tab 8 Adjusted Survival Curves
-            tabItem(tabName = "AdjSurvival", Tab8_Adjusted_Survival_Curves_UI("pp")),
+       #   ## Tab 8 Adjusted Survival Curves
+       #   tabItem(tabName = "AdjSurvival", Tab8_Adjusted_Survival_Curves_UI("pp")),
 
-            ## Tab 9 Survival Trees
-            tabItem(tabName = "RpartTree", Tab9_Rpart_UI("hh")),
-            tabItem(tabName = "STreeCtree", Tab9_Ctree_UI("hhh")),
+       #   ## Tab 9 Survival Trees
+       #   tabItem(tabName = "RpartTree", Tab9_Rpart_UI("hh")),
+       #   tabItem(tabName = "STreeCtree", Tab9_Ctree_UI("hhh")),
 
-            ## Tab 10 Maftools Summary
-            tabItem(tabName = "MAFText", Tab10_MAF_Text_Summary_UI("rr")),
-            tabItem(tabName = "MAFVis", Tab10_MAF_Visual_Summary_UI("rrr")),
+       #   ## Tab 10 Maftools Summary
+       #   tabItem(tabName = "MAFText", Tab10_MAF_Text_Summary_UI("rr")),
+       #   tabItem(tabName = "MAFVis", Tab10_MAF_Visual_Summary_UI("rrr")),
 
-            ## Tab 11 Download Code/Log
-            tabItem(tabName = "downlog", Tab11_Download_Code_UI("pppp")))
+       #   ## Tab 11 Download Code/Log
+       #   tabItem(tabName = "downlog", Tab11_Download_Code_UI("pppp")))
+            )
         )
     )
 
@@ -127,46 +128,71 @@ GNOSIS <- function(...) {
          Tab1_Input_Files_Preview_Server("tab1_input_preview_2", datalist, "CNA_Val", length_px = "650px", select_dt = "multiple")
          Tab1_Input_Files_Preview_Server("tab1_input_preview_3", datalist, "MAF_Val", length_px = "650px", select_dt = "multiple")
 
-        # Tab 2 - Exploratory Tables Tab
-        ## Tables
-          Tab2_Exploratory_Tables_Server("tab2_clin_table", datalist, "Combined_clin", length_px = "450px", select_dt = "multiple")
-          Tab2_Exploratory_Tables_Server("tab2_cna_table", datalist, "CNA_Val", length_px = "450px", select_dt = "multiple")
-          Tab2_Exploratory_Tables_Server("tab2_maf_table", datalist, "MAF_Val", length_px = "450px", select_dt = "multiple")
+         # Tab 2 - Exploratory Tables Tab
+         ## Tables
+         Tab2_Exploratory_Tables_Server("tab2_clin_table", datalist, "Combined_clin", length_px = "450px", select_dt = "multiple")
+         Tab2_Exploratory_Tables_Server("tab2_cna_table", datalist, "CNA_Val", length_px = "450px", select_dt = "multiple")
+         Tab2_Exploratory_Tables_Server("tab2_maf_table", datalist, "MAF_Val", length_px = "450px", select_dt = "multiple")
 
          # Tab 3 - Recode andSubset Data
          ## Check Levels
-         Formatted_Data <- Tab3_Factor_Levels_Server("tab3", datalist, "Combined_clin")
-        # Tab3_Render_Print_Server("tab3", Formatted_Data, "formatted_data", expression_text = "str(datalist[[data]](), list.len=ncol(datalist[[data]]()))")
-       #  Tab3_Subset_Server("tab31", Formatted_Data, "formatted_data")
+          Formatted_Data <- Tab3_Factor_Levels_Server("tab3_factor_levels", datalist, "Combined_clin")
+          Tab3_Render_Print_Server("tab3_factor_levels", Formatted_Data, "formatted_data", expression_text = "str(datalist[[data]](), list.len=ncol(datalist[[data]]()))")
+          Tab3_Subset_Server("tab3_subset", Formatted_Data, "formatted_data")
+          Subset_Data <- Tab3_Subset_Server("tab3_subset", Formatted_Data, "formatted_data")
+          Tab3_Recode_Server("tab3_recode", Subset_Data, "subset_data")
+          Recode_Data <- Tab3_Recode_Server("tab3_recode", Subset_Data, "subset_data")
+         # Tab3_CNACalc_Server("tab3_CNAcalc", datalist, Recode_Data, "recode_data", rowselect = selectedLine)
 
          # Tab 4 - Exploratory Plots
          ## Boxplots
-         PlotsBP <- Tab4_BoxPlots_Server("tab4_boxplot", datalist, "patient_manual_data")
+         PlotsBP <- Tab4_BoxPlots_Server("tab4_boxplot", Recode_Data, "recode_data")
          Tab4_DisplayPlot_Server("tab4_boxplot", PlotsBP, "boxplot")
          Tab4_Download_Server("tab4_boxplot", PlotsBP, "boxplot")
 
          ## Scatterplots
-         PlotsSP <- Tab4_Scatterplot_Server("tab4_scatterplot", datalist, "patient_manual_data")
+         PlotsSP <- Tab4_Scatterplot_Server("tab4_scatterplot", Recode_Data, "recode_data")
          Tab4_DisplayPlot_Server("tab4_scatterplot", PlotsSP, "scatterplot")
          Tab4_Download_Server("tab4_scatterplot", PlotsSP, "scatterplot")
 
          ## Barplots
-         PlotsBar <- Tab4_Barplot_Server("tab4_barplot", datalist, "patient_manual_data")
+         PlotsBar <- Tab4_Barplot_Server("tab4_barplot", Recode_Data, "recode_data")
          Tab4_DisplayPlot_Server("tab4_barplot", PlotsBar, "barplot")
          Tab4_Download_Server("tab4_barplot", PlotsBar, "barplot")
 
          ## Histograms
-          PlotsHist <- Tab4_Hist_Server("tab4_density", datalist, "patient_manual_data")
-          Tab4_DisplayPlot_Server("tab4_density", PlotsHist, "histogram")
-          Tab4_Download_Server("tab4_density", PlotsHist, "histogram")
-         #Tab4_DisplayPlot_Server("tab4_density", PlotsHist, "facet_histogram")
-        # Tab4_Download_Server("tab4_density", PlotsHist, "facet_histogram")
+         PlotsHist <- Tab4_Hist_Server("tab4_density", Recode_Data, "recode_data")
+         Tab4_DisplayPlot_Server("tab4_density", PlotsHist, "histogram")
+         Tab4_Download_Server("tab4_density", PlotsHist, "histogram")
+         Tab4_DisplayPlot_Server("tab4_density", PlotsHist, "facet_histogram")
+         Tab4_Download_Server("tab4_density", PlotsHist, "facet_histogram")
+
+         # Tab 5 - Survival Plots
+         ## Clinical KM Curves
+         Plot_KM <- Tab5_KM_Plot_Server("tab5_km_plot", Recode_Data, "recode_data")
+         Tab5_Display_KM_Plot_Server("tab5_km_plot", Plot_KM, "surv_plot")
+         Tab5_Download_Server("tab5_km_plot", Plots_KM, "surv_plot")
+
+         ## CNA KM Curves
+         Plot_KM_Quart <- Tab5_KM_Plot_Quart_Server("tab5_km_qurt_plot",  Recode_Data, "recode_data")
+         Tab5_Display_KM_Plot_Server("tab5_km_qurt_plot", Plot_KM_Quart, "surv_plot")
+         Tab5_Download_Server("tab5_km_qurt_plot", Plots_KM_Quart, "surv_plot")
+
+         ## Treatment KM Curves
+         Plot_KM_Treat <- Tab5_KM_Plot_Treat_Server("tab5_km_treat_plot",  Recode_Data, "recode_data")
+         Tab5_Display_KM_Plot_Server("tab5_km_treat_plot", Plot_KM_Treat, "surv_plot_Yes")
+         Tab5_Download_Server("tab5_km_treat_plot", Plots_KM_Treat, "surv_plot_Yes")
+         Tab5_Display_KM_Plot_Server("tab5_km_treat_plot", Plot_KM_Treat, "surv_plot_No")
+         Tab5_Download_Server("tab5_km_treat_plot", Plots_KM_Treat, "surv_plot_No")
+
+         # Tab 6 - Association Tests
     }
 
     shinyApp(ui, server, ...)
 }
 
-# GNOSIS::GNOSIS()
+GNOSIS()
+
 
 #library(tidyverse)
 #library(cBioPortalData)

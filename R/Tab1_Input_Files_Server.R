@@ -231,7 +231,6 @@ Count_Row <- function(dataset) {
 
 Tab1_Input_Files_Preview_Server <- function(id, datalist, data, length_px, select_dt) {
     moduleServer(id, function(input, output, session) {
-
         loading_API <- function() {
             req(!is.null(datalist[["API_Out"]]()) & is.null(input$Input_Sample_File) & is.null(input$Input_Patient_File))
             try(message(datalist[["API_Out"]](), silent = T))

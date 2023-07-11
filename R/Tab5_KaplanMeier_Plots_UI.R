@@ -10,7 +10,7 @@ Tab5_KM_Clin_UI  <- function(id) {
             tags$a(href="http://www.sthda.com/english/wiki/survival-analysis-basics", "Survival Analysis Basics in R"),
             tags$a(href="https://www.datacamp.com/tutorial/survival-analysis-R", "Survival Analysis in R Tutorial For Beginners"),
             tags$a(href="https://www.statology.org/log-rank-test-in-r/", "How to Perform a Log Rank Test in R"))),
-        collapsible = T, solidHeader=T, width = 12, style = "height:520px; overflow-y: hidden", height = "520px", status = "primary", withSpinner(plotOutput("Plot", height="500px")),
+        collapsible = T, solidHeader=T, width = 12, style = "height:520px; overflow-y: hidden", height = "520px", status = "primary", withSpinner(plotOutput(ns("Plot"), height="500px")),
         sidebar = boxSidebar(width = 25, id = "Tab5_KM_Clinical_Sidebar",  background = "#599740",  icon = shiny::icon("rectangle-list"), selectizeInput(ns("Tab5_KM_Clinical_Survival_Time"), "Survival Time:", choices = ""), selectizeInput(ns("Tab5_KM_Clinical_Event_Status"), "Event Status:", choices = ""),
                              selectizeInput(ns("Tab5_KM_Clinical_Select_Variable"), "Select Variable:", choices = ""), tags$hr(), # Select survival variables i.e. time to event, event status Aand variable of interest
                              prettyToggle(inputId = ns("Tab5_KM_Clinical_Display_CI"), label_on = "Display CI", label_off = "Display CI", icon_on = fa_i(name = "check", verify_fa = FALSE), icon_off = fa_i(name = "times", verify_fa = FALSE)),
@@ -79,7 +79,7 @@ Tab5_KM_Treatment_1_UI  <- function(id) {
 Tab5_KM_Treatment_2_UI  <- function(id) {
     ns <- NS(id)
     tagList(
-        box(title = ("Kaplan-Meier Plot for Treatment - No"), style = "height:500px", height = "500px", solidHeader=T, width = 12, collapsible = T, status = "primary", withSpinner(plotOutput(ns("KMR2"), height = "465px")),
+        box(title = ("Kaplan-Meier Plot for Treatment - No"), style = "height:500px", height = "500px", solidHeader=T, width = 12, collapsible = T, status = "primary", withSpinner(plotOutput(ns("Plot"), height = "465px")),
             sidebar = boxSidebar(width = 25, id = "Tab5_KM_Treatment_Sidebar_No",  background = "#599740",  icon = shiny::icon("rectangle-list"),
                                  prettyToggle(inputId = ns("Tab5_KM_Treatment_No_Display_CI"), label_on = "Display CI", label_off = "Display CI", icon_on = fa_i(name = "check", verify_fa = FALSE), icon_off = fa_i(name = "times", verify_fa = FALSE)),
                                  prettyToggle(inputId = ns("Tab5_KM_Treatment_No_Display_Risk_Table"), label_on = "Display Risk Table", label_off = "Display Risk Table", icon_on = fa_i(name = "check", verify_fa = FALSE), icon_off = fa_i(name = "times", verify_fa = FALSE)),

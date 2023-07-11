@@ -32,3 +32,4 @@ Tab2_Exploaratory_Tables_MAF_UI <- function(tab2_exploaratory_tables_maf_ui) {
                                                selectizeInput(ns("Tab2_Column1_Variable"), "Select Column 1:", choices = "None Selected", width = "95%", selected = "None Selected"), selectizeInput(ns("Tab2_Column2_Variable"), "Select Column 2:", choices = "None Selected", width = "95%", selected = "None Selected"), selectizeInput(ns("Tab2_Column3_Variable"), "Select Column 3:", choices = "None Selected", width = "95%", selected = "None Selected"),
                                                selectizeInput(ns("Tab2_Column4_Variable"), "Select Column 4:", choices = "None Selected", width = "95%", selected = "None Selected"), selectizeInput(ns("Tab2_Column5_Variable"), "Select Column 5:", choices = "None Selected", width = "95%", selected = "None Selected"))))) # Select Input: Display desired columns
 }
+

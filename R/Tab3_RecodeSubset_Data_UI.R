@@ -24,34 +24,35 @@ Tab3_Recode_UI <- function(id) {
     ns <- NS(id)
     # 3) Survival Recoding
     fluidRow(box(collapsible = T, solidHeader = TRUE, width = 3, status = "primary", title = ("Select Survival Columns"), # Select Options for recoding survival, CNA calculations start column and number of splits in data desired
-                 awesomeRadio(inputId = "Tab3_Recode_Survival_Yes_or_No", label = "Recode Survival Columns:",  choices = c("No", "Yes"), selected = "No", inline = F, status = "primary"), tags$hr(),
-                 selectInput("Tab3_Select_OS_Column", "Select OS Column:", choices = ""), selectInput("Tab3_Select_DSS_Column", "Select DSS Column:", choices = ""), tags$hr(),
-                 textInput("Tab3_OS_Event", "OS Event:", "DECEASED"), verbatimTextOutput("value"), textInput("Tab3_DSS_Event", "DSS Event:", "Died of Disease"), verbatimTextOutput("Died of Disease")),
-             box(collapsible = T, solidHeader = TRUE, title = "Check Survival Recoding", width = 9, status = "primary", style = "height:500px", withSpinner(dataTableOutput("TableRecode"), proxy.height = "480px")))
+                 awesomeRadio(inputId = ns("Tab3_Recode_Survival_Yes_or_No"), label = "Recode Survival Columns:",  choices = c("No", "Yes"), selected = "No", inline = F, status = "primary"), tags$hr(),
+                 selectInput(ns("Tab3_Select_OS_Column"), "Select OS Column:", choices = ""), selectInput(ns("Tab3_Select_DSS_Column"), "Select DSS Column:", choices = ""), tags$hr(),
+                 textInput(ns("Tab3_OS_Event"), "OS Event:", "DECEASED"), verbatimTextOutput("value"), textInput(ns("Tab3_DSS_Event"), "DSS Event:", "Died of Disease"), verbatimTextOutput("Died of Disease")),
+             box(collapsible = T, solidHeader = TRUE, title = "Check Survival Recoding", width = 9, status = "primary", style = "height:500px", withSpinner(dataTableOutput(ns("TableRecode")), proxy.height = "480px")))
 }
 
 Tab3_CNACalc_UI <- function(id) {
     ns <- NS(id)
     # 4) CNA Calculation
     fluidRow(box(style = "height:550px", sidebar = boxSidebar(id = "Tab3_CNA_Calculation_Sidebar", width = 25, background = "#599740",  icon = shiny::icon("rectangle-list"), h4(strong("Options")),
-                                                              numericInput(inputId = "Tab3_CNA_Start_Column", label = "Indicate CNA Start Column:", value = 3,  width = "95%", min = 1), tags$hr(width = "93%"),
-                                                              awesomeRadio(inputId = "Tab3_CNA_of_Interest", label = "CNA of Interest:", choices = c("None", "Single Gene", "CNA Score"), selected = "None", inline = F, status = "primary"), tags$hr(width = "93%"),
-                                                              awesomeRadio(inputId = "Tab3_Merge_Column", label = "Merge on:", choices = c("PATIENT_ID", "SAMPLE_ID"), selected = "PATIENT_ID", inline = T, status = "primary"), tags$hr(width = "93%"),
-                                                              conditionalPanel(condition = "input.Tab3_CNA_of_Interest == 'None'",  h5(strong("Options:"))),
-                                                              conditionalPanel(condition = "input.Tab3_CNA_of_Interest== 'Single Gene'", h5(strong("Options:")), textInput("Tab3_Select_Genes", "Select Gene of Interest:", "TP53, PTEN, BRCA1, A1BG", placeholder = T,  width = "95%")),
-                                                              conditionalPanel(condition = "input.Tab3_CNA_of_Interest == 'CNA Score'", h5(strong("Options:")), prettyToggle(inputId = "Tab3_CNA_Remove_NAs_Yes_or_No", label_on = "Remove NAs", label_off = "Remove NAs", icon_on = fa_i(name = "check", verify_fa = FALSE), icon_off = fa_i(name = "times", verify_fa = FALSE)),
-                                                                               prettyToggle(inputId = "Tab3_Segment_CNA_Yes_or_No", label_on = "Segment Data", label_off = "Segment Data", icon_on = fa_i(name = "check", verify_fa = FALSE), icon_off = fa_i(name = "times", verify_fa = FALSE)),
-                                                                               numericInput(inputId = "Tab3_Number_of_Segments", label = "Number of Segments:", value = 4, width = "95%"))),
-                 collapsible = T, solidHeader = TRUE, width = 12, status = "primary", title = ("CNA Score Exploration"), withSpinner(dataTableOutput("TableCNACalc"), proxy.height = "510px")))
+                                                              numericInput(inputId = ns("Tab3_CNA_Start_Column"), label = "Indicate CNA Start Column:", value = 3,  width = "95%", min = 1), tags$hr(width = "93%"),
+                                                              awesomeRadio(inputId = ns("Tab3_CNA_of_Interest"), label = "CNA of Interest:", choices = c("None", "Single Gene", "CNA Score"), selected = "None", inline = F, status = "primary"), tags$hr(width = "93%"),
+                                                              awesomeRadio(inputId = ns("Tab3_Merge_Column"), label = "Merge on:", choices = c("PATIENT_ID", "SAMPLE_ID"), selected = "PATIENT_ID", inline = T, status = "primary"), tags$hr(width = "93%"),
+                                                              conditionalPanel(condition = "input.Tab3_CNA_of_Interest == 'None'", ns = ns,  h5(strong("Options:"))),
+                                                              conditionalPanel(condition = "input.Tab3_CNA_of_Interest== 'Single Gene'", ns = ns,  h5(strong("Options:")), textInput(ns("Tab3_Select_Genes"), "Select Gene of Interest:", "TP53, PTEN, BRCA1, A1BG", placeholder = T,  width = "95%")),
+                                                              conditionalPanel(condition = "input.Tab3_CNA_of_Interest == 'CNA Score'", ns = ns, h5(strong("Options:")), prettyToggle(inputId = ns("Tab3_CNA_Remove_NAs_Yes_or_No"), label_on = "Remove NAs", label_off = "Remove NAs", icon_on = fa_i(name = "check", verify_fa = FALSE), icon_off = fa_i(name = "times", verify_fa = FALSE)),
+                                                                               prettyToggle(inputId = ns("Tab3_Segment_CNA_Yes_or_No"), label_on = "Segment Data", label_off = "Segment Data", icon_on = fa_i(name = "check", verify_fa = FALSE), icon_off = fa_i(name = "times", verify_fa = FALSE)),
+                                                                               numericInput(inputId = ns("Tab3_Number_of_Segments"), label = "Number of Segments:", value = 4, width = "95%"))),
+                 collapsible = T, solidHeader = TRUE, width = 12, status = "primary", title = ("CNA Score Exploration"), withSpinner(dataTableOutput(ns("TableCNACalc")), proxy.height = "510px")))
 }
 
 Tab3_Data_Down_UI <- function(id) {
     ns <- NS(id)
     # 5) CNA Calculation Download
     fluidRow(box(style = "height:530px", sidebar = boxSidebar(id = "Tab3_CNA_Download_Sidebar", width = 25, background = "#599740",  icon = shiny::icon("rectangle-list"), h4(strong("Options")),
-                                                              awesomeRadio(inputId = "Tab3_Download_File_Separator", label = "Separator:", c(Comma = ",", Semicolon = ";", Tab = "\t"), selected = "\t", inline = F, status = "primary"), tags$hr(width = "93%"), # Input: Select Separator:
-                                                              prettyToggle(inputId = "Tab3_Download_File_Quote", label_on = "Include Quotes", label_off = "Include Quotes", icon_on = fa_i(name = "check", verify_fa = FALSE), icon_off = fa_i(name = "times", verify_fa = FALSE)),
-                                                              prettyToggle(inputId = "Tab3_Download_File_Row_Names", label_on = "Include Row Names", label_off = "Include Row Names", icon_on = fa_i(name = "check", verify_fa = FALSE), icon_off = fa_i(name = "times", verify_fa = FALSE)),
-                                                              tags$hr(width = "93%"), downloadButton('Tab3_Download_File', 'Download Data', style = "width:95%;")),
-                 collapsible = T, solidHeader = TRUE, width = 12, status = "primary", title = ("Preview and Download Processed Data"), withSpinner(dataTableOutput("TableData"), proxy.height = "510px")))
+                                                              awesomeRadio(inputId = ns("Tab3_Download_File_Separator"), label = "Separator:", c(Comma = ",", Semicolon = ";", Tab = "\t"), selected = "\t", inline = F, status = "primary"), tags$hr(width = "93%"), # Input: Select Separator:
+                                                              prettyToggle(inputId = ns("Tab3_Download_File_Quote"), label_on = "Include Quotes", label_off = "Include Quotes", icon_on = fa_i(name = "check", verify_fa = FALSE), icon_off = fa_i(name = "times", verify_fa = FALSE)),
+                                                              prettyToggle(inputId = ns("Tab3_Download_File_Row_Names"), label_on = "Include Row Names", label_off = "Include Row Names", icon_on = fa_i(name = "check", verify_fa = FALSE), icon_off = fa_i(name = "times", verify_fa = FALSE)),
+                                                              tags$hr(width = "93%"), downloadButton(ns('Tab3_Download_File'), 'Download Data', style = "width:95%;")),
+                 collapsible = T, solidHeader = TRUE, width = 12, status = "primary", title = ("Preview and Download Processed Data"), withSpinner(dataTableOutput(ns("TableData")), proxy.height = "510px")))
 }
+
