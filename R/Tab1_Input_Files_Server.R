@@ -28,27 +28,36 @@ Tab1_Input_Files_Manual_Server <- function(tab1_input_manual, rowselect) {
     moduleServer(tab1_input_manual, function(input, output, session) {
 
        # Clinical Data
-        patient_data <-  metaReactive2({req(input$Input_Patient_File)
+        patient_data <-  metaReactive2({if(is.null(input$Input_Patient_File)){
+            return(NULL)
+        } else {
             metaExpr({read.delim(..(input$Input_Patient_File$datapath),
-                       header = ..(input$Tab1_Clin_Header_Yes_or_No),
-                       sep =  ..(input$Tab1_Clin_Separator),
-                       quote = ..(input$Tab1_Clin_Quote),
-                       na.strings=c(""," ","NA"),
-                       skip = ..(input$Tab1_Clin_Skip_Lines))})
+                                 header = ..(input$Tab1_Clin_Header_Yes_or_No),
+                                 sep =  ..(input$Tab1_Clin_Separator),
+                                 quote = ..(input$Tab1_Clin_Quote),
+                                 na.strings=c(""," ","NA"),
+                                 skip = ..(input$Tab1_Clin_Skip_Lines))})
+        }
         })
 
-        sample_data <- metaReactive2({req(input$Input_Sample_File)
-            metaExpr({read.delim(
-                ..(input$Input_Sample_File$datapath),
-                header = ..(input$Tab1_Sample_Header_Yes_or_No),
-                sep = ..(input$Tab1_Sample_Separator),
-                quote = ..(input$Tab1_Sample_Quote),
-                na.strings=c(""," ","NA"),
-                skip = ..(input$Tab1_Sample_Skip_Lines))})
+        sample_data <- metaReactive2({
+            if(is.null(input$Input_Sample_File)){
+                return(NULL)
+            } else {
+                metaExpr({read.delim(
+                    ..(input$Input_Sample_File$datapath),
+                    header = ..(input$Tab1_Sample_Header_Yes_or_No),
+                    sep = ..(input$Tab1_Sample_Separator),
+                    quote = ..(input$Tab1_Sample_Quote),
+                    na.strings=c(""," ","NA"),
+                    skip = ..(input$Tab1_Sample_Skip_Lines))})
+            }
         })
 
         # CNA Data
-        CNA_data <- metaReactive2({req(input$Input_CNA_File)
+        CNA_data <- metaReactive2({if(is.null(input$Input_CNA_File)){
+            return(NULL)
+        } else {
             metaExpr({read.delim(
                 ..(input$Input_CNA_File$datapath),
                 header = ..(input$Tab1_CNA_Header_Yes_or_No),
@@ -56,10 +65,13 @@ Tab1_Input_Files_Manual_Server <- function(tab1_input_manual, rowselect) {
                 quote = ..(input$Tab1_CNA_Quote),
                 na.strings=c(""," ","NA"),
                 skip = ..(input$Tab1_CNA_Skip_Lines))})
+        }
         })
 
         # MAF Data
-        MAF_data <- metaReactive2({req(input$Input_MAF_File)
+        MAF_data <- metaReactive2({if(is.null(input$Input_MAF_File)){
+            return(NULL)
+        } else {
             metaExpr({read.delim(
                 ..(input$Input_MAF_File$datapath),
                 header = ..(input$Tab1_MAF_Header_Yes_or_No),
@@ -67,6 +79,7 @@ Tab1_Input_Files_Manual_Server <- function(tab1_input_manual, rowselect) {
                 quote = ..(input$Tab1_MAF_Quote),
                 na.strings=c(""," ","NA"),
                 skip = ..(input$Tab1_MAF_Skip_Lines))})
+        }
         })
 
         # API cBioPortal Data
@@ -212,7 +225,10 @@ Tab1_Input_Files_Manual_Server <- function(tab1_input_manual, rowselect) {
             }
         })
 
-        rlist <- list(patient_manual_data = patient_data, sample_manual_data = sample_data, CNA_manual_data = CNA_data, MAF_manual_data = MAF_data, Combined_clin = dataClinical, CNA_Val = CNA_Validated, MAF_Val = MAF_Validated, API_Out = API_Out)
+        rlist <- list(patient_manual_data = patient_data, sample_manual_data = sample_data,
+                      CNA_manual_data = CNA_data, MAF_manual_data = MAF_data,
+                      Combined_clin = dataClinical, CNA_Val = CNA_Validated,
+                      MAF_Val = MAF_Validated, API_Out = API_Out, API_data_output = API_data_output)
         return(rlist)
     })
 }

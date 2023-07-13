@@ -1,4 +1,4 @@
-Tab6_Association_Tests <- function(id) {
+Tab6_Association_Tests_UI <- function(id) {
     ns <- NS(id)
 
     box(collapsible = T, title = "Association Tests", solidHeader = T, status = "primary", width = 12,
@@ -37,7 +37,7 @@ Tab6_Association_Tests <- function(id) {
                                                   selectizeInput(ns("Tab6_Select_Continuous_Variable_1"), "Select Continuous Variables:", choices = "", width = "95%", multiple = T)),
                                  conditionalPanel(condition = "input.Tab6_Select_Association_Test == 'Compare groups'", ns = ns,
                                                   selectizeInput(ns("Tab6_Select_Response_Variable"), "Select Response (Group) Variable:", choices = "", width = "95%", multiple = F),
-                                                  selectizeInput(ns("Tab6_Select_Explanatory_Variable"), "Select Explanatory Variables:", choices = "", width = "95%", multiple = T),
+                                                  selectizeInput(ns("Tab6_Select_Explanatory_Variable"), "Select Explanatory Variables:", choices = "", width = "95%", multiple = T))),
 
             conditionalPanel(condition = "input.Tab6_Select_Association_Test == 'Chi-squared test'", ns = ns, h4(strong("Chi-Squared Test:")), # The null hypothesis of the Chi-Square test is that no relationship exists on the categorical variables in the population; they are independent.
                              verbatimTextOutput(ns("Cat1")), br(), h4(strong("Adjusted P-values:")), withSpinner(dataTableOutput(ns("Cat1Ad")))),
@@ -51,6 +51,7 @@ Tab6_Association_Tests <- function(id) {
                              h4(strong("Kruskal-Wallis Test:")), verbatimTextOutput(ns("KW")), br(), h4(strong("Adjusted P-values:")), withSpinner(dataTableOutput(ns("KWAd")))),
             conditionalPanel(condition = "input.Tab6_Select_Association_Test == 'Pairwise t-test'", ns = ns, h4(strong("Pairwise Comparisons: t-test")), div(style="height:500px;", verbatimTextOutput(ns("PC")))),
             conditionalPanel(condition = "input.Tab6_Select_Association_Test == 'Dunns test'", ns = ns, h4(strong("Pairwise Comparisons: Dunn's Test")), div(style="height:500px;", verbatimTextOutput(ns("Dunn")))),
-            conditionalPanel(condition = "input.Tab6_Select_Association_Test == 'Compare groups'", ns = ns, h4(strong("Compare Groups:")), verbatimTextOutput(ns("CG")),br(), h4(strong("Compare Groups Table:")), verbatimTextOutput(ns("CG_Table")))))
+            conditionalPanel(condition = "input.Tab6_Select_Association_Test == 'Compare groups'", ns = ns, h4(strong("Compare Groups:")), verbatimTextOutput(ns("CG")),br(), h4(strong("Compare Groups Table:")), verbatimTextOutput(ns("CG_Table")))
     )
 }
+

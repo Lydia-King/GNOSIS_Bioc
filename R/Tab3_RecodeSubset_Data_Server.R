@@ -124,208 +124,89 @@ Tab3_CNACalc_Server <-  function(id, datalist, datalist_Recode, data, rowselect)
     moduleServer(id, function(input, output, session) {
 
         CNA_Clin <- metaReactive2({
-                     validate(need("PATIENT_ID" %in% colnames(datalist[["CNA_Val"]]()) | input$Tab3_CNA_of_Interest != "None", "Please choose to calculate CNA Scores, select specific genes to analyse or make sure CNA file has PATIENT_ID column."))
-                     if(input$Tab3_CNA_of_Interest == "Single Gene"){
-                         gene_list <- unlist(str_split(c(input$Tab3_Select_Genes), pattern = ", "))
-                         if(sum(gene_list %in% datalist[["CNA_Val"]]()[,c("Hugo_Symbol")]) != length(gene_list)){
-                             return(NULL)
-                         } else {
-                             metaExpr({gene_list <- unlist(str_split(c(..(input$Tab3_Select_Genes)), pattern = ", "))
-                             Gene <- ..(datalist[["CNA_Val"]]()) %>% filter(Hugo_Symbol %in% gene_list)
-                             CNA_Status <- as.data.frame(t(Gene[,..(input$Tab3_CNA_Start_Column):ncol(Gene)]))
-                             names(CNA_Status) <- gene_list
-                             CNA_Status$PATIENT_ID <- rownames(CNA_Status)
-                             rownames(CNA_Status) = NULL
-                             CNA_Status <- CNA_Status %>% select(PATIENT_ID, all_of(gene_list)) %>% mutate_if(is.numeric, list(as.factor))
-                             # Merge with Clinical
-                             if(!is.null(datalist[["patient_data_test"]]())){
-                             CNA_Status <- merge(..(datalist_Recode[[data]]()), CNA_Status, by.x = input$Tab3_Merge_Column, by.y = "PATIENT_ID")
-                             } else {CNA_Status <- CNA_Status}
+            validate(need("PATIENT_ID" %in% colnames(datalist[["CNA_Val"]]()) | input$Tab3_CNA_of_Interest != "None", "Please choose to calculate CNA Scores, select specific genes to analyse or make sure CNA file has PATIENT_ID column."))
+                if(input$Tab3_CNA_of_Interest == "Single Gene"){
+                    gene_list <- unlist(str_split(c(input$Tab3_Select_Genes), pattern = ", "))
+                    if(sum(gene_list %in% datalist[["CNA_Val"]]()[,c("Hugo_Symbol")]) != length(gene_list)){
+                        return(NULL)
+                    } else {
+                        metaExpr({gene_list <- unlist(str_split(c(..(input$Tab3_Select_Genes)), pattern = ", "))
+                        Gene <- ..(datalist[["CNA_Val"]]()) %>% filter(Hugo_Symbol %in% gene_list)
+                        CNA_Status <- as.data.frame(t(Gene[,..(input$Tab3_CNA_Start_Column):ncol(Gene)]))
+                        names(CNA_Status) <- gene_list
+                        CNA_Status$PATIENT_ID <- rownames(CNA_Status)
+                        rownames(CNA_Status) = NULL
+                        CNA_Status <- CNA_Status %>% select(PATIENT_ID, all_of(gene_list)) %>% mutate_if(is.numeric, list(as.factor))
+                        # Merge with Clinical
+                        if(!is.null(datalist[["patient_manual_data"]]()) | !is.null(datalist[["sample_manual_data"]]()) | !is.null(rowselect()) ){
+                            CNA_Status <- merge(..(datalist_Recode[[data]]()), CNA_Status, by.x = input$Tab3_Merge_Column, by.y = "PATIENT_ID")
+                        } else {CNA_Status <- CNA_Status}
 
-                             CNA_Status }) }
-                     } else {
-                         validate(need(is.numeric(datalist[["CNA_Val"]]()[,input$Tab3_CNA_Start_Column]), "Please make sure CNA start column is numeric."))
-                         metaExpr({ PATIENT_ID <- colnames(..(datalist[["CNA_Val"]]())[,..(input$Tab3_CNA_Start_Column):ncol(..(datalist[["CNA_Val"]]()))])
-                         Scores <- as.data.frame(PATIENT_ID)
-                         Scores$CNA_Score <- colSums(abs(..(datalist[["CNA_Val"]]())[,..(input$Tab3_CNA_Start_Column):ncol(..(datalist[["CNA_Val"]]()))]), na.rm = ..(input$Tab3_CNA_Remove_NAs_Yes_or_No))
-                         Scores <- na.omit(Scores) # remove NAs (Could have All and CCA)
+                        CNA_Status }) }
+                } else {
+                    validate(need(is.numeric(datalist[["CNA_Val"]]()[,input$Tab3_CNA_Start_Column]), "Please make sure CNA start column is numeric."))
+                    metaExpr({ PATIENT_ID <- colnames(..(datalist[["CNA_Val"]]())[,..(input$Tab3_CNA_Start_Column):ncol(..(datalist[["CNA_Val"]]()))])
+                    Scores <- as.data.frame(PATIENT_ID)
+                    Scores$CNA_Score <- colSums(abs(..(datalist[["CNA_Val"]]())[,..(input$Tab3_CNA_Start_Column):ncol(..(datalist[["CNA_Val"]]()))]), na.rm = ..(input$Tab3_CNA_Remove_NAs_Yes_or_No))
+                    Scores <- na.omit(Scores) # remove NAs (Could have All and CCA)
 
-                         # CNA Score Amp and Del for Each Patient CCA (Apply)
-                         Scores$Amp_Score <- na.omit(apply(X = ..(datalist[["CNA_Val"]]())[,..(input$Tab3_CNA_Start_Column):ncol(..(datalist[["CNA_Val"]]()))], MARGIN = 2, function(x) sum(x[x > 0], na.rm = ..(input$Tab3_CNA_Remove_NAs_Yes_or_No))))
-                         Scores$Del_Score <- na.omit(apply(X = ..(datalist[["CNA_Val"]]())[,..(input$Tab3_CNA_Start_Column):ncol(..(datalist[["CNA_Val"]]()))], MARGIN = 2, function(x) sum(x[x < 0], na.rm = ..(input$Tab3_CNA_Remove_NAs_Yes_or_No))))
-                         Scores$Del_Score <- abs(Scores$Del_Score)
+                    # CNA Score Amp and Del for Each Patient CCA (Apply)
+                    Scores$Amp_Score <- na.omit(apply(X = ..(datalist[["CNA_Val"]]())[,..(input$Tab3_CNA_Start_Column):ncol(..(datalist[["CNA_Val"]]()))], MARGIN = 2, function(x) sum(x[x > 0], na.rm = ..(input$Tab3_CNA_Remove_NAs_Yes_or_No))))
+                    Scores$Del_Score <- na.omit(apply(X = ..(datalist[["CNA_Val"]]())[,..(input$Tab3_CNA_Start_Column):ncol(..(datalist[["CNA_Val"]]()))], MARGIN = 2, function(x) sum(x[x < 0], na.rm = ..(input$Tab3_CNA_Remove_NAs_Yes_or_No))))
+                    Scores$Del_Score <- abs(Scores$Del_Score)
 
-                         if(..(input$Tab3_Segment_CNA_Yes_or_No) == "TRUE"){
-                             Scores$Score_Quartile <- split_quantile(x=Scores$CNA_Score, type = ..(input$Tab3_Number_of_Segments)) # Segment Scores
-                         }
+                    if(..(input$Tab3_Segment_CNA_Yes_or_No) == "TRUE"){
+                        Scores$Score_Quartile <- split_quantile(x=Scores$CNA_Score, type = ..(input$Tab3_Number_of_Segments)) # Segment Scores
+                    }
 
-                         CNA_Metrics <- Scores
-                         CNA_Metrics_All <- merge(..(datalist_Recode[["recode_data"]]()), CNA_Metrics, by.x = input$Tab3_Merge_Column, by.y = "PATIENT_ID") # Make sure both files have PATIENT_ID
+                    CNA_Metrics <- Scores
+                    if(!is.null(datalist[["patient_manual_data"]]()) | !is.null(datalist[["sample_manual_data"]]()) | !is.null(rowselect()) ){
+                        CNA_Metrics_All <- merge(..(datalist_Recode[["recode_data"]]()), CNA_Metrics, by.x = input$Tab3_Merge_Column, by.y = "PATIENT_ID") # Make sure both files have PATIENT_ID
+                    } else {
+                        CNA_Metrics_All <- CNA_Metrics
+                    }
 
-                         if(..(input$Tab3_Segment_CNA_Yes_or_No) == "TRUE"){
-                             CNA_Metrics_All$Subset_Score_Quartile <- split_quantile(x=CNA_Metrics_All$CNA_Score, type = ..(input$Tab3_Number_of_Segments)) # Segment Scores
-                         }
+                    if(..(input$Tab3_Segment_CNA_Yes_or_No) == "TRUE"){
+                        CNA_Metrics_All$Subset_Score_Quartile <- split_quantile(x=CNA_Metrics_All$CNA_Score, type = ..(input$Tab3_Number_of_Segments)) # Segment Scores
+                    }
 
-                         CNA_Metrics_All
-                         })
+                    CNA_Metrics_All
+                    })
 
                 }
         })
-                    #     validate(need("PATIENT_ID" %in% colnames(CNA_Validated()) | input$Tab3_CNA_of_Interest != "None", "Please choose to calculate CNA Scores, select specific genes to analyse or make sure CNA file has PATIENT_ID column."))
-             #       if(input$Tab3_CNA_of_Interest == "None"){
-           ##             metaExpr({CNA_Status <- ..(datalist[["CNA_Val"]]()) # Make sure both files have PATIENT_ID
-          #              return(CNA_Status) })
-          #          }
-             #   }
-       #     }
-                 #   } else if(input$Tab3_CNA_of_Interest == "Single Gene"){
-                 #       gene_list <- unlist(str_split(c(input$Tab3_Select_Genes), pattern = ", "))
-                 #       if(sum(gene_list %in% datalist[["CNA_Val"]]()[,c("Hugo_Symbol")]) != length(gene_list)){
-                 #           return(NULL)
-                 #       } else {
-                 #           metaExpr({gene_list <- unlist(str_split(c(..(input$Tab3_Select_Genes)), pattern = ", "))
-                 #           Gene <- ..(datalist[["CNA_Val"]]()) %>% filter(Hugo_Symbol %in% gene_list)
-                 #           CNA_Status <- as.data.frame(t(Gene[,..(input$Tab3_CNA_Start_Column):ncol(Gene)]))
-                 #           names(CNA_Status) <- gene_list
-                 #           CNA_Status$PATIENT_ID <- rownames(CNA_Status)
-                 #           rownames(CNA_Status) = NULL
-                 #           CNA_Status <- CNA_Status %>% select(PATIENT_ID, all_of(gene_list)) %>% mutate_if(is.numeric, list(as.factor))
-                 #           CNA_Status}) }
-                 #   } else {
-                 #       validate(need(is.numeric(datalist[["CNA_Val"]]()[,input$Tab3_CNA_Start_Column]), "Please make sure CNA start column is numeric."))
-                 #       metaExpr({ PATIENT_ID <- colnames(..(datalist[["CNA_Val"]]())[,..(input$Tab3_CNA_Start_Column):ncol(..(datalist[["CNA_Val"]]()))])
-                 #       Scores <- as.data.frame(PATIENT_ID)
-                 #       Scores$CNA_Score <- colSums(abs(..(datalist[["CNA_Val"]]())[,..(input$Tab3_CNA_Start_Column):ncol(..(datalist[["CNA_Val"]]()))]), na.rm = ..(input$Tab3_CNA_Remove_NAs_Yes_or_No))
-                 #       Scores <- na.omit(Scores) # remove NAs (Could have All and CCA)
-#
-                 #       # CNA Score Amp and Del for Each Patient CCA (Apply)
-                 #       Scores$Amp_Score <- na.omit(apply(X = ..(datalist[["CNA_Val"]]())[,..(input$Tab3_CNA_Start_Column):ncol(..(datalist[["CNA_Val"]]()))], MARGIN = 2, function(x) sum(x[x > 0], na.rm = ..(input$Tab3_CNA_Remove_NAs_Yes_or_No))))
-                 #       Scores$Del_Score <- na.omit(apply(X = ..(datalist[["CNA_Val"]]())[,..(input$Tab3_CNA_Start_Column):ncol(..(datalist[["CNA_Val"]]()))], MARGIN = 2, function(x) sum(x[x < 0], na.rm = ..(input$Tab3_CNA_Remove_NAs_Yes_or_No))))
-                 #       Scores$Del_Score <- abs(Scores$Del_Score)
-#
-                 #       if(..(input$Tab3_Segment_CNA_Yes_or_No) == "TRUE"){ Scores$Score_Quartile <- split_quantile(x=Scores$CNA_Score, type = ..(input$Tab3_Number_of_Segments))
-                 #       CNA_Metrics <- Scores %>% select(c("PATIENT_ID", "CNA_Score", "Amp_Score", "Del_Score", "Score_Quartile"))} # Segment Scores
-                 #       else{CNA_Metrics <- Scores %>% select(c("PATIENT_ID", "CNA_Score", "Amp_Score", "Del_Score"))}
-                 #       CNA_Metrics
-                 #       })
-#
-   #              #   }
-   #     })
-        #  else {
-        #     validate(need("PATIENT_ID" %in% colnames(datalist[["CNA_Val"]]()) | input$Tab3_CNA_of_Interest != "None", "Please choose to calculate CNA Scores, select specific genes to analyse or make sure CNA file has PATIENT_ID column."))
-        #     if(input$Tab3_CNA_of_Interest == "Single Gene"){
-        #         gene_list <- unlist(str_split(c(input$Tab3_Select_Genes), pattern = ", "))
-        #         if(sum(gene_list %in% datalist[["CNA_Val"]]()[,c("Hugo_Symbol")]) != length(gene_list)){
-        #             return(NULL)
-        #         } else {
-        #             metaExpr({gene_list <- unlist(str_split(c(..(input$Tab3_Select_Genes)), pattern = ", "))
-        #             Gene <- ..(datalist[["CNA_Val"]]()) %>% filter(Hugo_Symbol %in% gene_list)
-        #             CNA_Status <- as.data.frame(t(Gene[,..(input$Tab3_CNA_Start_Column):ncol(Gene)]))
-        #             names(CNA_Status) <- gene_list
-        #             CNA_Status$PATIENT_ID <- rownames(CNA_Status)
-        #             rownames(CNA_Status) = NULL
-        #             CNA_Status <- CNA_Status %>% select(PATIENT_ID, all_of(gene_list)) %>% mutate_if(is.numeric, list(as.factor))
-        #             # Merge with Clinical
-        #             CNA_Status <- merge(..(datalist_Recode[["recode_data"]]()), CNA_Status, by.x = "PATIENT_ID", by.y = "PATIENT_ID") # Make sure both files have PATIENT_ID
-        #             CNA_Status }) }
-        #     } else {
-        #         validate(need(is.numeric(datalist[["CNA_Val"]]()[,input$Tab3_CNA_Start_Column]), "Please make sure CNA start column is numeric."))
-        #         metaExpr({ PATIENT_ID <- colnames(..(datalist[["CNA_Val"]]())[,..(input$Tab3_CNA_Start_Column):ncol(..(datalist[["CNA_Val"]]()))])
-        #         Scores <- as.data.frame(PATIENT_ID)
-        #         Scores$CNA_Score <- colSums(abs(..(datalist[["CNA_Val"]]())[,..(input$Tab3_CNA_Start_Column):ncol(..(datalist[["CNA_Val"]]()))]), na.rm = ..(input$Tab3_CNA_Remove_NAs_Yes_or_No))
-        #         Scores <- na.omit(Scores) # remove NAs (Could have All and CCA)
 
-        #         # CNA Score Amp and Del for Each Patient CCA (Apply)
-        #         Scores$Amp_Score <- na.omit(apply(X = ..(datalist[["CNA_Val"]]())[,..(input$Tab3_CNA_Start_Column):ncol(..(datalist[["CNA_Val"]]()))], MARGIN = 2, function(x) sum(x[x > 0], na.rm = ..(input$Tab3_CNA_Remove_NAs_Yes_or_No))))
-        #         Scores$Del_Score <- na.omit(apply(X = ..(datalist[["CNA_Val"]]())[,..(input$Tab3_CNA_Start_Column):ncol(..(datalist[["CNA_Val"]]()))], MARGIN = 2, function(x) sum(x[x < 0], na.rm = ..(input$Tab3_CNA_Remove_NAs_Yes_or_No))))
-        #         Scores$Del_Score <- abs(Scores$Del_Score)
-
-        #         if(..(input$Tab3_Segment_CNA_Yes_or_No) == "TRUE"){
-        #             Scores$Score_Quartile <- split_quantile(x=Scores$CNA_Score, type = ..(input$Tab3_Number_of_Segments)) # Segment Scores
-        #         }
-
-        #         CNA_Metrics <- Scores
-        #         CNA_Metrics_All <- merge(..(datalist_Recode[["recode_data"]]()), CNA_Metrics, by.x = "PATIENT_ID", by.y = "PATIENT_ID") # Make sure both files have PATIENT_ID
-
-        #         if(..(input$Tab3_Segment_CNA_Yes_or_No) == "TRUE"){
-        #             CNA_Metrics_All$Subset_Score_Quartile <- split_quantile(x=CNA_Metrics_All$CNA_Score, type = ..(input$Tab3_Number_of_Segments)) # Segment Scores
-        #         }
-
-        #         CNA_Metrics_All
-        #         })
-        #     }
-        # }
-    #}#lse {
-    # validate(need("PATIENT_ID" %in% colnames(datalist[["CNA_Val"]]()) | input$Tab3_CNA_of_Interest != "None", "Please choose to calculate CNA Scores, select specific genes to analyse or make sure CNA file has PATIENT_ID column."))
-    # if(input$Tab3_CNA_of_Interest == "Single Gene"){
-    #     gene_list <- unlist(str_split(c(input$Tab3_Select_Genes), pattern = ", "))
-    #     if(sum(gene_list %in% datalist[["CNA_Val"]]()[,c("Hugo_Symbol")]) != length(gene_list)){
-    #         return(NULL)
-    #     } else {
-    #         metaExpr({gene_list <- unlist(str_split(c(..(input$Tab3_Select_Genes)), pattern = ", "))
-    #         Gene <- ..(datalist[["CNA_Val"]]()) %>% filter(Hugo_Symbol %in% gene_list)
-    #         CNA_Status <- as.data.frame(t(Gene[,..(input$Tab3_CNA_Start_Column):ncol(Gene)]))
-    #         names(CNA_Status) <- gene_list
-    #         CNA_Status$PATIENT_ID <- rownames(CNA_Status)
-    #         rownames(CNA_Status) = NULL
-    #         CNA_Status <- CNA_Status %>% select(PATIENT_ID, all_of(gene_list)) %>% mutate_if(is.numeric, list(as.factor))
-    #         # Merge with Clinical
-    #         CNA_Status <- merge(..(datalist_Recode[["recode_data"]]()), CNA_Status, by.x = input$Tab3_Merge_Column, by.y = "PATIENT_ID") # Make sure both files have PATIENT_ID
-    #         CNA_Status }) }
-    # } else {
-    #     validate(need(is.numeric(datalist[["CNA_Val"]]()[,input$Tab3_CNA_Start_Column]), "Please make sure CNA start column is numeric."))
-    #     metaExpr({ PATIENT_ID <- colnames(..(datalist[["CNA_Val"]]())[,..(input$Tab3_CNA_Start_Column):ncol(..(datalist[["CNA_Val"]]()))])
-    #     Scores <- as.data.frame(PATIENT_ID)
-    #     Scores$CNA_Score <- colSums(abs(..(datalist[["CNA_Val"]]())[,..(input$Tab3_CNA_Start_Column):ncol(..(datalist[["CNA_Val"]]()))]), na.rm = ..(input$Tab3_CNA_Remove_NAs_Yes_or_No))
-    #     Scores <- na.omit(Scores) # remove NAs (Could have All and CCA)
-
-    #     # CNA Score Amp and Del for Each Patient CCA (Apply)
-    #     Scores$Amp_Score <- na.omit(apply(X = ..(datalist[["CNA_Val"]]())[,..(input$Tab3_CNA_Start_Column):ncol(..(datalist[["CNA_Val"]]()))], MARGIN = 2, function(x) sum(x[x > 0], na.rm = ..(input$Tab3_CNA_Remove_NAs_Yes_or_No))))
-    #     Scores$Del_Score <- na.omit(apply(X = ..(datalist[["CNA_Val"]]())[,..(input$Tab3_CNA_Start_Column):ncol(..(datalist[["CNA_Val"]]()))], MARGIN = 2, function(x) sum(x[x < 0], na.rm = ..(input$Tab3_CNA_Remove_NAs_Yes_or_No))))
-    #     Scores$Del_Score <- abs(Scores$Del_Score)
-
-    #     if(..(input$Tab3_Segment_CNA_Yes_or_No) == "TRUE"){
-    #         Scores$Score_Quartile <- split_quantile(x=Scores$CNA_Score, type = ..(input$Tab3_Number_of_Segments)) # Segment Scores
-    #     }
-
-    #     CNA_Metrics <- Scores
-    #     CNA_Metrics_All <- merge(..(datalist_Recode[["recode_data"]]()), CNA_Metrics, by.x = input$Tab3_Merge_Column, by.y = "PATIENT_ID") # Make sure both files have PATIENT_ID
-
-    #     if(..(input$Tab3_Segment_CNA_Yes_or_No) == "TRUE"){
-    #         CNA_Metrics_All$Subset_Score_Quartile <- split_quantile(x=CNA_Metrics_All$CNA_Score, type = ..(input$Tab3_Number_of_Segments)) # Segment Scores
-    #     }
-
-    #     CNA_Metrics_All
-    #     })
-
-    # }
-
-    #  })
 
     output$TableCNACalc = metaRender(renderDataTable, {
         datatable(..(CNA_Clin()), options = list(lengthMenu = c(10, 30, 50, 100), pageLength = 30, scrollX = TRUE, scrollY = "400px"))})
 
-#   # Dataset after all the manipulations -> use for everything going forward
-#   Whole_Data <- metaReactive2({
-#       validate(need(!is.null(input$Input_Patient_File) | !is.null(input$Input_Sample_File) | !is.null(input$Input_CNA_File) | !is.null(rowselect()), "Please input clinical file, sample file and/or CNA file OR select cBioPortal dataset"))
-#       validate(need(c(is.null(input$Input_Patient_File) & is.null(input$Input_Sample_File) & is.null(input$Input_CNA_File)) | is.null(rowselect()), "Please only select cBioPortal dataset OR upload your own data"))
-#       if(!is.null(input$Input_CNA_File) & input$Tab3_CNA_of_Interest != "None"){
-#           metaExpr({..(CNA_Clin())})
-#       } else if(!is.null(rowselect()) & input$Tab3_CNA_of_Interest == "None"){
-#           metaExpr({..(datalist_Recode[["subset_data"]]())})
-#       } else if(!is.null(rowselect()) & input$Tab3_CNA_of_Interest != "None"){
-#           metaExpr({..(CNA_Clin())})
-#       } else {
-#           metaExpr({..(datalist_Recode[["subset_data"]]())})
-#       }
-#   })
+    # Dataset after all the manipulations -> use for everything going forward
+    Whole_Data <- metaReactive2({
+        if(is.null(datalist[["API_data_output"]]()[["CNA"]]) & is.null(datalist[["CNA_manual_data"]]())){
+            metaExpr({..(datalist_Recode[["recode_data"]]())})
+        } else if(!is.null(datalist[["API_data_output"]]()[["CNA"]]) & is.null(datalist[["CNA_manual_data"]]()) & input$Tab3_CNA_of_Interest != "None"){
+            metaExpr({..(CNA_Clin())})
+        } else if(is.null(datalist[["API_data_output"]]()[["CNA"]]) & !is.null(datalist[["CNA_manual_data"]]()) & input$Tab3_CNA_of_Interest != "None"){
+            metaExpr({..(CNA_Clin())})
+        } else {
+            metaExpr({..(datalist_Recode[["recode_data"]]())})
+        }
+    })
 
-#   output$TableData = metaRender(renderDataTable, {
-#       datatable(..(Whole_Data()), options = list(lengthMenu = c(10, 30, 50, 100), pageLength = 30, scrollX = TRUE, scrollY = "400px"))})
-
-#   output$Tab3_Download_File = downloadHandler('Processed_Data.txt', content = function(file) {
-#       write.table(Whole_Data(), file, sep=input$Tab3_Download_File_Separator, quote = input$Tab3_Download_File_Quote, row.names = input$Tab3_Download_File_Row_Names)
-#   })
+    return(list(Final_DF = Whole_Data))
 
     })
 }
+
+Tab3_Download_Server <-  function(id, datalist, data) {
+    moduleServer(id, function(input, output, session) {
+
+        output$TableData = metaRender(renderDataTable, {
+            datatable(..(datalist[[data]]()), options = list(lengthMenu = c(10, 30, 50, 100), pageLength = 30, scrollX = TRUE, scrollY = "400px"))})
+
+        output$Tab3_Download_File = downloadHandler('Processed_Data.txt', content = function(file) {
+            write.table(datalist[[data]](), file, sep=input$Tab3_Download_File_Separator, quote = input$Tab3_Download_File_Quote, row.names = input$Tab3_Download_File_Row_Names)
+        })
+    })
+}
+

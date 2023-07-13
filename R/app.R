@@ -60,12 +60,12 @@ GNOSIS <- function(...) {
                      tabItem(tabName = "density_hist", Tab4_Density_UI("tab4_density")),
 
                      ## Tab 5 Kaplan-Meier Plots
-                     tabItem(tabName = "KMplot", Tab5_KM_Clin_UI("tab5_km_plot")),
-                     tabItem(tabName = "KMOver", Tab5_KM_Quart_UI("tab5_km_qurt_plot")),
-                     tabItem(tabName = "KMplotRadio", Tab5_KM_Treatment_1_UI("tab5_km_treat_plot"), Tab5_KM_Treatment_2_UI("tab5_km_treat_plot"))
+            #         tabItem(tabName = "KMplot", Tab5_KM_Clin_UI("tab5_km_plot")),
+             #        tabItem(tabName = "KMOver", Tab5_KM_Quart_UI("tab5_km_qurt_plot")),
+              #       tabItem(tabName = "KMplotRadio", Tab5_KM_Treatment_1_UI("tab5_km_treat_plot"), Tab5_KM_Treatment_2_UI("tab5_km_treat_plot")),
 
-       #   ## Tab 6 Association Tests
-       #   tabItem(tabName = "ASTest", Tab6_Association_Tests("h")),
+                     ## Tab 6 Association Tests
+                     tabItem(tabName = "ASTest", Tab6_Association_Tests_UI("tab6_association_tests"))
 
        #   ## Tab 7 Cox PH Models
        #   tabItem(tabName = "UniVar", Tab7_Univariate_CoxPH("l")),
@@ -142,50 +142,54 @@ GNOSIS <- function(...) {
           Subset_Data <- Tab3_Subset_Server("tab3_subset", Formatted_Data, "formatted_data")
           Tab3_Recode_Server("tab3_recode", Subset_Data, "subset_data")
           Recode_Data <- Tab3_Recode_Server("tab3_recode", Subset_Data, "subset_data")
-         # Tab3_CNACalc_Server("tab3_CNAcalc", datalist, Recode_Data, "recode_data", rowselect = selectedLine)
+          Tab3_CNACalc_Server("tab3_CNAcalc", datalist, Recode_Data, "recode_data", rowselect = selectedLine)
+          Final_Data <- Tab3_CNACalc_Server("tab3_CNAcalc", datalist, Recode_Data, "recode_data", rowselect = selectedLine)
+          Tab3_Download_Server("tab3_data_download", Final_Data, "Final_DF")
 
-         # Tab 4 - Exploratory Plots
-         ## Boxplots
-         PlotsBP <- Tab4_BoxPlots_Server("tab4_boxplot", Recode_Data, "recode_data")
-         Tab4_DisplayPlot_Server("tab4_boxplot", PlotsBP, "boxplot")
-         Tab4_Download_Server("tab4_boxplot", PlotsBP, "boxplot")
+          # Tab 4 - Exploratory Plots
+     #    ## Boxplots
+     #    PlotsBP <- Tab4_BoxPlots_Server("tab4_boxplot", Final_Data, "Final_DF")
+     #    Tab4_DisplayPlot_Server("tab4_boxplot", PlotsBP, "boxplot")
+     #    Tab4_Download_Server("tab4_boxplot", PlotsBP, "boxplot")
 
-         ## Scatterplots
-         PlotsSP <- Tab4_Scatterplot_Server("tab4_scatterplot", Recode_Data, "recode_data")
-         Tab4_DisplayPlot_Server("tab4_scatterplot", PlotsSP, "scatterplot")
-         Tab4_Download_Server("tab4_scatterplot", PlotsSP, "scatterplot")
+     #    ## Scatterplots
+     #    PlotsSP <- Tab4_Scatterplot_Server("tab4_scatterplot", Final_Data, "Final_DF")
+     #    Tab4_DisplayPlot_Server("tab4_scatterplot", PlotsSP, "scatterplot")
+     #    Tab4_Download_Server("tab4_scatterplot", PlotsSP, "scatterplot")
 
-         ## Barplots
-         PlotsBar <- Tab4_Barplot_Server("tab4_barplot", Recode_Data, "recode_data")
-         Tab4_DisplayPlot_Server("tab4_barplot", PlotsBar, "barplot")
-         Tab4_Download_Server("tab4_barplot", PlotsBar, "barplot")
+     #    ## Barplots
+     #    PlotsBar <- Tab4_Barplot_Server("tab4_barplot", Final_Data, "Final_DF")
+     #    Tab4_DisplayPlot_Server("tab4_barplot", PlotsBar, "barplot")
+     #    Tab4_Download_Server("tab4_barplot", PlotsBar, "barplot")
 
-         ## Histograms
-         PlotsHist <- Tab4_Hist_Server("tab4_density", Recode_Data, "recode_data")
-         Tab4_DisplayPlot_Server("tab4_density", PlotsHist, "histogram")
-         Tab4_Download_Server("tab4_density", PlotsHist, "histogram")
-         Tab4_DisplayPlot_Server("tab4_density", PlotsHist, "facet_histogram")
-         Tab4_Download_Server("tab4_density", PlotsHist, "facet_histogram")
+     #    ## Histograms
+     #    PlotsHist <- Tab4_Hist_Server("tab4_density", Final_Data, "Final_DF")
+     #    Tab4_DisplayPlot_Server("tab4_density", PlotsHist, "histogram")
+     #    Tab4_Download_Server("tab4_density", PlotsHist, "histogram")
+     #    Tab4_DisplayPlot_Server("tab4_density", PlotsHist, "facet_histogram")
+     #    Tab4_Download_Server("tab4_density", PlotsHist, "facet_histogram")
 
-         # Tab 5 - Survival Plots
-         ## Clinical KM Curves
-         Plot_KM <- Tab5_KM_Plot_Server("tab5_km_plot", Recode_Data, "recode_data")
-         Tab5_Display_KM_Plot_Server("tab5_km_plot", Plot_KM, "surv_plot")
-         Tab5_Download_Server("tab5_km_plot", Plots_KM, "surv_plot")
+     #    # Tab 5 - Survival Plots
+     #    ## Clinical KM Curves
+     #    Plot_KM <- Tab5_KM_Plot_Server("tab5_km_plot", Final_Data, "Final_DF")
+     #    Tab5_Display_KM_Plot_Server("tab5_km_plot", Plot_KM, "surv_plot")
+     #    Tab5_Download_Server("tab5_km_plot", Plots_KM, "surv_plot")
 
-         ## CNA KM Curves
-         Plot_KM_Quart <- Tab5_KM_Plot_Quart_Server("tab5_km_qurt_plot",  Recode_Data, "recode_data")
-         Tab5_Display_KM_Plot_Server("tab5_km_qurt_plot", Plot_KM_Quart, "surv_plot")
-         Tab5_Download_Server("tab5_km_qurt_plot", Plots_KM_Quart, "surv_plot")
+     #    ## CNA KM Curves
+     #    Plot_KM_Quart <- Tab5_KM_Plot_Quart_Server("tab5_km_qurt_plot",  Final_Data, "Final_DF")
+     #    Tab5_Display_KM_Plot_Server("tab5_km_qurt_plot", Plot_KM_Quart, "surv_plot")
+     #    Tab5_Download_Server("tab5_km_qurt_plot", Plots_KM_Quart, "surv_plot")
 
-         ## Treatment KM Curves
-         Plot_KM_Treat <- Tab5_KM_Plot_Treat_Server("tab5_km_treat_plot",  Recode_Data, "recode_data")
-         Tab5_Display_KM_Plot_Server("tab5_km_treat_plot", Plot_KM_Treat, "surv_plot_Yes")
-         Tab5_Download_Server("tab5_km_treat_plot", Plots_KM_Treat, "surv_plot_Yes")
-         Tab5_Display_KM_Plot_Server("tab5_km_treat_plot", Plot_KM_Treat, "surv_plot_No")
-         Tab5_Download_Server("tab5_km_treat_plot", Plots_KM_Treat, "surv_plot_No")
+     #    ## Treatment KM Curves
+     #    Plot_KM_Treat <- Tab5_KM_Plot_Treat_Server("tab5_km_treat_plot",  Final_Data, "Final_DF")
+     #    Tab5_Display_KM_Plot_Server("tab5_km_treat_plot", Plot_KM_Treat, "surv_plot_Yes")
+     #    Tab5_Download_Server("tab5_km_treat_plot", Plots_KM_Treat, "surv_plot_Yes")
+     #    Tab5_Display_KM_Plot_Server("tab5_km_treat_plot", Plot_KM_Treat, "surv_plot_No")
+     #    Tab5_Download_Server("tab5_km_treat_plot", Plots_KM_Treat, "surv_plot_No")
 
-         # Tab 6 - Association Tests
+          # Tab 6 - Association Tests
+          ## Chi-Square
+         Tab6_Chi_Square_Server("tab6_association_tests", datalist,  Final_Data, "Final_DF", rowselect = selectedLine)
     }
 
     shinyApp(ui, server, ...)
@@ -193,7 +197,3 @@ GNOSIS <- function(...) {
 
 GNOSIS()
 
-
-#library(tidyverse)
-#library(cBioPortalData)
-#cbio <- cBioPortal()
