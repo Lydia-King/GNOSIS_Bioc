@@ -23,9 +23,9 @@ Tab9_Rpart_UI <- function(id) {
                                       sliderInput(inputId = ns("Tab9_Rpart_Cp"), label = "cp:", value = .01, min = 0.0001, max = 0.05),
                                       sliderInput(inputId = ns("Tab9_Rpart_Xval"), label = "xval:", value = 10, min = 0, max = 20),
                                       sliderInput(inputId = ns("Tab9_Rpart_Maxdepth"), label = "maxdepth:", value = 25, min = 0, max = 50),
-                                      tags$hr(), numericInput(ns("Tab9_Rpart_Plot_Width"), "Plot Width (inches):", value=8, min=1, max=50),
-                                      numericInput(ns("Tab9_Rpart_Plot_Height"), "Plot Height (inches):", value=5, min=1, max=50), tags$hr(),
-                                      downloadButton(ns('Tab9_Download_Rpart_Plot_PNG'),'Download Plot (PNG)', style = "width:100%;"),  br(), br(), downloadButton(ns('Tab9_Download_Rpart_Plot_SVG'),'Download Plot (SVG)', style = "width:100%;"))),
+                                      tags$hr(), numericInput(ns("Plot_Width"), "Plot Width (inches):", value=8, min=1, max=50),
+                                      numericInput(ns("Plot_Height"), "Plot Height (inches):", value=5, min=1, max=50), tags$hr(),
+                                      downloadButton(ns('Download_Plot_PNG'),'Download Plot (PNG)', style = "width:100%;"),  br(), br(), downloadButton(ns('Download_Plot_SVG'),'Download Plot (SVG)', style = "width:100%;"))),
 
              box(collapsible = T, height = "550px", width = 12, status = "primary", title = "Corresponding Survival Curves", solidHeader = TRUE, withSpinner(plotOutput(ns("Surv_Curve1"), height = "510px")),
                  sidebar = boxSidebar(id="Tab9_Rpart_Surv_Sidebar", width =25, background = "#599740",  icon = shiny::icon("rectangle-list"),
@@ -37,9 +37,9 @@ Tab9_Rpart_UI <- function(id) {
                                       textInput(ns("Tab9_Surv_Rpart_Plot_Title"), "Plot Title:", "Breast cancer patients in METABRIC data", placeholder = T),
                                       textInput(ns("Tab9_Surv_Rpart_X_Axis_Title"), "X-axis Title:", "Survival Time", placeholder = T), textInput(ns("Tab9_Surv_Rpart_Y_Axis_Title"), "Y-axis Title:", "Survival Probability", placeholder = T),
                                       textInput(ns("Tab9_Surv_Rpart_Legend_Title"), "Legend Title:", "Legend", placeholder = T),
-                                      tags$hr(), numericInput(ns("Tab9_Surv_Rpart_Plot_Width"), "Plot Width (inches):", value=8, min=1, max=50),
-                                      numericInput(ns("Tab9_Surv_Rpart_Plot_Height"), "Plot Height (inches):", value=5, min=1, max=50), tags$hr(),
-                                      downloadButton(ns('Tab9_Download_Surv_Rpart_Plot_PNG'),'Download Plot (PNG)', style = "width:100%;"),  br(), br(), downloadButton(ns('Tab9_Download_Surv_Rpart_Plot_SVG'),'Download Plot (SVG)', style = "width:100%;"))))
+                                      tags$hr(), numericInput(ns("Plot_Width"), "Plot Width (inches):", value=8, min=1, max=50),
+                                      numericInput(ns("Plot_Height"), "Plot Height (inches):", value=5, min=1, max=50), tags$hr(),
+                                      downloadButton(ns('Download_Plot_PNG'),'Download Plot (PNG)', style = "width:100%;"),  br(), br(), downloadButton(ns('Download_Plot_SVG'),'Download Plot (SVG)', style = "width:100%;"))))
 
 }
 

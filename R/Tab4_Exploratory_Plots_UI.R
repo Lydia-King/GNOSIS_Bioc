@@ -11,11 +11,11 @@ Tab4_Boxplot_UI <- function(id) {
                              textInput(ns("Tab4_Boxplot_Title"), "Plot Title:", "Clinical Variable Boxplot", placeholder = T),
                              textInput(ns("Tab4_Boxplot_X_Axis_Title"), "X-axis Title:", "Clinical Variable X", placeholder = T), textInput(ns("Tab4_Boxplot_Y_Axis_Title"), "Y-axis Title:", "Clinical Variable Y", placeholder = T),
                              textInput(ns("Tab4_Boxplot_Legend_Title"), "Legend Title:", "Legend", placeholder = T),
-                             tags$hr(), numericInput(ns("Tab4_Plot_Width"), "Plot Width (inches):", value=8, min=1, max=50),
-                             numericInput(ns("Tab4_Plot_Height"), "Plot Height (inches):", value=5, min=1, max=50),
-                             tags$hr(), downloadButton(ns('Tab4_Download_PNG'),'Download Plot (PNG)', style = "width:100%;"),
+                             tags$hr(), numericInput(ns("Plot_Width"), "Plot Width (inches):", value=8, min=1, max=50),
+                             numericInput(ns("Plot_Height"), "Plot Height (inches):", value=5, min=1, max=50),
+                             tags$hr(), downloadButton(ns('Download_PNG'),'Download Plot (PNG)', style = "width:100%;"),
                              br(), br(),
-                             downloadButton(ns('Tab4_Download_SVG'),'Download Plot (SVG)', style = "width:100%;")))
+                             downloadButton(ns('Download_SVG'),'Download Plot (SVG)', style = "width:100%;")))
 }
 
 # 2) Scatterplots
@@ -29,10 +29,10 @@ Tab4_Scatterplot_UI <- function(id) {
                              textInput(ns("Tab4_Scatterplot_Title"), "Plot Title:", "Scatterplot of Clinical Variables and Scores", placeholder = T),
                              textInput(ns("Tab4_Scatterplot_X_Axis_Title"), "X-axis Title:", "Clinical Variable X", placeholder = T), textInput(ns("Tab4_Scatterplot_Y_Axis_Title"), "Y-axis Title:", "Clinical Variable Y", placeholder = T),
                              textInput(ns("Tab4_Scatterplot_Legend_Title"), "Legend Title:", "Legend", placeholder = T),
-                             tags$hr(), numericInput(ns("Tab4_Plot_Width"), "Plot Width (inches):", value=8, min=1, max=50),
-                             numericInput(ns("Tab4_Plot_Height"), "Plot Height (inches):", value=5, min=1, max=50),
-                             tags$hr(), downloadButton(ns('Tab4_Download_PNG'),'Download Plot (PNG)', style = "width:100%;"),
-                             br(), br(), downloadButton(ns('Tab4_Download_SVG'),'Download Plot (SVG)', style = "width:100%;")))
+                             tags$hr(), numericInput(ns("Plot_Width"), "Plot Width (inches):", value=8, min=1, max=50),
+                             numericInput(ns("Plot_Height"), "Plot Height (inches):", value=5, min=1, max=50),
+                             tags$hr(), downloadButton(ns('Download_PNG'),'Download Plot (PNG)', style = "width:100%;"),
+                             br(), br(), downloadButton(ns('Download_SVG'),'Download Plot (SVG)', style = "width:100%;")))
 }
 
 # 3) Barplots
@@ -47,10 +47,10 @@ Tab4_Barplot_UI <- function(id) {
                              textInput(ns("Tab4_Barplot_Title"), "Plot Title:", "Barplot of Clinical Variables and Scores", placeholder = T),
                              textInput(ns("Tab4_Barplot_X_Axis_Title"), "X-axis Title:", "Clinical Variable X", placeholder = T), textInput(ns("Tab4_Barplot_Y_Axis_Title"), "Y-axis Title:", "Count", placeholder = T),
                              textInput(ns("Tab4_Barplot_Legend_Title"), "Legend Title:", "Legend", placeholder = T),
-                             tags$hr(), numericInput(ns("Tab4_Plot_Width"), "Plot Width (inches):", value=8, min=1, max=50),
-                             numericInput(ns("Tab4_Plot_Height"), "Plot Height (inches):", value=5, min=1, max=50),
-                             tags$hr(), downloadButton(ns('Tab4_Download_PNG'),'Download Plot (PNG)', style = "width:100%;"),
-                             br(), br(), downloadButton(ns('Tab4_Download_SVG'),'Download Plot (SVG)', style = "width:100%;")))
+                             tags$hr(), numericInput(ns("Plot_Width"), "Plot Width (inches):", value=8, min=1, max=50),
+                             numericInput(ns("Plot_Height"), "Plot Height (inches):", value=5, min=1, max=50),
+                             tags$hr(), downloadButton(ns('Download_PNG'),'Download Plot (PNG)', style = "width:100%;"),
+                             br(), br(), downloadButton(ns('Download_SVG'),'Download Plot (SVG)', style = "width:100%;")))
 }
 
 # 4) Density plot of CNA scores etc.

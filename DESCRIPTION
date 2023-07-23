@@ -2,4 +2,6 @@ Package: GNOSIS
 Type: Package
 Title: GeNomics explOrer using StatistIcal and Survival analysis in R
 Version: 0.0.1.0
+Encoding: UTF-8
+Depends: shiny, shinydashboard, shinydashboardPlus, dashboardthemes, fontawesome, shinyWidgets, shinycssloaders, shinymeta, tidyverse
 RoxygenNote: 7.2.3

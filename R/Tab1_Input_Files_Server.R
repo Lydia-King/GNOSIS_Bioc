@@ -1,12 +1,15 @@
+# cBioPortalData API
 Tab1_API_Files_Server <- function(API) {
     moduleServer(API, function(input, output, session) {
 
-
         API_data <- metaReactive2({ metaExpr({
             tryCatch({
-            cbio <- cBioPortal(hostname = "www.cbioportal.org", protocol = "https", api. = "/api/api-docs")
-            as.data.frame(getStudies(cbio))
-            },  error = function(e){return(NULL)})
+                cbio <- cBioPortalData::cBioPortal(hostname = "www.cbioportal.org", protocol = "https", api. = "/api/api-docs")
+                as.data.frame(cBioPortalData::getStudies(cbio))
+            },  error = function(e){
+                message(e)
+                # Choose a return value in case of error
+                return(NULL)})
         })
         })
 
@@ -17,15 +20,8 @@ Tab1_API_Files_Server <- function(API) {
 }
 
 ## Tab 1 - Input Files (Upload ourselves or use API)
-# 1) Input Clinical Patient File from cBioPortal: can specify header, sep, quote and Tab3_Segment_CNA_Yes_or_No of lines to skip (default = tab, double quote, skip 4)
-# 2) Input Clinical Sample File from cBioPortal: can specify header, sep, quote and Tab3_Segment_CNA_Yes_or_No of lines to skip (default = tab, double quote, skip 4)
-# 3) Merge two files (patient and sample -> clinical data) -> Make sure PATIENT ID column exists
-# 4) Input CNA File from cBioPortal: can specify header, sep, quote and Tab3_Segment_CNA_Yes_or_No of lines to skip (default = tab, double quote, skip 0)
-# 5) Input MAF File from cBioPortal: can specify header, sep, quote and Tab3_Segment_CNA_Yes_or_No of lines to skip (default = tab, double quote, skip 1)
-# 6) API data
-
-Tab1_Input_Files_Manual_Server <- function(tab1_input_manual, rowselect) {
-    moduleServer(tab1_input_manual, function(input, output, session) {
+Tab1_Input_Files_Manual_Server <- function(id, rowselect) {
+    moduleServer(id, function(input, output, session) {
 
        # Clinical Data
         patient_data <-  metaReactive2({if(is.null(input$Input_Patient_File)){
@@ -87,10 +83,10 @@ Tab1_Input_Files_Manual_Server <- function(tab1_input_manual, rowselect) {
             if(is.null(rowselect())){
                 return(NULL)
             } else {
-                cbio <- cBioPortal(hostname = "www.cbioportal.org", protocol = "https", api. = "/api/api-docs")
-                API <-  as.data.frame(getStudies(cbio))
+                cbio <- cBioPortalData::cBioPortal(hostname = "www.cbioportal.org", protocol = "https", api. = "/api/api-docs")
+                API <-  as.data.frame(cBioPortalData::getStudies(cbio))
                 samp <- API[rowselect(), "studyId"]
-                download <- downloadStudy(samp)
+                download <- cBioPortalData::downloadStudy(samp)
                 return(list(download = download, samp = samp))
             }
         })
@@ -101,7 +97,7 @@ Tab1_Input_Files_Manual_Server <- function(tab1_input_manual, rowselect) {
             } else {
                 study <- API_Out()[["download"]]
                 samp <-  API_Out()[["samp"]]
-                file_dir <- untarStudy(study, tempdir())
+                file_dir <- cBioPortalData::untarStudy(study, tempdir())
                 patient_clin_file <- if(file.exists(paste0(file_dir, "/", samp, "/data_clinical_patient.txt"))){
                     read.delim(paste0(file_dir, "/", samp, "/data_clinical_patient.txt"),
                                                 header = input$Tab1_Clin_Header_Yes_or_No,
@@ -233,6 +229,7 @@ Tab1_Input_Files_Manual_Server <- function(tab1_input_manual, rowselect) {
     })
 }
 
+# Display dimensions
 Count_Col <- function(dataset) {
     moduleServer(dataset, function(input, output, session) {
         metaExpr({ncol(..(dataset))})
@@ -245,6 +242,7 @@ Count_Row <- function(dataset) {
     })
 }
 
+# Preview uploaded or selected data
 Tab1_Input_Files_Preview_Server <- function(id, datalist, data, length_px, select_dt) {
     moduleServer(id, function(input, output, session) {
         loading_API <- function() {

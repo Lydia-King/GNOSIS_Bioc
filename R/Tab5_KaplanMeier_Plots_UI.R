@@ -19,9 +19,9 @@ Tab5_KM_Clin_UI  <- function(id) {
                              selectInput(ns("Tab5_KM_Clinical_Legend_Position"), "Legend Position:", choices = c("top", "bottom", "left", "right", "none"), selected = "right"), tags$hr(),
                              textInput(ns("Tab5_KM_Clinical_Plot_Title"), "Plot Title:", "Breast cancer patients in METABRIC data", placeholder = T),
                              textInput(ns("Tab5_KM_Clinical_X_Axis_Title"), "X-axis Title:", "Survival Time", placeholder = T), textInput(ns("Tab5_KM_Clinical_Y_Axis_Title"), "Y-axis Title:", "Survival Probability", placeholder = T),
-                             textInput(ns("Tab5_KM_Clinical_Legend_Title"), "Legend Title:", "Legend", placeholder = T), tags$hr(), numericInput(ns("Tab5_Plot_Width"), "Plot Width (inches):", value=8, min=1, max=50),
-                             numericInput(ns("Tab5_Plot_Height"), "Plot Height (inches):", value=5, min=1, max=50), tags$hr(), downloadButton(ns('Tab5_Download_PNG'),'Download Plot (PNG)', style = "width:100%;"),
-                             br(), br(), downloadButton(ns('Tab5_Download_SVG'),'Download Plot (SVG)', style = "width:100%;"))),
+                             textInput(ns("Tab5_KM_Clinical_Legend_Title"), "Legend Title:", "Legend", placeholder = T), tags$hr(), numericInput(ns("Plot_Width"), "Plot Width (inches):", value=8, min=1, max=50),
+                             numericInput(ns("Plot_Height"), "Plot Height (inches):", value=5, min=1, max=50), tags$hr(), downloadButton(ns('Download_PNG'),'Download Plot (PNG)', style = "width:100%;"),
+                             br(), br(), downloadButton(ns('Download_SVG'),'Download Plot (SVG)', style = "width:100%;"))),
     box(title = ("Logrank Test"), collapsible = T, style="overflow-y: hidden", solidHeader = T, width = 12, status = "primary", withSpinner(verbatimTextOutput(ns("KMlogrank")))))
 }
 
@@ -44,9 +44,9 @@ Tab5_KM_Quart_UI  <- function(id) {
                                  textInput(ns("Tab5_KM_CNA_Plot_Title"), "Plot Title:", "Breast cancer patients in METABRIC data", placeholder = T),
                                  textInput(ns("Tab5_KM_CNA_X_Axis_Title"), "X-axis Title:", "Survival Time", placeholder = T), textInput(ns("Tab5_KM_CNA_Y_Axis_Title"), "Y-axis Title:", "Survival Probability", placeholder = T),
                                  textInput(ns("Tab5_KM_CNA_Legend_Title"), "Legend Title:", "Legend", placeholder = T),
-                                 tags$hr(), numericInput(ns("Tab5_Plot_Width"), "Plot Width (inches):", value=8, min=1, max=50),
-                                 numericInput(ns("Tab5_Plot_Height"), "Plot Height (inches):", value=5, min=1, max=50), tags$hr(),
-                                 downloadButton(ns('Tab5_Download_PNG'),'Download Plot (PNG)', style = "width:100%;"),  br(), br(), downloadButton(ns('Tab5_Download_SVG'),'Download Plot (SVG)', style = "width:100%;"))),
+                                 tags$hr(), numericInput(ns("Plot_Width"), "Plot Width (inches):", value=8, min=1, max=50),
+                                 numericInput(ns("Plot_Height"), "Plot Height (inches):", value=5, min=1, max=50), tags$hr(),
+                                 downloadButton(ns('Download_PNG'),'Download Plot (PNG)', style = "width:100%;"),  br(), br(), downloadButton(ns('Download_SVG'),'Download Plot (SVG)', style = "width:100%;"))),
         box(title = ("Logrank Test"), collapsible = T, style = "overflow-y: hidden", width = 12, status = "primary", solidHeader = T, withSpinner(verbatimTextOutput(ns("KMlogrank1"))))) # Logrank Test
 }
 

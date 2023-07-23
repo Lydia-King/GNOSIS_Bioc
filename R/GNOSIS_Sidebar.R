@@ -28,7 +28,7 @@ GNOSIS_sidebarUI <- function(GNOSIS_sidebar_ui) {
                     menuItem("Adjusted Survival Curves", tabName = "AdjSurvival", icon = fa_i(name ="heartbeat", verify_fa = FALSE)),
                     menuItem("Survival Trees", tabName = "SurvTrees", icon = fa_i(name ="tree", verify_fa = FALSE),
                              menuSubItem("Rpart", tabName = "RpartTree"),
-                             menuSubItem("Ctree", tabName = "STreeCtree")),
+                             menuSubItem("Ctree", tabName = "CtreeTree")),
                     menuItem("Maftools Summary", tabName = "MAFplots", icon = fa_i(name ="exclamation-triangle", verify_fa = FALSE),
                              menuSubItem("MAF Text Summary", tabName = "MAFText"),
                              menuSubItem("MAF Visual Summary", tabName = "MAFVis")),

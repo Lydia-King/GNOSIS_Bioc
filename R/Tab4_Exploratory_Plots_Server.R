@@ -339,7 +339,6 @@ Tab4_Hist_Server <- function(id, datalist, data) {
     })
 }
 
-
 ## Render plot
 Tab4_DisplayPlot_Server <- function(id, datalist, plot) {
     moduleServer(id, function(input, output, session) {
@@ -347,20 +346,27 @@ Tab4_DisplayPlot_Server <- function(id, datalist, plot) {
     })
 }
 
-## Download Plot
-Tab4_Download_Server <- function(id, datalist, plot) {
-    moduleServer(id, function(input, output, session) {
-        output$Tab4_Download_PNG <- downloadHandler(filename = function(){paste(plot, ".png", sep="")}, content = function(file){
-            png(file, width = input$Tab4_Plot_Width, height = input$Tab4_Plot_Height, units="in", res = 1200)
-            print(datalist[[plot]]())
-            dev.off()})
-
-        output$Tab4_Download_SVG <- downloadHandler(filename = function(){paste(plot, ".svg", sep="")}, content = function(file){
-            svg(file, width = input$Tab4_Plot_Width, height = input$Tab4_Plot_Height)
-            print(datalist[[plot]]())
-            dev.off()})
-    })
-}
+### Render plot
+#Tab4_DisplayPlot_Server <- function(id, datalist, plot) {
+#    moduleServer(id, function(input, output, session) {
+#        output$Plot = metaRender(renderPlot, { ..(datalist[[plot]]())})
+#    })
+#}
+#
+### Download Plot
+#Tab4_Download_Server <- function(id, datalist, plot) {
+#    moduleServer(id, function(input, output, session) {
+#        output$Tab4_Download_PNG <- downloadHandler(filename = function(){paste(plot, ".png", sep="")}, content = function(file){
+#            png(file, width = input$Tab4_Plot_Width, height = input$Tab4_Plot_Height, units="in", res = 1200)
+#            print(datalist[[plot]]())
+#            dev.off()})
+#
+#        output$Tab4_Download_SVG <- downloadHandler(filename = function(){paste(plot, ".svg", sep="")}, content = function(file){
+#            svg(file, width = input$Tab4_Plot_Width, height = input$Tab4_Plot_Height)
+#            print(datalist[[plot]]())
+#            dev.off()})
+#    })
+#}
 
 
 
