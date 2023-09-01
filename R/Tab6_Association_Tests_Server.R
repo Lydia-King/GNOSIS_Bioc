@@ -306,7 +306,7 @@ Tab6_FE_Sim_Server <- function(id, datalist, datalist1, data, rowselect) {
                             )
                         )
                         print(stats::fisher.test(
-                            ..(data_Association2())[[i]], simulate.p.value = T
+                            ..(data_Association2())[[i]], simulate.p.value = TRUE
                         ))
                     }
                 })
@@ -356,7 +356,7 @@ Tab6_FE_Sim_Server <- function(id, datalist, datalist1, data, rowselect) {
                     for (i in 1:length(..(input$Tab6_Select_Categorical_Variable_2))) {
                         name <- ..(input$Tab6_Select_Categorical_Variable_2)[i]
                         SimF_List[[name]] <- stats::fisher.test(
-                            ..(data_Association2())[[i]], simulate.p.value = T
+                            ..(data_Association2())[[i]], simulate.p.value = TRUE
                         )
                     }
                     SimF_List
@@ -420,7 +420,7 @@ Tab6_FE_Sim_Server <- function(id, datalist, datalist1, data, rowselect) {
                                 )
                             )
                             Test <- stats::fisher.test(
-                                ..(data_Association2())[[i]], simulate.p.value = T
+                                ..(data_Association2())[[i]], simulate.p.value = TRUE
                             )
                             Pval <- c(Pval, signif(Test$p.value, digits = 3))
                         }, error=function(e) {
@@ -502,7 +502,7 @@ Tab6_FE_Server <- function(id, datalist, datalist1, data, rowselect) {
                                               ..(input$Tab6_Select_Categorical_Variable_1), "and",
                                               "Categorical Variable 2:",
                                               ..(input$Tab6_Select_Categorical_Variable_2)[i], "\n")))
-                            print(stats::fisher.test(..(data_Association2())[[i]], simulate.p.value = F))
+                            print(stats::fisher.test(..(data_Association2())[[i]], simulate.p.value = FALSE))
                         }, error=function(e) {
                             cat("ERROR :", conditionMessage(e), "\n")
                         })
@@ -536,7 +536,7 @@ Tab6_FE_Server <- function(id, datalist, datalist1, data, rowselect) {
                         name <- ..(input$Tab6_Select_Categorical_Variable_2)[i]
                         tryCatch({
                             F_List[[name]] <- stats::fisher.test(
-                                ..(data_Association2())[[i]], simulate.p.value = F)
+                                ..(data_Association2())[[i]], simulate.p.value = FALSE)
                         }, error=function(e) {
                             cat("ERROR :", conditionMessage(e), "\n")
                         })
@@ -1227,7 +1227,7 @@ Tab6_PWC_Server <- function(id, datalist, datalist1, data, rowselect) {
                         print(DescTools::DunnTest(
                             ..(datalist1[[data]]())[,..(input$Tab6_Select_Continuous_Variable_1)[i]],
                             ..(datalist1[[data]]())[,..(input$Tab6_Select_Categorical_Variable_3)],
-                            method = "BH", out.list = F))
+                            method = "BH", out.list = FALSE))
                     }
                 })}
         })
@@ -1262,7 +1262,7 @@ Tab6_PWC_Server <- function(id, datalist, datalist1, data, rowselect) {
                         PairwiseD_List[[name]] <- DescTools::DunnTest(
                             ..(datalist1[[data]]())[,..(input$Tab6_Select_Continuous_Variable_1)[i]],
                             ..(datalist1[[data]]())[,..(input$Tab6_Select_Categorical_Variable_3)],
-                            method = "BH", out.list = F)
+                            method = "BH", out.list = FALSE)
                     }
                     PairwiseD_List
                 })}

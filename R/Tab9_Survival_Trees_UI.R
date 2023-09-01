@@ -2,7 +2,7 @@
 Tab9_Rpart_UI <- function(id) {
     ns <- NS(id)
     fluidRow(
-        box(collapsible = T, width = 12, status = "primary", height = "600px",
+        box(collapsible = TRUE, width = 12, status = "primary", height = "600px",
             title = "Rpart Survival Tree", solidHeader = TRUE,
             shinycssloaders::withSpinner(plotOutput(ns("RpartTreePlot"), height = "540px")),
             dropdownMenu = boxDropdown(icon = fontawesome::fa_i(name = "info-circle", verify_fa = FALSE),
@@ -41,7 +41,7 @@ Tab9_Rpart_UI <- function(id) {
                                                 style = "width:100%;")
             )
         ),
-        box(collapsible = T, height = "550px", width = 12, status = "primary",
+        box(collapsible = TRUE, height = "550px", width = 12, status = "primary",
             title = "Corresponding Survival Curves", solidHeader = TRUE,
             shinycssloaders::withSpinner(plotOutput(ns("Surv_Curve1"), height = "510px")),
             sidebar = boxSidebar(id = "Tab9_Rpart_Surv_Sidebar", width = 25,
@@ -64,13 +64,13 @@ Tab9_Rpart_UI <- function(id) {
                                              choices = c("top", "bottom", "left", "right", "none"), selected = "right"),
                                  tags$hr(),
                                  textInput(ns("Tab9_Surv_Rpart_Plot_Title"), "Plot Title:",
-                                           "Breast cancer patients in METABRIC data", placeholder = T),
+                                           "Breast cancer patients in METABRIC data", placeholder = TRUE),
                                  textInput(ns("Tab9_Surv_Rpart_X_Axis_Title"), "X-axis Title:",
-                                           "Survival Time", placeholder = T),
+                                           "Survival Time", placeholder = TRUE),
                                  textInput(ns("Tab9_Surv_Rpart_Y_Axis_Title"), "Y-axis Title:",
-                                           "Survival Probability", placeholder = T),
+                                           "Survival Probability", placeholder = TRUE),
                                  textInput(ns("Tab9_Surv_Rpart_Legend_Title"), "Legend Title:",
-                                           "Legend", placeholder = T),
+                                           "Legend", placeholder = TRUE),
                                  tags$hr(), numericInput(ns("Plot_Width_2"), "Plot Width (inches):",
                                                          value = 8, min = 1, max = 50),
                                  numericInput(ns("Plot_Height_2"), "Plot Height (inches):",
@@ -89,7 +89,7 @@ Tab9_Ctree_UI <- function(id) {
     ns <- NS(id)
 
     fluidRow(
-        box(collapsible = T, width = 12, status = "primary", height = "600px",
+        box(collapsible = TRUE, width = 12, status = "primary", height = "600px",
             title = "Ctree Survival Tree", solidHeader = TRUE,
             shinycssloaders::withSpinner(plotOutput(ns("CTreePlot"), height = "540px")),
             dropdownMenu = boxDropdown(
@@ -160,7 +160,7 @@ Tab9_Ctree_UI <- function(id) {
             )
         ),
 
-        box(collapsible = T, width = 12, height = "550px", status = "primary",
+        box(collapsible = TRUE, width = 12, height = "550px", status = "primary",
             title = "Corresponding Survival Curves", solidHeader = TRUE,
             shinycssloaders::withSpinner(plotOutput(ns("Surv_CurveCtree"), height = "510px")),
             sidebar = boxSidebar(id = "Tab9_Ctree_Curv_Sidebar", width = 25, background = "#599740",
@@ -182,13 +182,13 @@ Tab9_Ctree_UI <- function(id) {
                                              choices = c("top", "bottom", "left", "right", "none"), selected = "right"),
                                  tags$hr(),
                                  textInput(ns("Tab9_Surv_Ctree_Plot_Title"), "Plot Title:",
-                                           "Breast cancer patients in METABRIC data", placeholder = T),
+                                           "Breast cancer patients in METABRIC data", placeholder = TRUE),
                                  textInput(ns("Tab9_Surv_Ctree_X_Axis_Title"), "X-axis Title:",
-                                           "Survival Time", placeholder = T),
+                                           "Survival Time", placeholder = TRUE),
                                  textInput("Tab9_Surv_Ctree_Y_Axis_Title", "Y-axis Title:",
-                                           "Survival Probability", placeholder = T),
+                                           "Survival Probability", placeholder = TRUE),
                                  textInput(ns("Tab9_Surv_Ctree_Legend_Title"), "Legend Title:",
-                                           "Legend", placeholder = T),
+                                           "Legend", placeholder = TRUE),
                                  tags$hr(), numericInput(ns("Plot_Width_2"), "Plot Width (inches):",
                                                          value = 8, min = 1, max = 50),
                                  numericInput(ns("Plot_Height_2"), "Plot Height (inches):",

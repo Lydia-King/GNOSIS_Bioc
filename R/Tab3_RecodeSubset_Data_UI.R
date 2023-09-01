@@ -3,7 +3,7 @@ Tab3_Factor_Levels_UI <- function(id) {
     ns <- NS(id)
     fluidRow(
         box(
-            collapsible = T, height = "500px", width = 12,
+            collapsible = TRUE, height = "500px", width = 12,
             solidHeader = TRUE, status = "primary",
             title = ("Clinical Variable Types"),
             verbatimTextOutput(ns("DataTypes")),
@@ -25,7 +25,7 @@ Tab3_Factor_Levels_UI <- function(id) {
             )
         ),
         box(
-            collapsible = T,
+            collapsible = TRUE,
             style = "height:300px; overflow-y: scroll;overflow-x: hidden",
             solidHeader = TRUE, width = 12, status = "primary",
             title = ("Clinical Variable Levels"),
@@ -42,8 +42,8 @@ Tab3_Subset_UI <- function(id) {
     ns <- NS(id)
     fluidRow(
         box(
-            collapsible = T, title =  "Filter and Preview Clinical Data",
-            height = "500px", solidHeader = T, status = "primary", width = 12,
+            collapsible = TRUE, title =  "Filter and Preview Clinical Data",
+            height = "500px", solidHeader = TRUE, status = "primary", width = 12,
             shinycssloaders::withSpinner(
                 DT::dataTableOutput(ns("TableRecode1")),
                 proxy.height = "460px"
@@ -85,7 +85,7 @@ Tab3_Subset_UI <- function(id) {
             )
         ),
         box(
-            collapsible = T, solidHeader = TRUE, height = "300px",
+            collapsible = TRUE, solidHeader = TRUE, height = "300px",
             title = "Check Selected Variable Levels", width = 12,
             status = "primary", style ="height:300px; overflow-y: scroll;",
             shinycssloaders::withSpinner(
@@ -101,13 +101,13 @@ Tab3_Recode_UI <- function(id) {
     ns <- NS(id)
     fluidRow(
         box(
-            collapsible = T, solidHeader = TRUE, width = 3,
+            collapsible = TRUE, solidHeader = TRUE, width = 3,
             status = "primary", title = ("Select Survival Columns"),
             awesomeRadio(
                 inputId = ns("Tab3_Recode_Survival_Yes_or_No"),
                 label = "Recode Survival Columns:",
                 choices = c("No", "Yes"), selected = "No",
-                inline = F, status = "primary"
+                inline = FALSE, status = "primary"
             ),
             tags$hr(),
             selectInput(
@@ -125,7 +125,7 @@ Tab3_Recode_UI <- function(id) {
             verbatimTextOutput("Died of Disease")
         ),
         box(
-            collapsible = T, solidHeader = TRUE,
+            collapsible = TRUE, solidHeader = TRUE,
             title = "Check Survival Recoding", width = 9,
             status = "primary", style = "height:500px",
             shinycssloaders::withSpinner(
@@ -156,14 +156,14 @@ Tab3_CNACalc_UI <- function(id) {
                     inputId = ns("Tab3_CNA_of_Interest"),
                     label = "CNA of Interest:",
                     choices = c("None", "Single Gene", "CNA Score"),
-                    selected = "None", inline = F, status = "primary"
+                    selected = "None", inline = FALSE, status = "primary"
                 ),
                 tags$hr(width = "93%"),
                 awesomeRadio(
                     inputId = ns("Tab3_Merge_Column"),
                     label = "Merge on:",
                     choices = c("PATIENT_ID", "SAMPLE_ID"),
-                    selected = "PATIENT_ID", inline = T, status = "primary"
+                    selected = "PATIENT_ID", inline = TRUE, status = "primary"
                 ),
                 tags$hr(width = "93%"),
                 conditionalPanel(
@@ -176,7 +176,7 @@ Tab3_CNACalc_UI <- function(id) {
                     textInput(
                         ns("Tab3_Select_Genes"),
                         "Select Gene of Interest:",
-                        "TP53, PTEN, BRCA1, A1BG", placeholder = T,  width = "95%"
+                        "TP53, PTEN, BRCA1, A1BG", placeholder = TRUE,  width = "95%"
                     )
                 ),
                 conditionalPanel(
@@ -200,7 +200,7 @@ Tab3_CNACalc_UI <- function(id) {
                     )
                 )
             ),
-            collapsible = T, solidHeader = TRUE, width = 12,
+            collapsible = TRUE, solidHeader = TRUE, width = 12,
             status = "primary", title = ("CNA Score Exploration"),
             shinycssloaders::withSpinner(
                 dataTableOutput(ns("TableCNACalc")), proxy.height = "510px"
@@ -223,7 +223,7 @@ Tab3_Data_Down_UI <- function(id) {
                     inputId = ns("Tab3_Download_File_Separator"),
                     label = "Separator:",
                     c(Comma = ",", Semicolon = ";", Tab = "\t"),
-                    selected = "\t", inline = F, status = "primary"
+                    selected = "\t", inline = FALSE, status = "primary"
                 ),
                 tags$hr(width = "93%"),
                 prettyToggle(
@@ -244,7 +244,7 @@ Tab3_Data_Down_UI <- function(id) {
                 downloadButton(ns('Tab3_Download_File'), 'Download Data',
                                style = "width:95%;")
             ),
-            collapsible = T, solidHeader = TRUE, width = 12,
+            collapsible = TRUE, solidHeader = TRUE, width = 12,
             status = "primary",
             title = ("Preview and Download Processed Data"),
             shinycssloaders::withSpinner(

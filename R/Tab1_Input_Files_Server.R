@@ -87,7 +87,7 @@ Tab1_Input_Files_Manual_Server <- function(id, rowselect) {
                         sep = ..(input$Tab1_CNA_Separator),
                         quote = ..(input$Tab1_CNA_Quote),
                         na.strings = c(""," ","NA"),
-                        check.names = F,
+                        check.names = FALSE,
                         comment.char = ..(input$Tab1_Comment_3),
                         skip = ..(input$Tab1_CNA_Skip_Lines)
                     )
@@ -185,7 +185,7 @@ Tab1_Input_Files_Manual_Server <- function(id, rowselect) {
                                    sep = ..(input$Tab1_CNA_Separator),
                                    quote = ..(input$Tab1_CNA_Quote),
                                    na.strings = c(""," ","NA"),
-                                   check.names = F,
+                                   check.names = FALSE,
                                    comment.char = ..(input$Tab1_Comment_3))
                     } else {
                         NULL

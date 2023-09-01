@@ -2,7 +2,7 @@
 Tab2_Exploaratory_Tables_Clin_UI <- function(id) {
     ns <- NS(id)
     tabPanel("All Clinical Data",
-             fluidRow(box(title = "Data Table - Clinical Data", collapsible = T, width = 12,
+             fluidRow(box(title = "Data Table - Clinical Data", collapsible = TRUE, width = 12,
                           status = "primary", solidHeader = TRUE,
                           shinycssloaders::withSpinner(
                               DT::dataTableOutput(ns("Table")),
@@ -46,7 +46,7 @@ Tab2_Exploaratory_Tables_CNA_UI <- function(id) {
     tabPanel("CNA Data",
              fluidRow(
                  box(
-                     title = "Data Table - CNA Data", collapsible = T,  width = 12,
+                     title = "Data Table - CNA Data", collapsible = TRUE,  width = 12,
                      status = "primary", solidHeader = TRUE,
                      shinycssloaders::withSpinner(
                          DT::dataTableOutput(ns("Table")), proxy.height = "560px"
@@ -90,7 +90,7 @@ Tab2_Exploaratory_Tables_MAF_UI <- function(id) {
         "Mutation Data",
         fluidRow(
             box(
-                title = "Data Table - Mutation Data", width = 12, collapsible = T,
+                title = "Data Table - Mutation Data", width = 12, collapsible = TRUE,
                 status = "primary", solidHeader = TRUE,
                 shinycssloaders::withSpinner(
                     DT::dataTableOutput(ns("Table")), proxy.height = "560px"

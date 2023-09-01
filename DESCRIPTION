@@ -50,7 +50,7 @@ Suggests:
     knitr, 
     rmarkdown
 biocViews:
-    Software, ShinyApps
+    Software, ShinyApps, Survival, GUI
 BugReports: https://github.com/Lydia-King/GNOSIS/issues
 URL: https://github.com/Lydia-King/GNOSIS/
 Video: https://doi.org/10.5281/zenodo.5788544

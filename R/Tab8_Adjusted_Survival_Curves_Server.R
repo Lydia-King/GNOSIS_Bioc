@@ -165,7 +165,7 @@ Tab8_Adjusted_Survival_Curves_Server <- function(id, datalist, datalist1, data, 
                         } else {
                             Lev <- mutate(
                                 Lev,
-                                !!varname :=  mean(..(datalist1[[data]]())[,varname], na.rm=T)
+                                !!varname :=  mean(..(datalist1[[data]]())[,varname], na.rm=TRUE)
                             )
                         }
                     }
@@ -276,7 +276,7 @@ Tab8_Adjusted_Survival_Curves_Server <- function(id, datalist, datalist1, data, 
                         ggtheme = theme_bw() +
                             theme(plot.title = element_text(size = 18, hjust = 0.5)) +
                             theme(legend.title = element_text(colour = "black", size = 15, face = "bold")),
-                        break.time.by = 50, risk.table.y.text.col = T, risk.table.y.text = FALSE,
+                        break.time.by = 50, risk.table.y.text.col = TRUE, risk.table.y.text = FALSE,
                         legend.title = ..(input$Tab8_Download_Adjusted_Curves_Legend_Title),
                         title = (..(input$Tab8_Download_Adjusted_Curves_Plot_Title)),
                         font.main = c(18, "plain", "black"), font.x = c(15, "plain", "black"),
@@ -306,7 +306,7 @@ Tab8_Adjusted_Survival_Curves_Server <- function(id, datalist, datalist1, data, 
                         ggtheme = theme_bw() +
                             theme(plot.title = element_text(size = 18, hjust = 0.5)) +
                             theme(legend.title = element_text(colour = "black", size = 15, face = "bold")),
-                        break.time.by = 50, risk.table.y.text.col = T, risk.table.y.text = FALSE,
+                        break.time.by = 50, risk.table.y.text.col = TRUE, risk.table.y.text = FALSE,
                         legend.title = ..(input$Tab8_Download_Adjusted_Curves_Legend_Title),
                         title = (..(input$Tab8_Download_Adjusted_Curves_Plot_Title)),
                         font.main = c(18, "plain", "black"),

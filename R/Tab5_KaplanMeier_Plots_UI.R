@@ -13,7 +13,7 @@ Tab5_KM_Clin_UI <- function(id) {
                     tags$a(href="https://www.statology.org/log-rank-test-in-r/", "How to Perform a Log Rank Test in R")
                 )
             ),
-            collapsible = T, solidHeader = T, width = 12,
+            collapsible = TRUE, solidHeader = TRUE, width = 12,
             style = "height:520px; overflow-y: hidden", height = "520px",
             status = "primary", shinycssloaders::withSpinner(plotOutput(ns("Plot"), height="500px")),
             sidebar = boxSidebar(
@@ -58,19 +58,19 @@ Tab5_KM_Clin_UI <- function(id) {
                 textInput(
                     ns("Tab5_KM_Clinical_Plot_Title"),
                     "Plot Title:", "Breast cancer patients in METABRIC data",
-                    placeholder = T
+                    placeholder = TRUE
                 ),
                 textInput(
                     ns("Tab5_KM_Clinical_X_Axis_Title"),
-                    "X-axis Title:", "Survival Time", placeholder = T
+                    "X-axis Title:", "Survival Time", placeholder = TRUE
                 ),
                 textInput(
                     ns("Tab5_KM_Clinical_Y_Axis_Title"),
-                    "Y-axis Title:", "Survival Probability", placeholder = T
+                    "Y-axis Title:", "Survival Probability", placeholder = TRUE
                 ),
                 textInput(
                     ns("Tab5_KM_Clinical_Legend_Title"),
-                    "Legend Title:", "Legend", placeholder = T
+                    "Legend Title:", "Legend", placeholder = TRUE
                 ),
                 tags$hr(), numericInput(
                     ns("Plot_Width"), "Plot Width (inches):", value = 8, min = 1, max = 50
@@ -87,8 +87,8 @@ Tab5_KM_Clin_UI <- function(id) {
             )
         ),
         box(
-            title = "Logrank Test", collapsible = T,
-            style = "overflow-y: hidden", solidHeader = T, width = 12,
+            title = "Logrank Test", collapsible = TRUE,
+            style = "overflow-y: hidden", solidHeader = TRUE, width = 12,
             status = "primary", shinycssloaders::withSpinner(
                 verbatimTextOutput(ns("KMlogrank"))
             )
@@ -120,9 +120,9 @@ Tab5_KM_Quart_UI <- function(id) {
                     )
                 )
             ),
-            width = 12, status = "primary", solidHeader = T,
+            width = 12, status = "primary", solidHeader = TRUE,
             style = "height:520px; overflow-y: hidden", height = "520px",
-            collapsible = T,
+            collapsible = TRUE,
             shinycssloaders::withSpinner(plotOutput(ns("Plot"), height = "500px")),
             sidebar = boxSidebar(
                 width = 25, id = "Tab5_KM_CNA_Quartile_Sidebar",
@@ -167,19 +167,19 @@ Tab5_KM_Quart_UI <- function(id) {
                 textInput(
                     ns("Tab5_KM_CNA_Plot_Title"),
                     "Plot Title:", "Breast cancer patients in METABRIC data",
-                    placeholder = T
+                    placeholder = TRUE
                 ),
                 textInput(
                     ns("Tab5_KM_CNA_X_Axis_Title"),
-                    "X-axis Title:", "Survival Time", placeholder = T
+                    "X-axis Title:", "Survival Time", placeholder = TRUE
                 ),
                 textInput(
                     ns("Tab5_KM_CNA_Y_Axis_Title"),
-                    "Y-axis Title:", "Survival Probability", placeholder = T
+                    "Y-axis Title:", "Survival Probability", placeholder = TRUE
                 ),
                 textInput(
                     ns("Tab5_KM_CNA_Legend_Title"),
-                    "Legend Title:", "Legend", placeholder = T
+                    "Legend Title:", "Legend", placeholder = TRUE
                 ),
                 tags$hr(),
                 numericInput(
@@ -203,9 +203,9 @@ Tab5_KM_Quart_UI <- function(id) {
             )
         ),
         box(
-            title = "Logrank Test", collapsible = T,
+            title = "Logrank Test", collapsible = TRUE,
             style = "overflow-y: hidden", width = 12,
-            status = "primary", solidHeader = T,
+            status = "primary", solidHeader = TRUE,
             shinycssloaders::withSpinner(
                 verbatimTextOutput(ns("KMlogrank1"))
             )
@@ -219,8 +219,8 @@ Tab5_KM_Treatment_UI <- function(id) {
     tagList(
         box(
             title = "Kaplan-Meier Plot for Treatment - Yes",
-            style = "height:500px", height = "500px", solidHeader = T, width = 12,
-            collapsible = T, status = "primary",
+            style = "height:500px", height = "500px", solidHeader = TRUE, width = 12,
+            collapsible = TRUE, status = "primary",
             shinycssloaders::withSpinner(plotOutput(ns("Plot1"), height = "465px")),
             dropdownMenu = boxDropdown(
                 icon = fontawesome::fa_i(name = "info-circle", verify_fa = FALSE),
@@ -296,19 +296,19 @@ Tab5_KM_Treatment_UI <- function(id) {
                 textInput(
                     ns("Tab5_KM_Treatment_Yes_Title"),
                     "Plot Title:", "Breast cancer patients in METABRIC data",
-                    placeholder = T
+                    placeholder = TRUE
                 ),
                 textInput(
                     ns("Tab5_KM_Treatment_Yes_X_Axis_Title"),
-                    "X-axis Title:", "Survival Time", placeholder = T
+                    "X-axis Title:", "Survival Time", placeholder = TRUE
                 ),
                 textInput(
                     ns("Tab5_KM_Treatment_Yes_Y_Axis_Title"),
-                    "Y-axis Title:", "Survival Probability", placeholder = T
+                    "Y-axis Title:", "Survival Probability", placeholder = TRUE
                 ),
                 textInput(
                     ns("Tab5_KM_Treatment_Yes_Legend_Title"),
-                    "Legend Title:", "Legend", placeholder = T
+                    "Legend Title:", "Legend", placeholder = TRUE
                 ),
                 tags$hr(),
                 numericInput(
@@ -333,8 +333,8 @@ Tab5_KM_Treatment_UI <- function(id) {
         ),
         box(
             title = "Kaplan-Meier Plot for Treatment - No",
-            style = "height:500px", height = "500px", solidHeader = T, width = 12,
-            collapsible = T, status = "primary",
+            style = "height:500px", height = "500px", solidHeader = TRUE, width = 12,
+            collapsible = TRUE, status = "primary",
             shinycssloaders::withSpinner(plotOutput(ns("Plot2"), height = "465px")),
             sidebar = boxSidebar(
                 width = 25, id = "Tab5_KM_Treatment_Sidebar_No",
@@ -368,19 +368,19 @@ Tab5_KM_Treatment_UI <- function(id) {
                 textInput(
                     ns("Tab5_KM_Treatment_No_Title"),
                     "Plot Title:", "Breast cancer patients in METABRIC data",
-                    placeholder = T
+                    placeholder = TRUE
                 ),
                 textInput(
                     ns("Tab5_KM_Treatment_No_X_Axis_Title"),
-                    "X-axis Title:", "Survival Time", placeholder = T
+                    "X-axis Title:", "Survival Time", placeholder = TRUE
                 ),
                 textInput(
                     "Tab5_KM_Treatment_No_Y_Axis_Title",
-                    "Y-axis Title:", "Survival Probability", placeholder = T
+                    "Y-axis Title:", "Survival Probability", placeholder = TRUE
                 ),
                 textInput(
                     ns("Tab5_KM_Treatment_No_Legend_Title"),
-                    "Legend Title:", "Legend", placeholder = T
+                    "Legend Title:", "Legend", placeholder = TRUE
                 ),
                 tags$hr(),
                 numericInput(
@@ -404,15 +404,15 @@ Tab5_KM_Treatment_UI <- function(id) {
             )
         ),
         box(
-            title = "Logrank Test for Treatment - Yes", solidHeader = T,
+            title = "Logrank Test for Treatment - Yes", solidHeader = TRUE,
             width = 6, style = "overflow-y: hidden", status = "primary",
-            collapsible = T,
+            collapsible = TRUE,
             shinycssloaders::withSpinner(verbatimTextOutput(ns("KMlogrankYes")))
         ),
         box(
-            title = "Logrank Test for Treatment - No", solidHeader = T,
+            title = "Logrank Test for Treatment - No", solidHeader = TRUE,
             width = 6, style = "overflow-y: hidden", status = "primary",
-            collapsible = T,
+            collapsible = TRUE,
             shinycssloaders::withSpinner(verbatimTextOutput(ns("KMlogrankNo")))
         )
     )

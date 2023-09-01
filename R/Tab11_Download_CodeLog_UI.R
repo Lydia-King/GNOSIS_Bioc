@@ -3,7 +3,7 @@ Tab11_Download_Code_UI <- function(id) {
     ns <- NS(id)
 
     fluidRow(box(
-        collapsible = T, title = "Preview of Input Logs", width = 12,
+        collapsible = TRUE, title = "Preview of Input Logs", width = 12,
         status = "primary", solidHeader = TRUE, style = "height:800px",
         shinycssloaders::withSpinner(DT::dataTableOutput(ns("InputLog"))),
         sidebar = boxSidebar(
@@ -13,14 +13,14 @@ Tab11_Download_Code_UI <- function(id) {
             selectInput(
                 ns("Tab11_Order_Log_By"), "Order by:",
                 choices = c("Timestamp", "Tab", "Name", "Value", "Binding"),
-                selected = c("Timestamp"), multiple = T, width = "450px"
+                selected = c("Timestamp"), multiple = TRUE, width = "450px"
             ),
             prettyToggle(
                 inputId = ns("Tab11_Remove_None_Log"),
                 label_on = "Remove NULL/None Selected",
                 label_off = "Remove NULL/None Selected",
                 icon_on = fa_i(name = "check", verify_fa = FALSE),
-                icon_off = fa_i(name = "times", verify_fa = FALSE), value = T
+                icon_off = fa_i(name = "times", verify_fa = FALSE), value = TRUE
             ),
             awesomeCheckboxGroup(
                 inputId = ns("Tab11_Display_Type"),
@@ -51,7 +51,7 @@ Tab11_Download_Code_UI <- function(id) {
                 inputId = ns("Tab11_Download_Log_Separator"),
                 label = "Separator:",
                 c(Comma = ",", Semicolon = ";", Tab = "\t"),
-                selected = "\t", inline = F, status = "primary"
+                selected = "\t", inline = FALSE, status = "primary"
             ),
             prettyToggle(
                 inputId = ns("Tab11_Download_Log_Quote"),

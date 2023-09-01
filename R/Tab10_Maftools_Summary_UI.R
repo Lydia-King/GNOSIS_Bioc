@@ -26,8 +26,8 @@ Tab10_MAF_Visual_Summary_UI <- function(id) {
     fluidRow(tabBox(width = 12, height = "1900px",
 
                     tabPanel("MafSummary",
-                             box(collapsible = T, title=("MafSummary Plots"), height = "800px",
-                                 width = 12, solidHeader = T, status = "primary",
+                             box(collapsible = TRUE, title=("MafSummary Plots"), height = "800px",
+                                 width = 12, solidHeader = TRUE, status = "primary",
                                  dropdownMenu = boxDropdown(
                                      icon = fa_i(name = "info-circle", verify_fa = FALSE),
                                      boxDropdownItem(
@@ -46,7 +46,7 @@ Tab10_MAF_Visual_Summary_UI <- function(id) {
                                      prettyToggle(inputId = ns("Tab10_Summary_Dashboard_Style"),
                                                   label_on = "Dashboard Style", label_off = "Dashboard Style",
                                                   icon_on = fa_i(name = "check", verify_fa = FALSE),
-                                                  icon_off = fa_i(name = "times", verify_fa = FALSE), value=T
+                                                  icon_off = fa_i(name = "times", verify_fa = FALSE), value=TRUE
                                      ),
                                      prettyToggle(inputId = ns("Tab10_Summary_Plot_Fraction"),
                                                   label_on = "Plot Fraction", label_off = "Plot Fraction",
@@ -77,8 +77,8 @@ Tab10_MAF_Visual_Summary_UI <- function(id) {
                     ),
 
                     tabPanel("OncoPlot/OncoStrip",
-                             box(collapsible = T, title = "OncoPlot", width = 12,
-                                 solidHeader = T, status = "primary", style = "height:530px",
+                             box(collapsible = TRUE, title = "OncoPlot", width = 12,
+                                 solidHeader = TRUE, status = "primary", style = "height:530px",
                                  height = "530px",
                                  dropdownMenu = boxDropdown(
                                      icon = fa_i(name = "info-circle", verify_fa = FALSE),
@@ -120,8 +120,8 @@ Tab10_MAF_Visual_Summary_UI <- function(id) {
                                  shinycssloaders::withSpinner(plotOutput(ns("oncoplotMAF"), height = "530px"))
                              ),
 
-                             box(collapsible = T, title = "Oncostrip Of Selected Genes",
-                                 width = 12, solidHeader = T, status = "primary", style = "height:530px",
+                             box(collapsible = TRUE, title = "Oncostrip Of Selected Genes",
+                                 width = 12, solidHeader = TRUE, status = "primary", style = "height:530px",
                                  height = "530px",
                                  dropdownMenu = boxDropdown(
                                      icon = fa_i(name = "info-circle", verify_fa = FALSE),
@@ -168,8 +168,8 @@ Tab10_MAF_Visual_Summary_UI <- function(id) {
                                  shinycssloaders::withSpinner(plotOutput(ns("oncostripMAF"), height = "530px"))
                              ),
 
-                             box(collapsible = T, title = "Transition and Transversions",
-                                 width = 12, solidHeader = T, status = "primary",
+                             box(collapsible = TRUE, title = "Transition and Transversions",
+                                 width = 12, solidHeader = TRUE, status = "primary",
                                  style = "height:530px", height = "530px",
                                  dropdownMenu = boxDropdown(
                                      icon = fa_i(name = "info-circle", verify_fa = FALSE),
@@ -222,7 +222,7 @@ Tab10_MAF_Visual_Summary_UI <- function(id) {
 
                     tabPanel("Lollipop Plots",
                              fluidRow(
-                                 box(collapsible = T, title = ("Choose Genes to Analyse"),
+                                 box(collapsible = TRUE, title = ("Choose Genes to Analyse"),
                                      width = 12, status = "primary", solidHeader = TRUE,
                                      dropdownMenu = boxDropdown(
                                          icon = fa_i(name = "info-circle", verify_fa = FALSE),
@@ -243,8 +243,8 @@ Tab10_MAF_Visual_Summary_UI <- function(id) {
                                      column(3, selectInput(ns("Tab10_Lollipop_Select_Gene_3"),
                                                            "Gene of Interest 3:", choices = ""))),
 
-                                 box(collapsible = T, title = "Lollipop Plot 1", width = 12,
-                                     solidHeader = T, status = "primary", height = "480px",
+                                 box(collapsible = TRUE, title = "Lollipop Plot 1", width = 12,
+                                     solidHeader = TRUE, status = "primary", height = "480px",
                                      shinycssloaders::withSpinner(plotOutput(ns("lol1"), height = "480px")),
                                      sidebar = boxSidebar(id = "Tab10_Lollipop_Plot1_Sidebar",
                                                           width = 25, background = "#599740", icon = shiny::icon("rectangle-list"),
@@ -259,21 +259,21 @@ Tab10_MAF_Visual_Summary_UI <- function(id) {
                                                                        label_on = "Show Somatic Mutation Rate",
                                                                        label_off = "Show Somatic Mutation Rate",
                                                                        icon_on = fa_i(name = "check", verify_fa = FALSE),
-                                                                       icon_off = fa_i(name = "times", verify_fa = FALSE), value = T),
+                                                                       icon_off = fa_i(name = "times", verify_fa = FALSE), value = TRUE),
                                                           prettyToggle(inputId = ns("Tab10_Lollipop_Label_Domains_1"),
                                                                        label_on = "Label Domains", label_off = "Label Domains",
                                                                        icon_on = fa_i(name = "check", verify_fa = FALSE),
-                                                                       icon_off = fa_i(name = "times", verify_fa = FALSE), value = T),
+                                                                       icon_off = fa_i(name = "times", verify_fa = FALSE), value = TRUE),
                                                           sliderInput(ns("Tab10_Lollipop_Label_Domains_Size_1"),
                                                                       "Domain Label Size:", value = 0.8, min = 0, max = 2, step = 0.1), tags$hr(),
                                                           prettyToggle(inputId = ns("Tab10_Lollipop_Repel_Yes_or_No_1"),
                                                                        label_on = "Repel", label_off = "Repel",
                                                                        icon_on = fa_i(name = "check", verify_fa = FALSE),
-                                                                       icon_off = fa_i(name = "times", verify_fa = FALSE), value = F),
+                                                                       icon_off = fa_i(name = "times", verify_fa = FALSE), value = FALSE),
                                                           prettyToggle(inputId = ns("Tab10_Lollipop_Show_Legend_1"),
                                                                        label_on = "Show Legend", label_off = "Show Legend",
                                                                        icon_on = fa_i(name = "check", verify_fa = FALSE),
-                                                                       icon_off = fa_i(name = "times", verify_fa = FALSE), value = T),
+                                                                       icon_off = fa_i(name = "times", verify_fa = FALSE), value = TRUE),
                                                           sliderInput(ns("Tab10_Lollipop_Size_Legend_1"),
                                                                       "Legend Text Size:", value = 0.8, min = 0, max = 2, step = 0.1),
                                                           tags$hr(), numericInput(ns("Tab10_Lollipop_Plot_Width_1"),
@@ -287,8 +287,8 @@ Tab10_MAF_Visual_Summary_UI <- function(id) {
                                      )
                                  ),
 
-                                 box(collapsible = T, title = "Lollipop Plot 2", width = 12,
-                                     solidHeader = T, status = "primary", height = "480px",
+                                 box(collapsible = TRUE, title = "Lollipop Plot 2", width = 12,
+                                     solidHeader = TRUE, status = "primary", height = "480px",
                                      shinycssloaders::withSpinner(plotOutput(ns("lol2"), height = "480px")),
                                      sidebar = boxSidebar(id = "Tab10_Lollipop_Plot2_Sidebar",
                                                           width = 25, background = "#599740", icon = shiny::icon("rectangle-list"),
@@ -303,21 +303,21 @@ Tab10_MAF_Visual_Summary_UI <- function(id) {
                                                                        label_on = "Show Somatic Mutation Rate",
                                                                        label_off = "Show Somatic Mutation Rate",
                                                                        icon_on = fa_i(name = "check", verify_fa = FALSE),
-                                                                       icon_off = fa_i(name = "times", verify_fa = FALSE), value = T),
+                                                                       icon_off = fa_i(name = "times", verify_fa = FALSE), value = TRUE),
                                                           prettyToggle(inputId = ns("Tab10_Lollipop_Label_Domains_2"),
                                                                        label_on = "Label Domains", label_off = "Label Domains",
                                                                        icon_on = fa_i(name = "check", verify_fa = FALSE),
-                                                                       icon_off = fa_i(name = "times", verify_fa = FALSE), value = T),
+                                                                       icon_off = fa_i(name = "times", verify_fa = FALSE), value = TRUE),
                                                           sliderInput(ns("Tab10_Lollipop_Label_Domains_Size_2"),
                                                                       "Domain Label Size:", value = 0.8, min = 0, max = 2, step = 0.1), tags$hr(),
                                                           prettyToggle(inputId = ns("Tab10_Lollipop_Repel_Yes_or_No_2"),
                                                                        label_on = "Repel", label_off = "Repel",
                                                                        icon_on = fa_i(name = "check", verify_fa = FALSE),
-                                                                       icon_off = fa_i(name = "times", verify_fa = FALSE), value = F),
+                                                                       icon_off = fa_i(name = "times", verify_fa = FALSE), value = FALSE),
                                                           prettyToggle(inputId = ns("Tab10_Lollipop_Show_Legend_2"),
                                                                        label_on = "Show Legend", label_off = "Show Legend",
                                                                        icon_on = fa_i(name = "check", verify_fa = FALSE),
-                                                                       icon_off = fa_i(name = "times", verify_fa = FALSE), value = T),
+                                                                       icon_off = fa_i(name = "times", verify_fa = FALSE), value = TRUE),
                                                           sliderInput(ns("Tab10_Lollipop_Size_Legend_2"),
                                                                       "Legend Text Size:", value = 0.8, min = 0, max = 2, step = 0.1),
                                                           tags$hr(), numericInput(ns("Tab10_Lollipop_Plot_Width_2"),
@@ -331,8 +331,8 @@ Tab10_MAF_Visual_Summary_UI <- function(id) {
                                      )
                                  ),
 
-                                 box(collapsible = T, title = "Lollipop Plot 3", width = 12,
-                                     solidHeader = T, status = "primary",
+                                 box(collapsible = TRUE, title = "Lollipop Plot 3", width = 12,
+                                     solidHeader = TRUE, status = "primary",
                                      shinycssloaders::withSpinner(plotOutput(ns("lol3"), height = "480px")),
                                      height = "480px",
                                      sidebar = boxSidebar(id = "Tab10_Lollipop_Plot3_Sidebar",
@@ -348,21 +348,21 @@ Tab10_MAF_Visual_Summary_UI <- function(id) {
                                                                        label_on = "Show Somatic Mutation Rate",
                                                                        label_off = "Show Somatic Mutation Rate",
                                                                        icon_on = fa_i(name = "check", verify_fa = FALSE),
-                                                                       icon_off = fa_i(name = "times", verify_fa = FALSE), value = T),
+                                                                       icon_off = fa_i(name = "times", verify_fa = FALSE), value = TRUE),
                                                           prettyToggle(inputId = ns("Tab10_Lollipop_Label_Domains_3"),
                                                                        label_on = "Label Domains", label_off = "Label Domains",
                                                                        icon_on = fa_i(name = "check", verify_fa = FALSE),
-                                                                       icon_off = fa_i(name = "times", verify_fa = FALSE), value = T),
+                                                                       icon_off = fa_i(name = "times", verify_fa = FALSE), value = TRUE),
                                                           sliderInput(ns("Tab10_Lollipop_Label_Domains_Size_3"),
                                                                       "Domain Label Size:", value = 0.8, min = 0, max = 2, step = 0.1), tags$hr(),
                                                           prettyToggle(inputId = ns("Tab10_Lollipop_Repel_Yes_or_No_3"),
                                                                        label_on = "Repel", label_off = "Repel",
                                                                        icon_on = fa_i(name = "check", verify_fa = FALSE),
-                                                                       icon_off = fa_i(name = "times", verify_fa = FALSE), value = F),
+                                                                       icon_off = fa_i(name = "times", verify_fa = FALSE), value = FALSE),
                                                           prettyToggle(inputId = ns("Tab10_Lollipop_Show_Legend_3"),
                                                                        label_on = "Show Legend", label_off = "Show Legend",
                                                                        icon_on = fa_i(name = "check", verify_fa = FALSE),
-                                                                       icon_off = fa_i(name = "times", verify_fa = FALSE), value = T),
+                                                                       icon_off = fa_i(name = "times", verify_fa = FALSE), value = TRUE),
                                                           sliderInput(ns("Tab10_Lollipop_Size_Legend_3"),
                                                                       "Legend Text Size:", value = 0.8, min = 0, max = 2, step = 0.1),
                                                           tags$hr(), numericInput(ns("Tab10_Lollipop_Plot_Width_3"),
@@ -388,7 +388,7 @@ Tab10_MAF_Visual_Summary_UI <- function(id) {
                                                                 )
                                                             )
                              ),
-                             collapsible = T, title = "Mutation Load Plot", width = 12, solidHeader = T, status = "primary",
+                             collapsible = TRUE, title = "Mutation Load Plot", width = 12, solidHeader = TRUE, status = "primary",
                              shinycssloaders::withSpinner(plotOutput(ns("Mutload"), height = "500px")), height = "580px",
                              sidebar = boxSidebar(id = "Tab10_Mutation_Load_Sidebar", width = 25, background = "#599740",
                                                   icon = shiny::icon("rectangle-list"),
@@ -407,7 +407,7 @@ Tab10_MAF_Visual_Summary_UI <- function(id) {
                                                   )
                              )
                              ),
-                             box(collapsible = T, title = "Somatic Interaction Plot", width = 12, solidHeader = T, status = "primary",
+                             box(collapsible = TRUE, title = "Somatic Interaction Plot", width = 12, solidHeader = TRUE, status = "primary",
                                  shinycssloaders::withSpinner(plotOutput(ns("VAF1"), height = "500px")), height = "540px",
                                  sidebar = boxSidebar(id = "Tab10_Somatic_Interaction_Sidebar", width = 25, background = "#599740",
                                                       icon = shiny::icon("rectangle-list"),

@@ -92,7 +92,7 @@ Tab9_RPST_Rpart_Server <- function(id, datalist, datalist1, data, rowselect) {
                                risk.table.height = 0.25, pval.size = 6,
                                ggtheme = theme_bw() + theme(plot.title = element_text(size= 18, hjust = 0.5)) +
                                    theme(legend.title = element_text(colour="black", size=15, face="bold")),
-                               break.time.by =50, risk.table.y.text.col = T, risk.table.y.text = FALSE,
+                               break.time.by =50, risk.table.y.text.col = TRUE, risk.table.y.text = FALSE,
                                legend.title = ..(input$Tab9_Surv_Rpart_Legend_Title),
                                title = (..(input$Tab9_Surv_Rpart_Plot_Title)), font.main = c(18, "plain", "black"),
                                font.x = c(15, "plain", "black"), font.y = c(15, "plain", "black"),
@@ -212,7 +212,7 @@ Tab9_RPST_Ctree_Server <- function(id, datalist, datalist1, data, rowselect) {
                                           risk.table.height = 0.25, pval.size = 6,
                                           ggtheme = theme_bw() + theme(plot.title = element_text(size= 18, hjust = 0.5)) +
                                               theme(legend.title = element_text(colour="black", size=15, face="bold")),
-                                          break.time.by =50, risk.table.y.text.col = T, risk.table.y.text = FALSE,
+                                          break.time.by =50, risk.table.y.text.col = TRUE, risk.table.y.text = FALSE,
                                           legend.title = ..(input$Tab9_Surv_Ctree_Legend_Title),
                                           title = (..(input$Tab9_Surv_Ctree_Plot_Title)),
                                           font.main = c(18, "plain", "black"),

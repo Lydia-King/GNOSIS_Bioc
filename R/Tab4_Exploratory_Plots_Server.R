@@ -404,7 +404,7 @@ Tab4_Hist_Server <- function(id, datalist, data) {
                         scale_color_manual(values = c("Color" = "#2ac0db")) +
                         scale_fill_manual(values = c("Color" = "#2ac0db")) +
                         theme(legend.position = "none") +
-                        xlim(range(density(..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], na.rm = T)$x))
+                        xlim(range(density(..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], na.rm = TRUE)$x))
                 })
             } else {
                 metaExpr({
@@ -431,7 +431,7 @@ Tab4_Hist_Server <- function(id, datalist, data) {
                             theme(legend.position = ..(input$Tab4_Density_Plot_Legend_Position)) +
                             scale_fill_discrete(..(input$Tab4_Density_Plot_Legend_Title)) +
                             scale_color_discrete(..(input$Tab4_Density_Plot_Legend_Title)) +
-                            xlim(range(density(..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], na.rm = T)$x))
+                            xlim(range(density(..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], na.rm = TRUE)$x))
                     } else {
                         ggplot(..(datalist[[data]]())) +
                             geom_density(
@@ -454,7 +454,7 @@ Tab4_Hist_Server <- function(id, datalist, data) {
                             theme(legend.position = ..(input$Tab4_Density_Plot_Legend_Position)) +
                             scale_fill_discrete(..(input$Tab4_Density_Plot_Legend_Title)) +
                             scale_color_discrete(..(input$Tab4_Density_Plot_Legend_Title)) +
-                            xlim(range(density(..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], na.rm = T)$x))
+                            xlim(range(density(..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], na.rm = TRUE)$x))
                     }
                 })
             }
@@ -669,7 +669,7 @@ Tab4_Hist_Server <- function(id, datalist, data) {
                         xlim(range(
                             density(
                                 ..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)],
-                                na.rm = T
+                                na.rm = TRUE
                             )$x
                         )) +
                         guides(color = FALSE)
@@ -743,7 +743,7 @@ Tab4_Hist_Server <- function(id, datalist, data) {
                         theme(legend.title = element_text(colour = "black", size = 15, face = "bold")) +
                         theme(strip.text = element_text(size = 15)) +
                         theme(legend.text = element_text(size = 15)) +
-                        xlim(range(density(..(datalist[[data]]())[, ..(input$Tab4_Select_Plot_Variable)], na.rm = T)$x)) +
+                        xlim(range(density(..(datalist[[data]]())[, ..(input$Tab4_Select_Plot_Variable)], na.rm = TRUE)$x)) +
                         scale_color_manual(values = c("Color" = "#2ac0db")) +
                         scale_fill_manual(values = c("Color" = "#2ac0db")) +
                         theme(legend.position = "none")
@@ -770,7 +770,7 @@ Tab4_Hist_Server <- function(id, datalist, data) {
                             xlab(..(input$Tab4_Both_Plot_X_Axis_Title)) +
                             ylab(..(input$Tab4_Both_Plot_Y_Axis_Title)) +
                             ggtitle(..(input$Tab4_Both_Plot_Title)) +
-                            xlim(range(density(..(datalist[[data]]())[, ..(input$Tab4_Select_Plot_Variable)], na.rm = T)$x)) +
+                            xlim(range(density(..(datalist[[data]]())[, ..(input$Tab4_Select_Plot_Variable)], na.rm = TRUE)$x)) +
                             theme_bw() +
                             theme(plot.title = element_text(hjust = 0.5, size = 18)) +
                             theme(axis.title.x = element_text(hjust = 0.5, size = 18)) +
@@ -811,7 +811,7 @@ Tab4_Hist_Server <- function(id, datalist, data) {
                             theme(legend.title = element_text(colour = "black", size = 15, face = "bold")) +
                             theme(strip.text = element_text(size = 15)) +
                             theme(legend.text = element_text(size = 15)) +
-                            xlim(range(density(..(datalist[[data]]())[, ..(input$Tab4_Select_Plot_Variable)], na.rm = T)$x)) +
+                            xlim(range(density(..(datalist[[data]]())[, ..(input$Tab4_Select_Plot_Variable)], na.rm = TRUE)$x)) +
                             theme(legend.position = ..(input$Tab4_Both_Plot_Legend_Position)) +
                             scale_fill_discrete(..(input$Tab4_Both_Plot_Legend_Title)) +
                             scale_color_discrete(..(input$Tab4_Both_Plot_Legend_Title))
@@ -903,7 +903,7 @@ Tab4_Hist_Server <- function(id, datalist, data) {
                         theme(strip.text = element_text(size=15)) +
                         theme(legend.text=element_text(size=15)) +
                         scale_fill_discrete(name = ..(input$Tab4_Faceted_Both_Plot_Legend_Title)) +
-                        xlim(range(density(..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], na.rm = T)$x)) +
+                        xlim(range(density(..(datalist[[data]]())[,..(input$Tab4_Select_Plot_Variable)], na.rm = TRUE)$x)) +
                         guides(color = FALSE) +
                         theme(legend.position = ..(input$Tab4_Faceted_Both_Plot_Legend_Position))
                 })

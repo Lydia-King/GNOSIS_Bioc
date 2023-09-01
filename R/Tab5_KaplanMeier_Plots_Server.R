@@ -52,7 +52,7 @@ Tab5_KM_Plot_Server <- function(id, datalist, data) {
                         ggtheme = theme_bw() +
                             theme(plot.title = element_text(size = 18, hjust = 0.5)) +
                             theme(legend.title = element_text(colour = "black", size = 15, face = "bold")),
-                        break.time.by = 50, risk.table.y.text.col = T,
+                        break.time.by = 50, risk.table.y.text.col = TRUE,
                         risk.table.y.text = FALSE, title = (..(input$Tab5_KM_Clinical_Plot_Title)),
                         font.main = c(18, "plain", "black"),
                         font.x = c(15, "plain", "black"),
@@ -140,7 +140,7 @@ Tab5_KM_Plot_Quart_Server <- function(id, datalist, data) {
                         ggtheme = theme_bw() +
                             theme(plot.title = element_text(size = 18, hjust = 0.5)) +
                             theme(legend.title = element_text(colour = "black", size = 15, face = "bold")),
-                        break.time.by = 50, risk.table.y.text.col = T,
+                        break.time.by = 50, risk.table.y.text.col = TRUE,
                         risk.table.y.text = FALSE,
                         legend.title = ..(input$Tab5_KM_CNA_Legend_Title),
                         title = (..(input$Tab5_KM_CNA_Plot_Title)),
@@ -246,7 +246,7 @@ Tab5_KM_Plot_Treatment_Server <- function(id, datalist, data) {
                         ggtheme = theme_bw() +
                             theme(plot.title = element_text(size = 18, hjust = 0.5)) +
                             theme(legend.title = element_text(colour = "black", size = 15, face = "bold")),
-                        break.time.by = 50, risk.table.y.text.col = T,
+                        break.time.by = 50, risk.table.y.text.col = TRUE,
                         risk.table.y.text = FALSE,
                         title = (..(input$Tab5_KM_Treatment_Yes_Title)),
                         font.main = c(18, "plain", "black"),
@@ -342,7 +342,7 @@ Tab5_KM_Plot_Treatment_Server <- function(id, datalist, data) {
                         ggtheme = theme_bw() +
                             theme(plot.title = element_text(size = 18, hjust = 0.5)) +
                             theme(legend.title = element_text(colour = "black", size = 15, face = "bold")),
-                        break.time.by = 50, risk.table.y.text.col = T,
+                        break.time.by = 50, risk.table.y.text.col = TRUE,
                         risk.table.y.text = FALSE,
                         title = (..(input$Tab5_KM_Treatment_No_Title)),
                         font.main = c(18, "plain", "black"),

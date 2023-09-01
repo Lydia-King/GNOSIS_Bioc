@@ -2,8 +2,8 @@
 Tab4_Boxplot_UI <- function(id) {
     ns <- NS(id)
     box(
-        title = "Boxplot", solidHeader = T, width = 12, height = "650px",
-        status = "primary", collapsible = T,
+        title = "Boxplot", solidHeader = TRUE, width = 12, height = "650px",
+        status = "primary", collapsible = TRUE,
         shinycssloaders::withSpinner(plotOutput(ns("Plot"), height = "590px")),
         sidebar = boxSidebar(
             width = 25, id = "Tab4_Boxplot_Sidebar", background = "#599740",
@@ -29,13 +29,13 @@ Tab4_Boxplot_UI <- function(id) {
                         selected = "none"),
             tags$hr(),
             textInput(ns("Tab4_Boxplot_Title"), "Plot Title:",
-                      "Clinical Variable Boxplot", placeholder = T),
+                      "Clinical Variable Boxplot", placeholder = TRUE),
             textInput(ns("Tab4_Boxplot_X_Axis_Title"), "X-axis Title:",
-                      "Clinical Variable X", placeholder = T),
+                      "Clinical Variable X", placeholder = TRUE),
             textInput(ns("Tab4_Boxplot_Y_Axis_Title"), "Y-axis Title:",
-                      "Clinical Variable Y", placeholder = T),
+                      "Clinical Variable Y", placeholder = TRUE),
             textInput(ns("Tab4_Boxplot_Legend_Title"), "Legend Title:",
-                      "Legend", placeholder = T),
+                      "Legend", placeholder = TRUE),
             tags$hr(),
             numericInput(ns("Plot_Width"), "Plot Width (inches):",
                          value = 8, min = 1, max = 50),
@@ -55,7 +55,7 @@ Tab4_Boxplot_UI <- function(id) {
 Tab4_Scatterplot_UI <- function(id) {
     ns <- NS(id)
     box(
-        title = ("Scatterplot"), collapsible = T, solidHeader = T,
+        title = ("Scatterplot"), collapsible = TRUE, solidHeader = TRUE,
         width = 12, height= "650px", status = "primary",
         shinycssloaders::withSpinner(plotOutput(ns("Plot"), height = "590px")),
         sidebar = boxSidebar(
@@ -80,13 +80,13 @@ Tab4_Scatterplot_UI <- function(id) {
             tags$hr(),
             textInput(ns("Tab4_Scatterplot_Title"), "Plot Title:",
                       "Scatterplot of Clinical Variables and Scores",
-                      placeholder = T),
+                      placeholder = TRUE),
             textInput(ns("Tab4_Scatterplot_X_Axis_Title"), "X-axis Title:",
-                      "Clinical Variable X", placeholder = T),
+                      "Clinical Variable X", placeholder = TRUE),
             textInput(ns("Tab4_Scatterplot_Y_Axis_Title"), "Y-axis Title:",
-                      "Clinical Variable Y", placeholder = T),
+                      "Clinical Variable Y", placeholder = TRUE),
             textInput(ns("Tab4_Scatterplot_Legend_Title"), "Legend Title:",
-                      "Legend", placeholder = T),
+                      "Legend", placeholder = TRUE),
             tags$hr(),
             numericInput(ns("Plot_Width"), "Plot Width (inches):",
                          value = 8, min = 1, max = 50),
@@ -106,8 +106,8 @@ Tab4_Scatterplot_UI <- function(id) {
 Tab4_Barplot_UI <- function(id) {
     ns <- NS(id)
     box(
-        title = ("Barplot"), solidHeader = T, width = 12, height = "650px",
-        status = "primary", collapsible = T,
+        title = ("Barplot"), solidHeader = TRUE, width = 12, height = "650px",
+        status = "primary", collapsible = TRUE,
         shinycssloaders::withSpinner(plotOutput(ns("Plot"), height = "590px")),
         sidebar = boxSidebar(
             width = 25, id = "Tab4_Barplot_Sidebar",
@@ -132,19 +132,19 @@ Tab4_Barplot_UI <- function(id) {
             tags$hr(),
             textInput(
                 ns("Tab4_Barplot_Title"), "Plot Title:",
-                "Barplot of Clinical Variables and Scores", placeholder = T
+                "Barplot of Clinical Variables and Scores", placeholder = TRUE
             ),
             textInput(
                 ns("Tab4_Barplot_X_Axis_Title"), "X-axis Title:",
-                "Clinical Variable X", placeholder = T
+                "Clinical Variable X", placeholder = TRUE
             ),
             textInput(
                 ns("Tab4_Barplot_Y_Axis_Title"), "Y-axis Title:",
-                "Count", placeholder = T
+                "Count", placeholder = TRUE
             ),
             textInput(
                 ns("Tab4_Barplot_Legend_Title"), "Legend Title:",
-                "Legend", placeholder = T
+                "Legend", placeholder = TRUE
             ),
             tags$hr(),
             numericInput(
@@ -175,10 +175,10 @@ Tab4_Density_UI <- function(id) {
     box(
         title = "Histogram and Density Plots",
         width = 12,
-        solidHeader = T,
+        solidHeader = TRUE,
         status = "primary",
         height = "650px",
-        collapsible = T,
+        collapsible = TRUE,
         sidebar = boxSidebar(
             width = 25, id = "Tab4_Density_Histogram_Sidebar",
             background = "#599740",  icon = shiny::icon("rectangle-list"),
@@ -187,7 +187,7 @@ Tab4_Density_UI <- function(id) {
             awesomeRadio(inputId = ns("Tab4_Select_Plot_Type"),
                          label = "Plot Type:",
                          choices = c("Histogram", "Density Plot", "Both"),
-                         selected = "Histogram", inline = F,
+                         selected = "Histogram", inline = FALSE,
                          status = "primary"),
             conditionalPanel(
                 condition = "input.Tab4_Select_Plot_Type == 'Histogram'",
@@ -232,25 +232,25 @@ Tab4_Density_UI <- function(id) {
                         ns("Tab4_Histogram_Title"),
                         "Plot Title:",
                         "Histogram of Selected Continuous Variables",
-                        placeholder = T
+                        placeholder = TRUE
                     ),
                     textInput(
                         ns("Tab4_Histogram_X_Axis_Title"),
                         "X-axis Title:",
                         "Clinical Variable X",
-                        placeholder = T
+                        placeholder = TRUE
                     ),
                     textInput(
                         ns("Tab4_Histogram_Y_Axis_Title"),
                         "Y-axis Title:",
                         "Frequency",
-                        placeholder = T
+                        placeholder = TRUE
                     ),
                     textInput(
                         ns("Tab4_Histogram_Legend_Title"),
                         "Legend Title:",
                         "Legend",
-                        placeholder = T
+                        placeholder = TRUE
                     ),
                     tags$hr(),
                     numericInput(
@@ -315,25 +315,25 @@ Tab4_Density_UI <- function(id) {
                         ns("Tab4_Faceted_Histogram_Title"),
                         "Plot Title:",
                         "Histogram by Variable",
-                        placeholder = T
+                        placeholder = TRUE
                     ),
                     textInput(
                         ns("Tab4_Faceted_Histogram_X_Axis_Title"),
                         "X-axis Title:",
                         "Clinical Variable X",
-                        placeholder = T
+                        placeholder = TRUE
                     ),
                     textInput(
                         ns("Tab4_Faceted_Histogram_Y_Axis_Title"),
                         "Y-axis Title:",
                         "Frequency",
-                        placeholder = T
+                        placeholder = TRUE
                     ),
                     textInput(
                         ns("Tab4_Faceted_Histogram_Legend_Title"),
                         "Legend Title:",
                         "Legend",
-                        placeholder = T
+                        placeholder = TRUE
                     ),
                     tags$hr(),
                     numericInput(
@@ -399,25 +399,25 @@ Tab4_Density_UI <- function(id) {
                         ns("Tab4_Density_Plot_Title"),
                         "Plot Title:",
                         "Density Plots of Selected Continuous Variables",
-                        placeholder = T
+                        placeholder = TRUE
                     ),
                     textInput(
                         ns("Tab4_Density_Plot_X_Axis_Title"),
                         "X-axis Title:",
                         "Clinical Variable X",
-                        placeholder = T
+                        placeholder = TRUE
                     ),
                     textInput(
                         ns("Tab4_Density_Plot_Y_Axis_Title"),
                         "Y-axis Title:",
                         "Density",
-                        placeholder = T
+                        placeholder = TRUE
                     ),
                     textInput(
                         ns("Tab4_Density_Plot_Legend_Title"),
                         "Legend Title:",
                         "Legend",
-                        placeholder = T
+                        placeholder = TRUE
                     ),
                     tags$hr(),
                     numericInput(
@@ -463,25 +463,25 @@ Tab4_Density_UI <- function(id) {
                         ns("Tab4_Segmented_Density_Plot_Title"),
                         "Plot Title:",
                         "Segmented Density Plots of Selected Continuous Variables",
-                        placeholder = T
+                        placeholder = TRUE
                     ),
                     textInput(
                         ns("Tab4_Segmented_Density_Plot_X_Axis_Title"),
                         "X-axis Title:",
                         "Clinical Variable X",
-                        placeholder = T
+                        placeholder = TRUE
                     ),
                     textInput(
                         ns("Tab4_Segmented_Density_Plot_Y_Axis_Title"),
                         "Y-axis Title:",
                         "Density",
-                        placeholder = T
+                        placeholder = TRUE
                     ),
                     textInput(
                         ns("Tab4_Segmented_Density_Plot_Legend_Title"),
                         "Legend Title:",
                         "Legend",
-                        placeholder = T
+                        placeholder = TRUE
                     ),
                     tags$hr(),
                     numericInput(
@@ -541,25 +541,25 @@ Tab4_Density_UI <- function(id) {
                         ns("Tab4_Faceted_Density_Plot_Title"),
                         "Plot Title:",
                         "Exploration of Density Plots by Variable",
-                        placeholder = T
+                        placeholder = TRUE
                     ),
                     textInput(
                         ns("Tab4_Faceted_Density_Plot_X_Axis_Title"),
                         "X-axis Title:",
                         "Clinical Variable X",
-                        placeholder = T
+                        placeholder = TRUE
                     ),
                     textInput(
                         ns("Tab4_Faceted_Density_Plot_Y_Axis_Title"),
                         "Y-axis Title:",
                         "Density",
-                        placeholder = T
+                        placeholder = TRUE
                     ),
                     textInput(
                         ns("Tab4_Faceted_Density_Plot_Legend_Title"),
                         "Legend Title:",
                         "Legend",
-                        placeholder = T
+                        placeholder = TRUE
                     ),
                     tags$hr(),
                     numericInput(
@@ -630,25 +630,25 @@ Tab4_Density_UI <- function(id) {
                         ns("Tab4_Both_Plot_Title"),
                         "Plot Title:",
                         "Histogram and Density Plots of Selected Continuous Variables",
-                        placeholder = T
+                        placeholder = TRUE
                     ),
                     textInput(
                         ns("Tab4_Both_Plot_X_Axis_Title"),
                         "X-axis Title:",
                         "Clinical Variable X",
-                        placeholder = T
+                        placeholder = TRUE
                     ),
                     textInput(
                         ns("Tab4_Both_Plot_Y_Axis_Title"),
                         "Y-axis Title:",
                         "Density",
-                        placeholder = T
+                        placeholder = TRUE
                     ),
                     textInput(
                         ns("Tab4_Both_Plot_Legend_Title"),
                         "Legend Title:",
                         "Legend",
-                        placeholder = T
+                        placeholder = TRUE
                     ),
                     tags$hr(),
                     numericInput(
@@ -712,25 +712,25 @@ Tab4_Density_UI <- function(id) {
                         ns("Tab4_Faceted_Both_Plot_Title"),
                         "Plot Title:",
                         "Histogram and Density Plot by Variable",
-                        placeholder = T
+                        placeholder = TRUE
                     ),
                     textInput(
                         ns("Tab4_Faceted_Both_Plot_X_Axis_Title"),
                         "X-axis Title:",
                         "Clinical Variable X",
-                        placeholder = T
+                        placeholder = TRUE
                     ),
                     textInput(
                         ns("Tab4_Faceted_Both_Plot_Y_Axis_Title"),
                         "Y-axis Title:",
                         "Density",
-                        placeholder = T
+                        placeholder = TRUE
                     ),
                     textInput(
                         ns("Tab4_Faceted_Both_Plot_Legend_Title"),
                         "Legend Title:",
                         "Legend",
-                        placeholder = T
+                        placeholder = TRUE
                     ),
                     tags$hr(),
                     numericInput(

@@ -13,17 +13,17 @@ Tab1_Input_Files_Manual_UI <- function(id) {
                           tags$hr(),
                           prettyToggle(inputId = ns("Tab1_Clin_Header_Yes_or_No"),
                                        label_on = "Header", label_off = "Header",
-                                       icon_on = fa_i(name ="check", verify_fa = F),
-                                       icon_off = fa_i(name ="times", verify_fa = F),
-                                       value = T, outline = T, shape = c("curve"),
+                                       icon_on = fa_i(name ="check", verify_fa = FALSE),
+                                       icon_off = fa_i(name ="times", verify_fa = FALSE),
+                                       value = TRUE, outline = TRUE, shape = c("curve"),
                                        status_on = "primary"),
                           fluidRow(column(7, awesomeRadio(inputId = ns("Tab1_Clin_Separator"),
                                                           label = "Separator:", c(Comma = ",", Semicolon = ";",
-                                                                                  Tab = "\t"), selected = "\t", inline = F,
+                                                                                  Tab = "\t"), selected = "\t", inline = FALSE,
                                                           status = "primary")),
                                    column(5, awesomeRadio(ns("Tab1_Clin_Quote"),
                                                           "Quote:", choices = c(None = "", "Double" = '"',
-                                                                                "Single" = "'"), selected = '"', inline = F,
+                                                                                "Single" = "'"), selected = '"', inline = FALSE,
                                                           status = "primary"))
                           ),
                           tags$hr(),
@@ -34,16 +34,16 @@ Tab1_Input_Files_Manual_UI <- function(id) {
                                        min = 0, max = 10),
                           tags$hr(),
                           h5(strong("Total Number of Clinical Variables:")),
-                          verbatimTextOutput('TotalC', placeholder = T),
+                          verbatimTextOutput('TotalC', placeholder = TRUE),
                           h5(strong("Total Number of Patients:")),
                           tags$style(HTML('table.dataTable.hover tbody tr:hover,
                 table.dataTable.display tbody tr:hover {
                     background-color: rgba(44,222,235) !important;
                 }')),
-                verbatimTextOutput('TotalR', placeholder = T)
+                verbatimTextOutput('TotalR', placeholder = TRUE)
              ),
 
-             box(collapsible = T, title = "Input Sample Data File",
+             box(collapsible = TRUE, title = "Input Sample Data File",
                  width = 3, status = "primary", solidHeader = TRUE,
                  fileInput(ns("Input_Sample_File"), "Choose File:",
                            multiple = TRUE, accept = c("text/csv",
@@ -52,17 +52,17 @@ Tab1_Input_Files_Manual_UI <- function(id) {
                  tags$hr(),
                  prettyToggle(inputId = ns("Tab1_Sample_Header_Yes_or_No"),
                               label_on = "Header", label_off = "Header",
-                              icon_on = fa_i(name = "check", verify_fa = F),
-                              icon_off = fa_i(name = "times", verify_fa = F),
-                              value = T, outline = T, shape = c("curve"),
+                              icon_on = fa_i(name = "check", verify_fa = FALSE),
+                              icon_off = fa_i(name = "times", verify_fa = FALSE),
+                              value = TRUE, outline = TRUE, shape = c("curve"),
                               status_on = "primary"),
                  fluidRow(column(7, awesomeRadio(inputId = ns("Tab1_Sample_Separator"),
                                                  label = "Separator:", c(Comma = ",", Semicolon = ";",
-                                                                         Tab = "\t"), selected = "\t", inline = F,
+                                                                         Tab = "\t"), selected = "\t", inline = FALSE,
                                                  status = "primary")),
                           column(5, awesomeRadio(ns("Tab1_Sample_Quote"),
                                                  "Quote:", choices = c(None = "", "Double" = '"',
-                                                                       "Single" = "'"), selected = '"', inline = F,
+                                                                       "Single" = "'"), selected = '"', inline = FALSE,
                                                  status = "primary"))
                  ),
                  tags$hr(),
@@ -73,13 +73,13 @@ Tab1_Input_Files_Manual_UI <- function(id) {
                               min = 0, max = 10),
                  tags$hr(),
                  h5(strong("Total Number of Clinical Variables:")),
-                 verbatimTextOutput('TotalC1', placeholder = T),
+                 verbatimTextOutput('TotalC1', placeholder = TRUE),
                  h5(strong("Total Number of Patients:")),
-                 verbatimTextOutput('TotalR2', placeholder = T)
+                 verbatimTextOutput('TotalR2', placeholder = TRUE)
              ),
 
              box(title = "Input CNA File", status = "primary",
-                 width = 3, solidHeader = TRUE, collapsible = T,
+                 width = 3, solidHeader = TRUE, collapsible = TRUE,
                  fileInput(ns("Input_CNA_File"), "Choose File:",
                            multiple = TRUE,
                            accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv")
@@ -87,18 +87,18 @@ Tab1_Input_Files_Manual_UI <- function(id) {
                  tags$hr(),
                  prettyToggle(inputId = ns("Tab1_CNA_Header_Yes_or_No"),
                               label_on = "Header", label_off = "Header",
-                              icon_on = fa_i(name = "check", verify_fa = F),
-                              icon_off = fa_i(name = "times", verify_fa = F),
-                              value = T, outline = T, shape = c("curve"),
+                              icon_on = fa_i(name = "check", verify_fa = FALSE),
+                              icon_off = fa_i(name = "times", verify_fa = FALSE),
+                              value = TRUE, outline = TRUE, shape = c("curve"),
                               status_on = "primary"
                  ),
                  fluidRow(
                      column(7, awesomeRadio(inputId = ns("Tab1_CNA_Separator"),
                                             label = "Separator:", c(Comma = ",", Semicolon = ";", Tab = "\t"),
-                                            selected = "\t", inline = F, status = "primary")),
+                                            selected = "\t", inline = FALSE, status = "primary")),
                      column(5, awesomeRadio(ns("Tab1_CNA_Quote"),
                                             "Quote:", choices = c(None = "", "Double" = '"', "Single" = "'"),
-                                            selected = '"', inline = F, status = "primary"))
+                                            selected = '"', inline = FALSE, status = "primary"))
                  ),
                  tags$hr(),
                  textInput(inputId = ns("Tab1_Comment_3"), label = "Comment Character:", value = "#"),
@@ -107,12 +107,12 @@ Tab1_Input_Files_Manual_UI <- function(id) {
                               value = 0, min = 0, max = 10),
                  tags$hr(),
                  h5(strong("Total Number of Columns:")),
-                 verbatimTextOutput('TotalCCNA', placeholder = T),
+                 verbatimTextOutput('TotalCCNA', placeholder = TRUE),
                  h5(strong("Total Number of Genes:")),
-                 verbatimTextOutput('TotalRCNA', placeholder = T)
+                 verbatimTextOutput('TotalRCNA', placeholder = TRUE)
              ),
 
-             box(collapsible = T, title = "Input MAF File",
+             box(collapsible = TRUE, title = "Input MAF File",
                  width = 3, status = "primary", solidHeader = TRUE,
                  fileInput(ns("Input_MAF_File"), "Choose File:",
                            multiple = TRUE,
@@ -121,18 +121,18 @@ Tab1_Input_Files_Manual_UI <- function(id) {
                  tags$hr(),
                  prettyToggle(inputId = ns("Tab1_MAF_Header_Yes_or_No"),
                               label_on = "Header", label_off = "Header",
-                              icon_on = fa_i(name = "check", verify_fa = F),
-                              icon_off = fa_i(name = "times", verify_fa = F),
-                              value = T, outline = T, shape = c("curve"),
+                              icon_on = fa_i(name = "check", verify_fa = FALSE),
+                              icon_off = fa_i(name = "times", verify_fa = FALSE),
+                              value = TRUE, outline = TRUE, shape = c("curve"),
                               status_on = "primary"
                  ),
                  fluidRow(
                      column(7, awesomeRadio(inputId = ns("Tab1_MAF_Separator"),
                                             label = "Separator:", c(Comma = ",", Semicolon = ";", Tab = "\t"),
-                                            selected = "\t", inline = F, status = "primary")),
+                                            selected = "\t", inline = FALSE, status = "primary")),
                      column(5, awesomeRadio(ns("Tab1_MAF_Quote"),
                                             "Quote:", choices = c(None = "", "Double" = '"', "Single" = "'"),
-                                            selected = '"', inline = F, status = "primary"))
+                                            selected = '"', inline = FALSE, status = "primary"))
                  ),
                  tags$hr(),
                  textInput(inputId = ns("Tab1_Comment_4"), label = "Comment Character:", value = "#"),
@@ -140,9 +140,9 @@ Tab1_Input_Files_Manual_UI <- function(id) {
                               value = 0, min = 0, max = 10),
                  tags$hr(),
                  h5(strong("Total Number of Columns:")),
-                 verbatimTextOutput('TotalCMAF', placeholder = T),
+                 verbatimTextOutput('TotalCMAF', placeholder = TRUE),
                  h5(strong("Total Number of Mutations:")),
-                 verbatimTextOutput('TotalRMAF', placeholder = T)
+                 verbatimTextOutput('TotalRMAF', placeholder = TRUE)
              ))
     )
 }
@@ -152,7 +152,7 @@ Tab1_Input_Files_API_UI <- function(id) {
     ns <- NS(id)
     tabPanel("API Upload",
              fluidRow(
-                 box(collapsible = T, title = "cBioPortal Datasets",
+                 box(collapsible = TRUE, title = "cBioPortal Datasets",
                      width = 12, status = "primary", solidHeader = TRUE,
                      shinycssloaders::withSpinner(DT::dataTableOutput(ns("cBioData"))),
                      style = "height:800px"
@@ -166,7 +166,7 @@ Tab1_Input_Files_Preview_Clin_UI <- function(tab1_input_preview_clin_ui) {
     ns <- NS(tab1_input_preview_clin_ui)
     tabPanel("Clinical Data",
              fluidRow(
-                 box(collapsible = T, title = "Preview",
+                 box(collapsible = TRUE, title = "Preview",
                      width = 12, status = "primary", solidHeader = TRUE,
                      shinyjs::useShinyjs(),
                      textOutput(ns("text")),
@@ -182,7 +182,7 @@ Tab1_Input_Files_Preview_CNA_UI <- function(tab1_input_preview_CNA_ui) {
     ns <- NS(tab1_input_preview_CNA_ui)
     tabPanel("CNA Data",
              fluidRow(
-                 box(collapsible = T, title = "Preview",
+                 box(collapsible = TRUE, title = "Preview",
                      width = 12, status = "primary", solidHeader = TRUE,
                      shinyjs::useShinyjs(),
                      textOutput(ns("text")),
@@ -198,7 +198,7 @@ Tab1_Input_Files_Preview_MAF_UI <- function(tab1_input_preview_MAF_ui) {
     ns <- NS(tab1_input_preview_MAF_ui)
     tabPanel("Mutation Data",
              fluidRow(
-                 box(collapsible = T, title = "Preview",
+                 box(collapsible = TRUE, title = "Preview",
                      width = 12, status = "primary", solidHeader = TRUE,
                      shinyjs::useShinyjs(),
                      textOutput(ns("text")),

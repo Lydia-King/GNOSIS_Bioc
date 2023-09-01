@@ -2,7 +2,7 @@
 Tab2_Exploratory_Tables_Server <- function(id, datalist, data, length_px, select_dt) {
     moduleServer(id, function(input, output, session) {
 
-        shinylogs::track_usage(shinylogs::store_null(console = F),  what = c("input"))
+        shinylogs::track_usage(shinylogs::store_null(console = FALSE),  what = c("input"))
 
         observe({
             vchoices <- c(names(datalist[[data]]()), "None Selected")

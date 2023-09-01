@@ -4,18 +4,18 @@ Tab8_Adjusted_Survival_Curves_UI <- function(id) {
 
     fluidRow(
         box(
-            collapsible = T,
+            collapsible = TRUE,
             title = ("Multivariable Cox Model"),
             width = 12,
-            solidHeader = T,
+            solidHeader = TRUE,
             status = "primary",
             shinycssloaders::withSpinner(verbatimTextOutput(ns("Interaction")))
         ),
         box(
             title = ("New Data for Adjusted Survival Curves"),
             width = 12,
-            solidHeader = T,
-            collapsible = T,
+            solidHeader = TRUE,
+            collapsible = TRUE,
             status = "primary",
             shinycssloaders::withSpinner(dataTableOutput(ns("preddata"))),
             dropdownMenu = boxDropdown(
@@ -51,9 +51,9 @@ Tab8_Adjusted_Survival_Curves_UI <- function(id) {
         ),
         box(
             title = ("View and Download Adjusted Survival Curves"),
-            collapsible = T,
+            collapsible = TRUE,
             width = 12,
-            solidHeader = T,
+            solidHeader = TRUE,
             status = "primary",
             shinycssloaders::withSpinner(plotOutput(ns("Pred3"))),
             height = "430px",
@@ -93,28 +93,28 @@ Tab8_Adjusted_Survival_Curves_UI <- function(id) {
                     ns("Tab8_Download_Adjusted_Curves_Plot_Title"),
                     "Plot Title:",
                     "Breast cancer patients in METABRIC data",
-                    placeholder = T,
+                    placeholder = TRUE,
                     width = "95%"
                 ),
                 textInput(
                     ns("Tab8_Download_Adjusted_Curves_X_Axis_Title"),
                     "X-axis Title:",
                     "Survival Time",
-                    placeholder = T,
+                    placeholder = TRUE,
                     width = "95%"
                 ),
                 textInput(
                     ns("Tab8_Download_Adjusted_Curves_Y_Axis_Title"),
                     "Y-axis Title:",
                     "Survival Probability",
-                    placeholder = T,
+                    placeholder = TRUE,
                     width = "95%"
                 ),
                 textInput(
                     ns("Tab8_Download_Adjusted_Curves_Legend_Title"),
                     "Legend Title:",
                     "Legend",
-                    placeholder = T,
+                    placeholder = TRUE,
                     width = "95%"
                 ),
                 tags$hr(),

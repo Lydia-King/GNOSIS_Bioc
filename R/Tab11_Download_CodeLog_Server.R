@@ -2,7 +2,7 @@
 Tab11_Log_Server <- function(id, data_inputs) {
     moduleServer(id, function(input, output, session) {
         shinylogs::track_usage(
-            storage_mode = store_null(console = T),
+            storage_mode = store_null(console = TRUE),
             what = "input",
             exclude_input_regex = "tab11",
             exclude_input_id = c("InputLog")
@@ -78,7 +78,7 @@ Tab11_Log_Server <- function(id, data_inputs) {
                     )
                 )
 
-                if (input$Tab11_Remove_None_Log == T) {
+                if (input$Tab11_Remove_None_Log == TRUE) {
                     temp_dataframe <- temp_dataframe %>%
                         filter(Value %!in% c("", "NULL", "None Selected", 'list("None Selected")', 'list()')) %>%
                         filter(!is.null(Value))
