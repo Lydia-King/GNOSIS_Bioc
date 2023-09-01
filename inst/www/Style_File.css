@@ -9,7 +9,7 @@ width: 195px;
 }
 
 /* Peacock Banner */
-.skin-blue .main-header .navbar {background-image: url(system.file("www/navbackground.png", package = "GNOSIS")); background-size: 350px;}
+.skin-blue .main-header .navbar {background-image: url("www/navbackground.png"); background-size: 350px;}
 
 /* Radio Buttons */
 .radio-primary input[type="radio"]+label::after   {background-color: #012B45;}
