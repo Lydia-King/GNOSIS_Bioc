@@ -13,7 +13,7 @@ Tab11_Download_Code_UI <- function(id) {
             selectInput(
                 ns("Tab11_Order_Log_By"), "Order by:",
                 choices = c("Timestamp", "Tab", "Name", "Value", "Binding"),
-                selected = c("Timestamp"), multiple = T, width = "100px"
+                selected = c("Timestamp"), multiple = T, width = "450px"
             ),
             prettyToggle(
                 inputId = ns("Tab11_Remove_None_Log"),
