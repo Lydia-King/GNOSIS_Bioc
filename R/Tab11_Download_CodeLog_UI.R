@@ -13,7 +13,7 @@ Tab11_Download_Code_UI <- function(id) {
             selectInput(
                 ns("Tab11_Order_Log_By"), "Order by:",
                 choices = c("Timestamp", "Tab", "Name", "Value", "Binding"),
-                selected = c("Timestamp"), multiple = T, width = "96%"
+                selected = c("Timestamp"), multiple = T, width = "100px"
             ),
             prettyToggle(
                 inputId = ns("Tab11_Remove_None_Log"),
@@ -69,13 +69,8 @@ Tab11_Download_Code_UI <- function(id) {
             ),
             tags$hr(),
             downloadButton(
-                ns('download_button_rscript'), 'Download R Script',
-                style = "width:96%;"
-            ),
-            br(), br(),
-            downloadButton(
                 ns('Tab11_Download_Log'), 'Download Input Log',
-                style = "width:96%;"
+                style = "width:98%;"
             )
         )
     ))
