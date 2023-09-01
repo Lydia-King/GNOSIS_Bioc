@@ -39,7 +39,6 @@ GNOSIS <- function(...) {
     options(spinner.size=1)
     options(spinner.type = 8)
     options(spinner.color="#012B45")
-    addResourcePath("www", system.file("www", package = "GNOSIS"))
 
     ui <- dashboardPage(
 
