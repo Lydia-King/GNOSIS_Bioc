@@ -2,10 +2,29 @@
 % Please edit documentation in R/app.R
 \name{GNOSIS}
 \alias{GNOSIS}
-\title{GNOSIS Shiny App}
+\title{#' Initialise GNOSIS}
 \usage{
 GNOSIS(...)
 }
+\arguments{
+\item{...}{Further arguments to the \code{runApp} function}
+}
+\value{
+Mainly called for the side effect of displaying the shiny app in a
+browser
+}
 \description{
-GNOSIS
+The shiny app will allow the user to explore and analyse clinical
+and copy number data uploaded manually or selected from a dataframe
+containing datasets available through cBioPortal.
+}
+\details{
+Note. This shiny app is an updated version of the app
+published in \href{https://hrbopenresearch.org/articles/5-8#}{HRB Open Research}.
+For details on version updates see NEWS.
+}
+\examples{
+if (interactive()) {
+    GNOSIS()
+}
 }

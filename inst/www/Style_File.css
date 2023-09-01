@@ -9,7 +9,7 @@ width: 195px;
 }
 
 /* Peacock Banner */
-.skin-blue .main-header .navbar {background-image: url("navbackground.png"); background-size: 350px;}
+.skin-blue .main-header .navbar {background-image: url(system.file("www/navbackground.png", package = "GNOSIS")); background-size: 350px;}
 
 /* Radio Buttons */
 .radio-primary input[type="radio"]+label::after   {background-color: #012B45;}
@@ -57,7 +57,7 @@ width: 195px;
   background: rgb(1,43,69);
   background: linear-gradient(0deg, rgba(1,43,69,1) 20%, rgba(96,205,214,1) 50%, rgba(1,43,69,1) 80%);
   }
-  
+
 /* Error Colour */
 .shiny-output-error-validation{
     color: #012B45;
@@ -70,5 +70,14 @@ width: 195px;
 .direct-chat-contacts {
     background: #599740;
 }
+
+/* Spinner Location */
+  .shiny-spinner-custom {
+    text-align: initial;
+  }
+  .load-container {
+    text-align: center;
+  }
+
 
 
