@@ -245,6 +245,3 @@ GNOSIS <- function(...) {
 
     shinyApp(ui, server, ...)
 }
-
-
-
