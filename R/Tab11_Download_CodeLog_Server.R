@@ -43,52 +43,80 @@ Tab11_Log_Server <- function(id, data_inputs) {
                         Timestamp = gsub("\\..*", "", Timestamp)
                     ) %>%
                     select(Timestamp, Name, Tab, Binding, Value) %>%
-                    mutate(
-                        Value = ifelse(
-                            Name %in% c(
-                                "tab1_input_manually-Input_Patient_File",
-                                "tab1_input_manually-Input_Sample_File",
-                                "tab1_input_manually-Input_CNA_File",
-                                "tab1_input_manually-Input_MAF_File"
-                            ),
-                            "uploaded file",
-                            Value
-                        )
-                    )
+                    mutate(Value = ifelse(
+                        Name %in% c(
+                            "tab1_input_manually-Input_Patient_File",
+                            "tab1_input_manually-Input_Sample_File",
+                            "tab1_input_manually-Input_CNA_File",
+                            "tab1_input_manually-Input_MAF_File"
+                        ),
+                        "uploaded file",
+                        Value
+                    ))
 
                 temp_dataframe <- temp_dataframe %>%
-                    mutate(
-                        Tab = ifelse(
-                            Tab %in% c(
-                                "Tab1", "Tab2", "Tab3", "Tab4", "Tab5",
-                                "Tab6", "Tab7", "Tab8", "Tab9", "Tab10",
-                                "Tab11"
-                            ),
-                            Tab,
-                            "Other"
-                        )
-                    )
+                    mutate(Tab = ifelse(
+                        Tab %in% c(
+                            "Tab1",
+                            "Tab2",
+                            "Tab3",
+                            "Tab4",
+                            "Tab5",
+                            "Tab6",
+                            "Tab7",
+                            "Tab8",
+                            "Tab9",
+                            "Tab10",
+                            "Tab11"
+                        ),
+                        Tab,
+                        "Other"
+                    ))
 
                 temp_dataframe$Tab <- factor(
                     temp_dataframe$Tab,
                     levels = c(
-                        "Tab1", "Tab2", "Tab3", "Tab4", "Tab5",
-                        "Tab6", "Tab7", "Tab8", "Tab9", "Tab10",
-                        "Tab11", "Other"
+                        "Tab1",
+                        "Tab2",
+                        "Tab3",
+                        "Tab4",
+                        "Tab5",
+                        "Tab6",
+                        "Tab7",
+                        "Tab8",
+                        "Tab9",
+                        "Tab10",
+                        "Tab11",
+                        "Other"
                     )
                 )
 
                 if (input$Tab11_Remove_None_Log == TRUE) {
                     temp_dataframe <- temp_dataframe %>%
-                        filter(Value %!in% c("", "NULL", "None Selected", 'list("None Selected")', 'list()')) %>%
+                        filter(
+                            Value %!in% c(
+                                "",
+                                "NULL",
+                                "None Selected",
+                                'list("None Selected")',
+                                "list()"
+                            )
+                        ) %>%
                         filter(!is.null(Value))
                 }
 
                 temp_dataframe <- temp_dataframe %>%
                     filter(Binding %in% c(input$Tab11_Display_Type))
-                temp_dataframe$Binding <- gsub("shinydashboard.", "", temp_dataframe$Binding)
-                temp_dataframe$Binding <- gsub("shinyWidgets.", "", temp_dataframe$Binding)
-                temp_dataframe$Binding <- gsub("shiny.", "", temp_dataframe$Binding)
+                temp_dataframe$Binding <-
+                    gsub(
+                        "shinydashboard.",
+                        "",
+                        temp_dataframe$Binding
+                    )
+                temp_dataframe$Binding <-
+                    gsub("shinyWidgets.", "", temp_dataframe$Binding)
+                temp_dataframe$Binding <-
+                    gsub("shiny.", "", temp_dataframe$Binding)
 
                 log_list <- c(input$Tab11_Order_Log_By)
                 temp_dataframe_order <- temp_dataframe %>%
@@ -99,7 +127,9 @@ Tab11_Log_Server <- function(id, data_inputs) {
         })
 
         output$InputLog <- DT::renderDataTable(
-            {Log_DataFrame()},
+            {
+                Log_DataFrame()
+            },
             options = list(
                 lengthMenu = c(10, 30, 50, 100),
                 pageLength = 30,
@@ -110,8 +140,8 @@ Tab11_Log_Server <- function(id, data_inputs) {
         )
 
         # Download File
-        output$Tab11_Download_Log = downloadHandler(
-            'Shiny_Log.txt',
+        output$Tab11_Download_Log <- downloadHandler(
+            "Shiny_Log.txt",
             content = function(file) {
                 Table_dl <- apply(Log_DataFrame(), 2, as.character)
                 write.table(

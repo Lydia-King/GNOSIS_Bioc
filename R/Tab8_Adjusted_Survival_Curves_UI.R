@@ -20,26 +20,30 @@ Tab8_Adjusted_Survival_Curves_UI <- function(id) {
             shinycssloaders::withSpinner(dataTableOutput(ns("preddata"))),
             dropdownMenu = boxDropdown(
                 icon = fontawesome::fa_i(name = "info-circle", verify_fa = FALSE),
-                boxDropdownItem(
-                    HTML(
-                        paste("Please make sure you have included all variables present",
-                              "in the Cox Multivariable PH model in the New Dataframe")
+                boxDropdownItem(HTML(
+                    paste(
+                        "Please make sure you have included all variables present",
+                        "in the Cox Multivariable PH model in the New Dataframe"
                     )
-                )
+                ))
             ),
             sidebar = boxSidebar(
                 id = "Tab8_New_Data_Sidebar",
                 width = 25,
                 background = "#599740",
                 icon = shiny::icon("rectangle-list"),
-                selectizeInput(ns("Tab8_Adjusted_Curves_Select_Variable_1"),
-                               "Select Model Variable 1:",
-                               choices = "",
-                               width = "95%"),
-                selectizeInput(ns("Tab8_Adjusted_Curves_Select_Variable_2"),
-                               "Select Model Variable 2:",
-                               choices = "",
-                               width = "95%"),
+                selectizeInput(
+                    ns("Tab8_Adjusted_Curves_Select_Variable_1"),
+                    "Select Model Variable 1:",
+                    choices = "",
+                    width = "95%"
+                ),
+                selectizeInput(
+                    ns("Tab8_Adjusted_Curves_Select_Variable_2"),
+                    "Select Model Variable 2:",
+                    choices = "",
+                    width = "95%"
+                ),
                 selectizeInput(
                     inputId = ns("Tab8_Adjusted_Curves_Select_Constant_Variable"),
                     label = "Select Variables to Keep Constant:",
@@ -63,10 +67,12 @@ Tab8_Adjusted_Survival_Curves_UI <- function(id) {
                 width = 25,
                 background = "#599740",
                 icon = shiny::icon("rectangle-list"),
-                selectInput(ns("Tab8_Download_Adjusted_Curves_Select"),
-                            "Select Plot:",
-                            choices = "",
-                            width = "95%"),
+                selectInput(
+                    ns("Tab8_Download_Adjusted_Curves_Select"),
+                    "Select Plot:",
+                    choices = "",
+                    width = "95%"
+                ),
                 h5(strong("Options:")),
                 prettyToggle(
                     inputId = ns("Tab8_Download_Adjusted_Curves_Display_CI"),
@@ -121,34 +127,31 @@ Tab8_Adjusted_Survival_Curves_UI <- function(id) {
                 numericInput(
                     ns("Plot_Width"),
                     "Plot Width (inches):",
-                    value=8,
-                    min=1,
-                    max=50,
+                    value = 8,
+                    min = 1,
+                    max = 50,
                     width = "95%"
                 ),
                 numericInput(
                     ns("Plot_Height"),
                     "Plot Height (inches):",
-                    value=5,
-                    min=1,
-                    max=50,
+                    value = 5,
+                    min = 1,
+                    max = 50,
                     width = "95%"
                 ),
                 tags$hr(),
-                downloadButton(
-                    ns('Download_PNG'),
-                    'Download Plot (PNG)',
+                downloadButton(ns("Download_PNG"),
+                    "Download Plot (PNG)",
                     style = "width:100%;"
                 ),
                 br(),
                 br(),
-                downloadButton(
-                    ns('Download_SVG'),
-                    'Download Plot (SVG)',
+                downloadButton(ns("Download_SVG"),
+                    "Download Plot (SVG)",
                     style = "width:100%;"
                 )
             )
         )
     )
 }
-

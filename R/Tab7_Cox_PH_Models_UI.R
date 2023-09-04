@@ -8,7 +8,9 @@ Tab7_Univariate_CoxPH <- function(id) {
             dropdownMenu = boxDropdown(
                 icon = fontawesome::fa_i(name = "info-circle", verify_fa = FALSE),
                 boxDropdownItem(
-                    HTML(paste("Useful Resources for Cox Models:", "<br/>")),
+                    HTML(paste(
+                        "Useful Resources for Cox Models:", "<br/>"
+                    )),
                     tags$a(
                         href = "http://www.sthda.com/english/wiki/cox-proportional-hazards-model",
                         "Cox PH Model Basics"
@@ -23,9 +25,7 @@ Tab7_Univariate_CoxPH <- function(id) {
             solidHeader = TRUE,
             width = 12,
             status = "primary",
-            shinycssloaders::withSpinner(
-                verbatimTextOutput(ns("CoxModelOut"), placeholder = TRUE)
-            ),
+            shinycssloaders::withSpinner(verbatimTextOutput(ns("CoxModelOut"), placeholder = TRUE)),
             br(),
             h4(strong("Adjusted P-values:")),
             shinycssloaders::withSpinner(dataTableOutput(ns("UniAdjusted"))),
@@ -73,7 +73,9 @@ Tab7_Multivariate_CoxPH <- function(id) {
             dropdownMenu = boxDropdown(
                 icon = fontawesome::fa_i(name = "info-circle", verify_fa = FALSE),
                 boxDropdownItem(
-                    HTML(paste("Useful Resources for Cox Models:", "<br/>")),
+                    HTML(paste(
+                        "Useful Resources for Cox Models:", "<br/>"
+                    )),
                     tags$a(
                         href = "http://www.sthda.com/english/wiki/cox-proportional-hazards-model",
                         "Cox PH Model Basics in R"
@@ -84,9 +86,10 @@ Tab7_Multivariate_CoxPH <- function(id) {
                     )
                 )
             ),
-            shinycssloaders::withSpinner(
-                verbatimTextOutput(ns("CoxModelMultiOut"), placeholder = TRUE)
-            ),
+            shinycssloaders::withSpinner(verbatimTextOutput(
+                ns("CoxModelMultiOut"),
+                placeholder = TRUE
+            )),
             h5(strong("Likelihood Ratio Test:")),
             verbatimTextOutput(ns("LRTid"), placeholder = TRUE),
             h5(strong("Wald Test:")),
@@ -118,21 +121,27 @@ Tab7_Multivariate_CoxPH <- function(id) {
                     width = "95%"
                 ),
                 selectizeInput(
-                    ns("Tab7_Multivariable_Cox_Select_Interaction_Variables_1"),
+                    ns(
+                        "Tab7_Multivariable_Cox_Select_Interaction_Variables_1"
+                    ),
                     "Select 2-Way Interaction 1:",
                     choices = "",
                     multiple = TRUE,
                     width = "95%"
                 ),
                 selectizeInput(
-                    ns("Tab7_Multivariable_Cox_Select_Interaction_Variables_2"),
+                    ns(
+                        "Tab7_Multivariable_Cox_Select_Interaction_Variables_2"
+                    ),
                     "Select 2-Way Interaction 2:",
                     choices = "",
                     multiple = TRUE,
                     width = "95%"
                 ),
                 selectizeInput(
-                    ns("Tab7_Multivariable_Cox_Select_Interaction_Variables_3"),
+                    ns(
+                        "Tab7_Multivariable_Cox_Select_Interaction_Variables_3"
+                    ),
                     "Select 3-way Interaction:",
                     choices = "",
                     multiple = TRUE,
@@ -157,7 +166,9 @@ Tab7_Assumption_CoxPH <- function(id) {
             dropdownMenu = boxDropdown(
                 icon = fontawesome::fa_i(name = "info-circle", verify_fa = FALSE),
                 boxDropdownItem(
-                    HTML(paste("Useful Resources for Cox Models:", "<br/>")),
+                    HTML(paste(
+                        "Useful Resources for Cox Models:", "<br/>"
+                    )),
                     tags$a(
                         href = "http://www.sthda.com/english/wiki/cox-proportional-hazards-model",
                         "Cox PH Model Basics in R"
@@ -199,22 +210,20 @@ Tab7_Assumption_CoxPH <- function(id) {
                     width = "95%"
                 ),
                 tags$hr(width = "96%"),
-                downloadButton(
-                    ns('Download_PNG'),
-                    'Download Plot (PNG)',
+                downloadButton(ns("Download_PNG"),
+                    "Download Plot (PNG)",
                     style = "width:96%;"
                 ),
                 br(),
                 br(),
-                downloadButton(
-                    ns('Download_SVG'),
-                    'Download Plot (SVG)',
+                downloadButton(ns("Download_SVG"),
+                    "Download Plot (SVG)",
                     style = "width:96%;"
                 )
             ),
-            shinycssloaders::withSpinner(
-                plotOutput(ns("AssumptionsCox"), height = "600px")
-            )
+            shinycssloaders::withSpinner(plotOutput(ns(
+                "AssumptionsCox"
+            ), height = "600px"))
         )
     )
 }
