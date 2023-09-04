@@ -27,8 +27,9 @@ visualisations, survival analysis, statistical analysis and mutation analysis.
 # Installation
 
 ```{r, eval=FALSE}
-if (!requireNamespace("BiocManager", quietly = TRUE))
+if (!requireNamespace("BiocManager", quietly = TRUE)) {
     install.packages("BiocManager")
+}
 
 BiocManager::install("GNOSIS")
 ```
@@ -57,6 +58,4 @@ sessionInfo()
 ```
 
 ```{r}
-
-
 ```
